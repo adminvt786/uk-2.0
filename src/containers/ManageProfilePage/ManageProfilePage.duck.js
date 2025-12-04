@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
 import { storableError } from '../../util/errors';
 import { addMarketplaceEntities, getOwnProfileListingById } from '../../ducks/marketplaceData.duck';
 import { getImageVariantInfo } from '../EditListingPage/EditListingPage.duck';
@@ -18,6 +18,33 @@ export const uploadImage = createAsyncThunk(
       .upload({ image: file }, queryParams)
       .then(resp => {
         const uploadedImage = resp.data.data;
+        return { id, uploadedImage };
+      })
+      .catch(e => {
+        return rejectWithValue({ id, error: storableError(e) });
+      });
+  }
+);
+
+// Media Kit image upload thunk
+export const uploadMediaKitImage = createAsyncThunk(
+  'ManageProfilePage/uploadMediaKitImage',
+  ({ id, file }, { rejectWithValue, extra: sdk }) => {
+    const queryParams = {
+      expand: true,
+      'fields.image': [
+        'variants.scaled-small',
+        'variants.scaled-medium',
+        'variants.scaled-large',
+        'variants.scaled-xlarge',
+      ],
+    };
+
+    return sdk.images
+      .upload({ image: file }, queryParams)
+      .then(resp => {
+        const uploadedImage = resp.data.data;
+        console.log('Uploaded media kit image:', uploadedImage);
         return { id, uploadedImage };
       })
       .catch(e => {
@@ -132,14 +159,21 @@ const manageProfileSlice = createSlice({
     profileImage: null,
     profileImageUploadError: null,
     profileImageUploadInProgress: false,
+
+    // Media kit images upload state
+    mediaKitImages: [],
+    mediaKitImagesOrder: [],
+    mediaKitImageUploadError: null,
+    mediaKitImageUploadInProgress: false,
   },
   reducers: {
-    changePasswordClear: state => {
-      //   state.changePasswordError = null;
-      //   state.changePasswordInProgress = false;
-      //   state.passwordChanged = false;
-      //   state.resetPasswordInProgress = false;
-      //   state.resetPasswordError = null;
+    removeMediaKitImage: (state, action) => {
+      const imageId = action.payload;
+      state.mediaKitImages = state.mediaKitImages.filter(img => {
+        const id = img.imageId || img.id;
+        return id?.uuid !== imageId?.uuid;
+      });
+      state.mediaKitImagesOrder = state.mediaKitImagesOrder.filter(id => id !== imageId?.uuid);
     },
   },
   extraReducers: builder => {
@@ -161,6 +195,32 @@ const manageProfileSlice = createSlice({
         state.profileImage = null;
         state.profileImageUploadInProgress = false;
         state.profileImageUploadError = action.payload?.error;
+      })
+      // Upload media kit image cases
+      .addCase(uploadMediaKitImage.pending, (state, action) => {
+        const { id, file } = action.meta.arg;
+        // Add new image to the array with pending state
+        const newImage = { id, file };
+        state.mediaKitImages = [...state.mediaKitImages, newImage];
+        state.mediaKitImagesOrder = [...state.mediaKitImagesOrder, id];
+        state.mediaKitImageUploadInProgress = true;
+        state.mediaKitImageUploadError = null;
+      })
+      .addCase(uploadMediaKitImage.fulfilled, (state, action) => {
+        const { id, uploadedImage } = action.payload;
+        // Update the image in the array with uploaded data
+        state.mediaKitImages = state.mediaKitImages.map(img =>
+          img.id === id ? { ...img, imageId: uploadedImage.id, uploadedImage } : img
+        );
+        state.mediaKitImageUploadInProgress = false;
+      })
+      .addCase(uploadMediaKitImage.rejected, (state, action) => {
+        const { id } = action.meta.arg;
+        // Remove the failed image from array
+        state.mediaKitImages = state.mediaKitImages.filter(img => img.id !== id);
+        state.mediaKitImagesOrder = state.mediaKitImagesOrder.filter(imgId => imgId !== id);
+        state.mediaKitImageUploadInProgress = false;
+        state.mediaKitImageUploadError = action.payload?.error;
       })
       // Fetch profile listing cases
       .addCase(fetchProfileListing.pending, state => {
@@ -202,7 +262,7 @@ const manageProfileSlice = createSlice({
   },
 });
 
-export const { changePasswordClear } = manageProfileSlice.actions;
+export const { removeMediaKitImage } = manageProfileSlice.actions;
 
 export const loadData = (_, __, config) => (dispatch, getState, sdk) => {
   const state = getState();
@@ -238,3 +298,11 @@ export const profileImageUploadInProgressSelector = state =>
   state.ManageProfilePage.profileImageUploadInProgress;
 export const profileImageUploadErrorSelector = state =>
   state.ManageProfilePage.profileImageUploadError;
+
+// Media kit images selectors
+export const mediaKitImagesSelector = state => state.ManageProfilePage.mediaKitImages;
+export const mediaKitImagesOrderSelector = state => state.ManageProfilePage.mediaKitImagesOrder;
+export const mediaKitImageUploadInProgressSelector = state =>
+  state.ManageProfilePage.mediaKitImageUploadInProgress;
+export const mediaKitImageUploadErrorSelector = state =>
+  state.ManageProfilePage.mediaKitImageUploadError;

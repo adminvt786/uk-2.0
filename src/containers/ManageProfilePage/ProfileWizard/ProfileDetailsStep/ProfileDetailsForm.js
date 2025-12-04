@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import arrayMutators from 'final-form-arrays';
 import { Field, Form as FinalForm } from 'react-final-form';
+import { FieldArray } from 'react-final-form-arrays';
 
 // Import util modules
 import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
@@ -15,6 +16,7 @@ import { isUploadImageOverLimitError } from '../../../../util/errors';
 
 // Import shared components
 import {
+  AspectRatioWrapper,
   Avatar,
   Button,
   FieldLocationAutocompleteInput,
@@ -23,6 +25,7 @@ import {
   H4,
   IconSpinner,
   ImageFromFile,
+  ResponsiveImage,
 } from '../../../../components';
 
 // Import modules from this directory
@@ -59,6 +62,179 @@ const ErrorMessage = props => {
     return <p className={css.error}>{errorMessage}</p>;
   }
   return null;
+};
+
+// Media kit image upload error component
+const MediaKitUploadError = props => {
+  return props.uploadOverLimit ? (
+    <p className={css.error}>
+      <FormattedMessage id="ProfileDetailsForm.mediaKitUploadOverLimit" />
+    </p>
+  ) : props.uploadError ? (
+    <p className={css.error}>
+      <FormattedMessage id="ProfileDetailsForm.mediaKitUploadFailed" />
+    </p>
+  ) : null;
+};
+
+// Remove button for media kit images
+const RemoveImageButton = props => {
+  const { onClick } = props;
+  return (
+    <button className={css.removeImageButton} onClick={onClick} type="button">
+      <svg
+        width="10px"
+        height="10px"
+        viewBox="0 0 10 10"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g strokeWidth="1" fillRule="evenodd">
+          <g transform="translate(-821.000000, -311.000000)">
+            <g transform="translate(809.000000, 299.000000)">
+              <path
+                d="M21.5833333,16.5833333 L17.4166667,16.5833333 L17.4166667,12.4170833 C17.4166667,12.1866667 17.2391667,12 17.00875,12 C16.77875,12 16.5920833,12.18625 16.5920833,12.41625 L16.5883333,16.5833333 L12.4166667,16.5833333 C12.18625,16.5833333 12,16.7695833 12,17 C12,17.23 12.18625,17.4166667 12.4166667,17.4166667 L16.5875,17.4166667 L16.5833333,21.5829167 C16.5829167,21.8129167 16.7691667,21.9995833 16.9991667,22 L16.9995833,22 C17.2295833,22 17.41625,21.81375 17.4166667,21.58375 L17.4166667,17.4166667 L21.5833333,17.4166667 C21.8133333,17.4166667 22,17.23 22,17 C22,16.7695833 21.8133333,16.5833333 21.5833333,16.5833333"
+                transform="translate(17.000000, 17.000000) rotate(-45.000000) translate(-17.000000, -17.000000) "
+              />
+            </g>
+          </g>
+        </g>
+      </svg>
+    </button>
+  );
+};
+
+// Media kit image component - displays uploaded or uploading images
+const MediaKitImage = props => {
+  const {
+    image,
+    onRemoveImage,
+    intl,
+    aspectWidth = 1,
+    aspectHeight = 1,
+    // variantPrefix = 'scaled',
+  } = props;
+
+  const handleRemoveClick = e => {
+    e.stopPropagation();
+    onRemoveImage();
+  };
+
+  if (image.file && !image.imageId) {
+    // Image is uploading - show file preview with spinner
+    return (
+      <ImageFromFile
+        id={image.id}
+        className={css.mediaKitThumbnail}
+        file={image.file}
+        aspectWidth={aspectWidth}
+        aspectHeight={aspectHeight}
+      >
+        <div className={css.mediaKitThumbnailLoading}>
+          <IconSpinner />
+        </div>
+      </ImageFromFile>
+    );
+  } else {
+    // Image is uploaded - show ResponsiveImage
+    // Handle both newly uploaded images (with uploadedImage) and listing images (with attributes)
+    const hasUploadedImage = !!image.uploadedImage;
+    const hasAttributes = !!image.attributes;
+
+    if (!hasUploadedImage && !hasAttributes) return null;
+
+    const imageId = image.imageId || image.id;
+    const imageData = hasUploadedImage ? image.uploadedImage : image;
+    const imgForResponsiveImage = { ...imageData, id: imageId };
+    const variants = imageData.attributes?.variants
+      ? Object.keys(imageData.attributes.variants).filter(
+          k => k.startsWith('scaled') || k.startsWith('listing')
+        )
+      : [];
+
+    return (
+      <div className={css.mediaKitThumbnail}>
+        <div className={css.mediaKitImageWrapper}>
+          <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
+            <ResponsiveImage
+              rootClassName={css.mediaKitRootForImage}
+              image={imgForResponsiveImage}
+              alt={intl.formatMessage({ id: 'ProfileDetailsForm.mediaKitImageAlt' })}
+              variants={variants}
+            />
+          </AspectRatioWrapper>
+          <RemoveImageButton onClick={handleRemoveClick} />
+        </div>
+      </div>
+    );
+  }
+};
+
+// Field component that shows media kit images from "images" field array
+const FieldMediaKitImage = props => {
+  const { name, intl, onRemoveImage, aspectWidth, aspectHeight, variantPrefix } = props;
+  return (
+    <Field name={name}>
+      {fieldProps => {
+        const { input } = fieldProps;
+        const image = input.value;
+        return image ? (
+          <MediaKitImage
+            image={image}
+            key={image?.id?.uuid || image?.id}
+            onRemoveImage={() => {
+              onRemoveImage(image?.imageId || image?.id);
+            }}
+            intl={intl}
+            aspectWidth={aspectWidth}
+            aspectHeight={aspectHeight}
+            variantPrefix={variantPrefix}
+          />
+        ) : null;
+      }}
+    </Field>
+  );
+};
+
+// Field component for adding new media kit images
+const FieldAddMediaKitImage = props => {
+  const {
+    formApi,
+    onImageUploadHandler,
+    aspectWidth = 1,
+    aspectHeight = 1,
+    disabled,
+    ...rest
+  } = props;
+  return (
+    <Field form={null} {...rest}>
+      {fieldprops => {
+        const { accept, input, label, disabled: fieldDisabled } = fieldprops;
+        const { name, type } = input;
+        const onChange = e => {
+          const file = e.target.files[0];
+          if (file) {
+            formApi.change('addMediaKitImage', file);
+            formApi.blur('addMediaKitImage');
+            onImageUploadHandler(file);
+          }
+        };
+        const inputProps = { accept, id: name, name, onChange, type };
+        return (
+          <div className={css.addMediaKitImageWrapper}>
+            <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
+              {fieldDisabled || disabled ? null : (
+                <input {...inputProps} className={css.addMediaKitImageInput} />
+              )}
+              <label htmlFor={name} className={css.addMediaKitImage}>
+                {label}
+              </label>
+            </AspectRatioWrapper>
+          </div>
+        );
+      }}
+    </Field>
+  );
 };
 
 /**
@@ -134,6 +310,12 @@ const ProfileDetailsForm = props => {
           selectableCategories,
           categoryPrefix,
           pickSelectedCategories,
+          // Media kit props
+          mediaKitImages,
+          onMediaKitImageUpload,
+          onRemoveMediaKitImage,
+          mediaKitUploadInProgress,
+          mediaKitUploadError,
         } = formRenderProps;
 
         const intl = useIntl();
@@ -220,10 +402,12 @@ const ProfileDetailsForm = props => {
           id: 'ProfileDetailsForm.addressNotRecognized',
         });
 
+        const images = values.images || [];
         const classes = classNames(css.root, className);
         const submitReady = (updated && pristine) || ready;
         const submitInProgress = updateInProgress;
-        const submitDisabled = invalid || disabled || submitInProgress || uploadInProgress;
+        const submitDisabled =
+          invalid || disabled || submitInProgress || uploadInProgress || mediaKitUploadInProgress;
 
         return (
           <Form className={classes} onSubmit={handleSubmit}>
@@ -334,6 +518,73 @@ const ProfileDetailsForm = props => {
                 })
               )}
             />
+
+            {/* Media Kit Images Section */}
+            <div className={css.sectionContainer}>
+              <H4 as="h2" className={css.sectionTitle}>
+                <FormattedMessage id="ProfileDetailsForm.mediaKitTitle" />
+              </H4>
+              <p className={css.mediaKitDescription}>
+                <FormattedMessage id="ProfileDetailsForm.mediaKitDescription" />
+              </p>
+
+              <div className={css.mediaKitImagesFieldArray}>
+                <FieldArray name="images">
+                  {({ fields }) =>
+                    fields.map((name, index) => (
+                      <FieldMediaKitImage
+                        key={name}
+                        name={name}
+                        onRemoveImage={imageId => {
+                          fields.remove(index);
+                          onRemoveMediaKitImage(imageId);
+                        }}
+                        intl={intl}
+                        aspectWidth={1}
+                        aspectHeight={1}
+                        variantPrefix="listing"
+                      />
+                    ))
+                  }
+                </FieldArray>
+
+                <FieldAddMediaKitImage
+                  id="addMediaKitImage"
+                  name="addMediaKitImage"
+                  accept={ACCEPT_IMAGES}
+                  label={
+                    <span className={css.chooseMediaKitImageText}>
+                      <span className={css.chooseMediaKitImage}>
+                        <FormattedMessage id="ProfileDetailsForm.addMediaKitImage" />
+                      </span>
+                      <span className={css.mediaKitImageTypes}>
+                        <FormattedMessage id="ProfileDetailsForm.mediaKitImageTypes" />
+                      </span>
+                    </span>
+                  }
+                  type="file"
+                  disabled={mediaKitUploadInProgress}
+                  formApi={form}
+                  onImageUploadHandler={file => {
+                    if (file && onMediaKitImageUpload) {
+                      const tempId = `${file.name}_${Date.now()}`;
+                      onMediaKitImageUpload({ id: tempId, file });
+                    }
+                  }}
+                  aspectWidth={1}
+                  aspectHeight={1}
+                />
+              </div>
+
+              <MediaKitUploadError
+                uploadOverLimit={isUploadImageOverLimitError(mediaKitUploadError)}
+                uploadError={mediaKitUploadError}
+              />
+
+              <p className={css.mediaKitTip}>
+                <FormattedMessage id="ProfileDetailsForm.mediaKitTip" />
+              </p>
+            </div>
 
             <FieldLocationAutocompleteInput
               rootClassName={css.input}

@@ -13,6 +13,11 @@ import {
   uploadImage,
   profileImageUploadErrorSelector,
   profileImageUploadInProgressSelector,
+  mediaKitImagesSelector,
+  mediaKitImageUploadInProgressSelector,
+  mediaKitImageUploadErrorSelector,
+  uploadMediaKitImage,
+  removeMediaKitImage,
 } from '../../ManageProfilePage.duck';
 import { pickCategoryFields } from '../../../../util/fieldHelpers';
 import {
@@ -32,7 +37,8 @@ const getInitialValues = (
   currentUserDisplayName,
   listingFields,
   listingCategories,
-  categoryKey
+  categoryKey,
+  images = []
 ) => {
   const { description, title, publicData, geolocation } = profileListing?.attributes || {};
   const {
@@ -52,6 +58,7 @@ const getInitialValues = (
     listingType,
     transactionProcessAlias,
     unitType,
+    images,
     ...nestedCategories,
     ...initialValuesForListingFields(
       publicData,
@@ -96,6 +103,9 @@ const ProfileDetailsPanel = props => {
   const profileImage = useSelector(profileImageSelector);
   const profileImageUploadInProgress = useSelector(profileImageUploadInProgressSelector);
   const profileImageUploadError = useSelector(profileImageUploadErrorSelector);
+  const mediaKitImages = useSelector(mediaKitImagesSelector);
+  const mediaKitImageUploadInProgress = useSelector(mediaKitImageUploadInProgressSelector);
+  const mediaKitImageUploadError = useSelector(mediaKitImageUploadErrorSelector);
 
   const {
     className,
@@ -115,16 +125,30 @@ const ProfileDetailsPanel = props => {
   const listingCategories = config.categoryConfiguration.categories;
   const categoryKey = config.categoryConfiguration.key;
 
+  // Combine listing images with uploaded images from Redux
+  // This ensures newly uploaded images appear in the form
+  const listingImages = profileListing?.images || [];
+  const combinedImages = [...listingImages, ...mediaKitImages];
+
   const initialValues = getInitialValues(
     profileListing,
     currentUserDisplayName,
     listingFields,
     listingCategories,
-    categoryKey
+    categoryKey,
+    combinedImages
   );
 
   const handleImageUpload = data => {
     dispatch(uploadImage(data));
+  };
+
+  const handleMediaKitImageUpload = data => {
+    return dispatch(uploadMediaKitImage(data));
+  };
+
+  const handleRemoveMediaKitImage = imageId => {
+    dispatch(removeMediaKitImage(imageId));
   };
 
   return (
@@ -142,6 +166,7 @@ const ProfileDetailsPanel = props => {
             transactionProcessAlias,
             unitType,
             location,
+            images,
             ...rest
           } = values;
 
@@ -165,8 +190,19 @@ const ProfileDetailsPanel = props => {
           const origin = location?.selectedPlace?.origin || null;
           const locationDataMaybe = address ? { location: { address } } : {};
 
+          const finalImages = images
+            ? images.map(elm => {
+                if (elm.id.uuid) {
+                  return elm.id;
+                }
+
+                return elm.imageId;
+              })
+            : [];
+
           // Prepare values for submission
           const updateValues = {
+            images: finalImages,
             geolocation: origin,
             title: title.trim(),
             description: description?.trim() || '',
@@ -179,6 +215,8 @@ const ProfileDetailsPanel = props => {
               ...locationDataMaybe,
             },
           };
+
+          // return;
 
           if (profileImage?.imageId) {
             updateValues.profileImageId = profileImage.imageId;
@@ -202,6 +240,12 @@ const ProfileDetailsPanel = props => {
         onImageUpload={handleImageUpload}
         uploadInProgress={profileImageUploadInProgress}
         uploadImageError={profileImageUploadError}
+        // Media kit props
+        mediaKitImages={mediaKitImages}
+        onMediaKitImageUpload={handleMediaKitImageUpload}
+        onRemoveMediaKitImage={handleRemoveMediaKitImage}
+        mediaKitUploadInProgress={mediaKitImageUploadInProgress}
+        mediaKitUploadError={mediaKitImageUploadError}
         listingFieldsConfig={listingFields}
         selectableCategories={listingCategories}
         categoryPrefix={categoryKey}
