@@ -14,12 +14,29 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [fix] Update the color of buttons in transaction processes email templates.
+  [#718](https://github.com/sharetribe/web-template/pull/718)
+
+## [v10.4.0] 2025-12-02
+
+- [add] Add Proxy around SDK instance on server that caches the responses for the page-asset
+  requests. [#713](https://github.com/sharetribe/web-template/pull/713)
+- [fix] Styleguide examples for booking forms were missing a mandatory prop.
+  [#719](https://github.com/sharetribe/web-template/pull/719)
+- [fix] PREVENT_DATA_LOADING_IN_SSR environment variable has not been working.
+  [#717](https://github.com/sharetribe/web-template/pull/717)
+- [add] Add accessibility improvements (Modals, filters, etc.).
+  [#716](https://github.com/sharetribe/web-template/pull/716)
+- [change] Upgrade Sharetribe SDK to 1.22.0.
+  [#715](https://github.com/sharetribe/web-template/pull/715)
 - [fix] ListingPageCoverPhoto: fix payoutDetailsWarning message.
   [#714](https://github.com/sharetribe/web-template/pull/714)
 - [fix] AuthenticationPage: fix a bug with long words in the title on mobile layout.
   [#711](https://github.com/sharetribe/web-template/pull/711)
 - [add] Add currently available translations for DE, ES, FR.
   [#710](https://github.com/sharetribe/web-template/pull/710)
+
+  [v10.4.0]: https://github.com/sharetribe/web-template/compare/v10.3.0...v10.4.0
 
 ## [v10.3.0] 2025-11-20
 
