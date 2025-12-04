@@ -1,0 +1,53 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  flex-grow: 1;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+
+  @media (--viewportMedium) {
+    padding: 32px;
+  }
+}
+
+.stepTitle {
+  margin-top: 24px;
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    margin-top: 32px;
+    margin-bottom: 32px;
+  }
+}
+
+.stepPlaceholder {
+  padding: 24px;
+  background-color: var(--colorGrey50);
+  border-radius: 8px;
+  text-align: center;
+  color: var(--colorGrey700);
+}
+
+.backButton {
+  margin-top: 16px;
+  padding: 12px 24px;
+  background: none;
+  border: 1px solid var(--colorGrey300);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--colorGrey700);
+  align-self: flex-start;
+
+  &:hover {
+    background-color: var(--colorGrey50);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

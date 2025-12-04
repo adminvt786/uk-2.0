@@ -1,0 +1,294 @@
+@import '../../../../styles/customMediaQueries.css';
+
+:root {
+  --ProfileDetailsForm_avatarSize: 96px;
+  --ProfileDetailsForm_avatarSizeDesktop: 240px;
+}
+
+.root {
+  /* Dimensions */
+  width: 100%;
+  height: auto;
+
+  /* Layout */
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  padding-top: 1px;
+
+  @media (--viewportMedium) {
+    padding-top: 2px;
+  }
+}
+
+.error {
+  color: var(--colorFail);
+}
+
+.formMargins {
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 32px;
+  }
+}
+
+.sectionContainer {
+  padding: 0;
+  margin-bottom: 36px;
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-bottom: 56px;
+  }
+}
+
+.sectionTitle {
+  margin-bottom: 16px;
+}
+
+/* Avatar upload styles */
+.uploadAvatarInput {
+  display: none;
+}
+
+.uploadAvatarWrapper {
+  margin-top: 18px;
+  margin-bottom: 18px;
+
+  @media (--viewportMedium) {
+    margin-top: 24px;
+    margin-bottom: 16px;
+  }
+}
+
+.label {
+  width: var(--ProfileDetailsForm_avatarSize);
+  @media (--viewportMedium) {
+    width: var(--ProfileDetailsForm_avatarSizeDesktop);
+  }
+}
+
+.avatarPlaceholder,
+.avatarContainer {
+  /* Dimension */
+  position: relative;
+  width: var(--ProfileDetailsForm_avatarSize);
+  height: var(--ProfileDetailsForm_avatarSize);
+
+  /* Center content */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Initial coloring */
+  background-color: var(--colorGrey50);
+  border-radius: calc(var(--ProfileDetailsForm_avatarSize) / 2);
+  cursor: pointer;
+
+  @media (--viewportMedium) {
+    width: var(--ProfileDetailsForm_avatarSizeDesktop);
+    height: var(--ProfileDetailsForm_avatarSizeDesktop);
+    border-radius: calc(var(--ProfileDetailsForm_avatarSizeDesktop) / 2);
+  }
+}
+
+.avatarPlaceholder {
+  /* Placeholder border */
+  border-style: dashed;
+  border-color: var(--colorGrey100);
+  border-width: 2px;
+
+  transition: var(--transitionStyleButton);
+
+  &:hover {
+    border-color: var(--colorGrey300);
+  }
+}
+
+.avatarPlaceholderTextMobile {
+  @media (--viewportMedium) {
+    display: none;
+  }
+}
+
+.avatarPlaceholderText {
+  display: none;
+
+  @media (--viewportMedium) {
+    display: block;
+    max-width: 130px;
+    text-align: center;
+  }
+}
+
+.avatarUploadError {
+  /* Placeholder border */
+  border-style: dashed;
+  border-color: var(--colorFail);
+  border-width: 2px;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+}
+
+.avatarInvisible {
+  visibility: hidden;
+}
+
+.uploadingImage {
+  width: var(--ProfileDetailsForm_avatarSize);
+  height: var(--ProfileDetailsForm_avatarSize);
+  border-radius: calc(var(--ProfileDetailsForm_avatarSize) / 2);
+  overflow: hidden;
+
+  @media (--viewportMedium) {
+    width: var(--ProfileDetailsForm_avatarSizeDesktop);
+    height: var(--ProfileDetailsForm_avatarSizeDesktop);
+    border-radius: calc(var(--ProfileDetailsForm_avatarSizeDesktop) / 2);
+  }
+}
+
+.uploadingImageOverlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--colorWhite);
+  opacity: 0.8;
+}
+
+.changeAvatar {
+  /* Font */
+  composes: h5 from global;
+  font-weight: var(--fontWeightMedium);
+
+  /* Positioning: right */
+  position: absolute;
+  bottom: 27px;
+  right: -129px;
+  /* Dimensions */
+  width: 105px;
+  height: 41px;
+  padding: 11px 10px 7px 35px;
+
+  /* Look and feel (buttonish) */
+  background-color: var(--colorWhite);
+  background-image: url('data:image/svg+xml;utf8,<svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg"><g stroke="%234A4A4A" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"><path d="M5.307 11.155L1 13l1.846-4.308L10.54 1 13 3.46zM11 5L9 3M5 11L3 9"/></g></svg>');
+  background-repeat: no-repeat;
+  background-position: 12px 12px;
+  border: solid 1px var(--colorGrey100);
+  border-radius: 2px;
+  margin-top: 0;
+  margin-bottom: 0;
+
+  transition: var(--transitionStyleButton);
+
+  &:hover {
+    border: solid 1px var(--colorGrey300);
+  }
+
+  @media (--viewportMedium) {
+    bottom: 20px;
+    right: -145px;
+    width: 120px;
+    height: 41px;
+    padding: 11px 10px 7px 40px;
+  }
+}
+
+.tip {
+  composes: marketplaceTinyFontStyles from global;
+  color: var(--colorGrey300);
+  margin-top: 0;
+  margin-bottom: 12px;
+  padding-top: 5px;
+  padding-bottom: 1px;
+
+  @media (--viewportMedium) {
+    margin-top: 0;
+    margin-bottom: 8px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+.fileInfo {
+  composes: marketplaceTinyFontStyles from global;
+  color: var(--colorGrey300);
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 1px;
+
+  @media (--viewportMedium) {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+.displayName {
+  composes: formMargins;
+}
+
+.aboutMe {
+  composes: formMargins;
+  flex-shrink: 0;
+}
+
+.submitButton {
+  margin-top: auto;
+  margin-bottom: 24px;
+  flex-shrink: 0;
+
+  @media (--viewportLarge) {
+    display: inline-block;
+    width: 241px;
+    margin-top: 100px;
+  }
+}
+
+.input {
+  flex-shrink: 0;
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 32px;
+  }
+}
+
+.locationAutocompleteInput {
+  /* Safari bugfix: without this Safari will print placeholder to a wrong place */
+  &::-webkit-input-placeholder {
+    line-height: normal;
+  }
+}
+
+.locationAutocompleteInputIcon {
+  display: none;
+}
+
+.predictionsRoot {
+  position: absolute;
+  width: 100%;
+  top: 36px;
+  left: 0;
+  background-color: var(--marketplaceColor);
+  border-bottom-left-radius: var(--borderRadius);
+  border-bottom-right-radius: var(--borderRadius);
+  box-shadow: var(--boxShadowPopup);
+  z-index: calc(var(--zIndexPopup) + 1);
+
+  @media (--viewportMedium) {
+    top: 40px;
+  }
+}

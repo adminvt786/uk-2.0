@@ -395,6 +395,8 @@ export const { clearCurrentUser, setCurrentUser, setCurrentUserHasOrders } = use
 
 // ================ Selectors ================ //
 
+export const currentUserSelector = state => state.user.currentUser;
+
 export const hasCurrentUserErrors = state => {
   const { user } = state;
   return (
@@ -404,3 +406,6 @@ export const hasCurrentUserErrors = state => {
     user.currentUserHasOrdersError
   );
 };
+
+export const currentUserDisplayNameSelector = state =>
+  state.user.currentUser?.attributes.profile.displayName;

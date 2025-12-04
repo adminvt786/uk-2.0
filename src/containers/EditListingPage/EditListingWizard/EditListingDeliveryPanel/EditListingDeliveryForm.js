@@ -27,7 +27,7 @@ import {
 // Import modules from this directory
 import css from './EditListingDeliveryForm.module.css';
 
-const identity = v => v;
+export const identity = v => v;
 
 /**
  * The EditListingDeliveryForm component.

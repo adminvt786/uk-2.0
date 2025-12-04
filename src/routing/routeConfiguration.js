@@ -39,6 +39,7 @@ const StripePayoutPage = loadable(() => import(/* webpackChunkName: "StripePayou
 const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfServicePage" */ '../containers/TermsOfServicePage/TermsOfServicePage'));
 const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionPage" */ '../containers/TransactionPage/TransactionPage'));
 const NoAccessPage = loadable(() => import(/* webpackChunkName: "NoAccessPage" */ '../containers/NoAccessPage/NoAccessPage'));
+const ManageProfilePage = loadable(() => import(/* webpackChunkName: "ManageProfilePage" */ '../containers/ManageProfilePage/ManageProfilePage'));
 
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
@@ -82,6 +83,13 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       name: 'LandingPage',
       component: LandingPage,
       loadData: pageDataLoadingAPI.LandingPage.loadData,
+    },
+    {
+      path: '/manage-profile',
+      name: 'ManageProfilePage',
+      auth: true,
+      component: ManageProfilePage,
+      loadData: pageDataLoadingAPI.ManageProfilePage.loadData,
     },
     {
       path: '/p/:pageId',

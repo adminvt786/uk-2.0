@@ -41,6 +41,17 @@ export const getListingsById = (state, listingIds) => {
   return denormalisedEntities(entities, resources, throwIfNotFound);
 };
 
+export const getOwnProfileListingById = (state, listingIds) => {
+  const { entities } = state.marketplaceData;
+  const resources = listingIds.map(id => ({
+    id,
+    type: 'ownListing',
+  }));
+  const throwIfNotFound = false;
+  return denormalisedEntities(entities, resources, throwIfNotFound);
+};
+
+
 /**
  * Get the denormalised entities from the given entity references.
  *

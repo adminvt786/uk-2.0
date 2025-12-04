@@ -23,6 +23,7 @@ import {
   loadData as TransactionPageLoader,
   setInitialValues as TransactionPageInitialValues,
 } from './TransactionPage/TransactionPage.duck';
+import { loadData as ManageProfilePageLoader } from './ManageProfilePage/ManageProfilePage.duck';
 
 const getPageDataLoadingAPI = () => {
   return {
@@ -83,6 +84,9 @@ const getPageDataLoadingAPI = () => {
     TransactionPage: {
       loadData: TransactionPageLoader,
       setInitialValues: TransactionPageInitialValues,
+    },
+    ManageProfilePage: {
+      loadData: ManageProfilePageLoader,
     },
   };
 };

@@ -1,0 +1,107 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 16px 0;
+}
+
+.stepInfo {
+  margin-bottom: 16px;
+}
+
+.stepText {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--colorGrey700);
+
+  @media (--viewportMedium) {
+    font-size: 16px;
+  }
+}
+
+.progressBar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  flex: 1;
+
+  &:last-child {
+    flex: 0;
+  }
+}
+
+.stepDot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--colorGrey100);
+  border: 2px solid var(--colorGrey300);
+  transition: all 0.2s ease-in-out;
+
+  @media (--viewportMedium) {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.stepNumber {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--colorGrey500);
+
+  @media (--viewportMedium) {
+    font-size: 16px;
+  }
+}
+
+.checkmark {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--colorWhite);
+
+  @media (--viewportMedium) {
+    font-size: 16px;
+  }
+}
+
+.stepActive .stepDot {
+  background-color: var(--marketplaceColor);
+  border-color: var(--marketplaceColor);
+}
+
+.stepActive .stepNumber {
+  color: var(--colorWhite);
+}
+
+.stepCompleted .stepDot {
+  background-color: var(--colorSuccess);
+  border-color: var(--colorSuccess);
+}
+
+.stepLine {
+  flex: 1;
+  height: 2px;
+  background-color: var(--colorGrey300);
+  margin: 0 8px;
+
+  @media (--viewportMedium) {
+    margin: 0 12px;
+  }
+}
+
+.stepLineCompleted {
+  background-color: var(--colorSuccess);
+}

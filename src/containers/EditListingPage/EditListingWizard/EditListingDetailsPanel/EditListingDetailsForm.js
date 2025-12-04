@@ -198,7 +198,7 @@ const CategoryField = props => {
   );
 };
 
-const FieldSelectCategory = props => {
+export const FieldSelectCategory = props => {
   useEffect(() => {
     checkIfInitialValuesExist();
   }, []);
@@ -242,7 +242,7 @@ const FieldSelectCategory = props => {
 };
 
 // Add collect data for listing fields (both publicData and privateData) based on configuration
-const AddListingFields = props => {
+export const AddListingFields = props => {
   const { listingType, listingFieldsConfig, selectedCategories, formId, intl } = props;
   const targetCategoryIds = Object.values(selectedCategories);
 
