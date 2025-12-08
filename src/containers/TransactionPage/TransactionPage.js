@@ -377,7 +377,7 @@ export const TransactionPageComponent = props => {
       bookingStartTime,
       bookingEndTime,
       priceVariantName, // relevant for bookings
-      quantity: quantityRaw,
+      quantity: quantityRaw = 1,
       seats: seatsRaw,
       deliveryMethod,
       ...otherOrderData
@@ -757,6 +757,8 @@ export const TransactionPageComponent = props => {
           marketplaceCurrency={config.currency}
           dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
           marketplaceName={config.marketplaceName}
+          fromTxPage={true}
+          selectedPackageId={transaction?.attributes?.protectedData?.packageId}
         />
       }
     />

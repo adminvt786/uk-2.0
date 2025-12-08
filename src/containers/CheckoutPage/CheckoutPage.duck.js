@@ -288,6 +288,7 @@ const speculateTransactionPayloadCreator = (
 
   const {
     deliveryMethod,
+    selectedPackageId,
     priceVariantName,
     quantity,
     bookingDates,
@@ -300,6 +301,7 @@ const speculateTransactionPayloadCreator = (
   const orderData = {
     ...(deliveryMethod ? { deliveryMethod } : {}),
     ...(priceVariantName ? { priceVariantName } : {}),
+    ...(selectedPackageId ? { selectedPackageId } : {}),
   };
 
   // Parameters for Marketplace API

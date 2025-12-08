@@ -1,20 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 
+import { PURCHASE_PROCESS_NAME } from '../../../transactions/transaction';
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
-import { numberAtLeast, required } from '../../../util/validators';
-import { PURCHASE_PROCESS_NAME } from '../../../transactions/transaction';
 
-import {
-  Form,
-  FieldSelect,
-  FieldTextInput,
-  InlineTextButton,
-  PrimaryButton,
-  H3,
-  H6,
-} from '../../../components';
+import { Form, H6, InlineTextButton, PrimaryButton } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 
@@ -22,91 +13,21 @@ import FetchLineItemsError from '../FetchLineItemsError/FetchLineItemsError.js';
 
 import css from './ProductOrderForm.module.css';
 
-// Browsers can't render huge number of select options.
-// (stock is shown inside select element)
-// Note: input element could allow ordering bigger quantities
-const MAX_QUANTITY_FOR_DROPDOWN = 100;
-
 const handleFetchLineItems = ({
-  quantity,
-  deliveryMethod,
-  displayDeliveryMethod,
+  selectedPackageId,
   listingId,
   isOwnListing,
   fetchLineItemsInProgress,
   onFetchTransactionLineItems,
 }) => {
-  const stockReservationQuantity = Number.parseInt(quantity, 10);
-  const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
   const isBrowser = typeof window !== 'undefined';
-  if (
-    isBrowser &&
-    stockReservationQuantity &&
-    (!displayDeliveryMethod || deliveryMethod) &&
-    !fetchLineItemsInProgress
-  ) {
+  if (isBrowser && selectedPackageId && !fetchLineItemsInProgress) {
     onFetchTransactionLineItems({
-      orderData: { stockReservationQuantity, ...deliveryMethodMaybe },
+      orderData: { selectedPackageId, stockReservationQuantity: 1 },
       listingId,
       isOwnListing,
     });
   }
-};
-
-const DeliveryMethodMaybe = props => {
-  const {
-    displayDeliveryMethod,
-    hasMultipleDeliveryMethods,
-    deliveryMethod,
-    hasStock,
-    formId,
-    intl,
-  } = props;
-  const showDeliveryMethodSelector = displayDeliveryMethod && hasMultipleDeliveryMethods;
-  const showSingleDeliveryMethod = displayDeliveryMethod && deliveryMethod;
-  return !hasStock ? null : showDeliveryMethodSelector ? (
-    <FieldSelect
-      id={`${formId}.deliveryMethod`}
-      className={css.deliveryField}
-      name="deliveryMethod"
-      label={intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
-      validate={required(intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodRequired' }))}
-    >
-      <option disabled value="">
-        {intl.formatMessage({ id: 'ProductOrderForm.selectDeliveryMethodOption' })}
-      </option>
-      <option value={'pickup'}>
-        {intl.formatMessage({ id: 'ProductOrderForm.pickupOption' })}
-      </option>
-      <option value={'shipping'}>
-        {intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })}
-      </option>
-    </FieldSelect>
-  ) : showSingleDeliveryMethod ? (
-    <div className={css.deliveryField}>
-      <H3 rootClassName={css.singleDeliveryMethodLabel}>
-        {intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
-      </H3>
-      <p className={css.singleDeliveryMethodSelected}>
-        {deliveryMethod === 'shipping'
-          ? intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })
-          : intl.formatMessage({ id: 'ProductOrderForm.pickupOption' })}
-      </p>
-      <FieldTextInput
-        id={`${formId}.deliveryMethod`}
-        className={css.deliveryField}
-        name="deliveryMethod"
-        type="hidden"
-      />
-    </div>
-  ) : (
-    <FieldTextInput
-      id={`${formId}.deliveryMethod`}
-      className={css.deliveryField}
-      name="deliveryMethod"
-      type="hidden"
-    />
-  );
 };
 
 const renderForm = formRenderProps => {
@@ -115,14 +36,7 @@ const renderForm = formRenderProps => {
     // FormRenderProps from final-form
     handleSubmit,
     form: formApi,
-
-    // Custom props passed to the form component
-    intl,
-    formId,
     currentStock,
-    allowOrdersOfMultipleItems,
-    hasMultipleDeliveryMethods,
-    displayDeliveryMethod,
     listingId,
     isOwnListing,
     onFetchTransactionLineItems,
@@ -133,26 +47,21 @@ const renderForm = formRenderProps => {
     price,
     payoutDetailsWarning,
     marketplaceName,
-    values,
+    fromTxPage,
+    selectedPackageId,
   } = formRenderProps;
 
   // Note: don't add custom logic before useEffect
   useEffect(() => {
     setMounted(true);
 
-    // Side-effect: fetch line-items after mounting if possible
-    const { quantity, deliveryMethod } = values;
-    if (quantity && !formRenderProps.hasMultipleDeliveryMethods) {
-      handleFetchLineItems({
-        quantity,
-        deliveryMethod,
-        displayDeliveryMethod,
-        listingId,
-        isOwnListing,
-        fetchLineItemsInProgress,
-        onFetchTransactionLineItems,
-      });
-    }
+    handleFetchLineItems({
+      selectedPackageId,
+      listingId,
+      isOwnListing,
+      fetchLineItemsInProgress,
+      onFetchTransactionLineItems,
+    });
   }, []);
 
   // If form values change, update line-items for the order breakdown
@@ -173,20 +82,9 @@ const renderForm = formRenderProps => {
   // In case quantity and deliveryMethod are missing focus on that select-input.
   // Otherwise continue with the default handleSubmit function.
   const handleFormSubmit = e => {
-    const { quantity, deliveryMethod } = values || {};
-    if (!quantity || quantity < 1) {
-      e.preventDefault();
-      // Blur event will show validator message
-      formApi.blur('quantity');
-      formApi.focus('quantity');
-    } else if (displayDeliveryMethod && !deliveryMethod) {
-      e.preventDefault();
-      // Blur event will show validator message
-      formApi.blur('deliveryMethod');
-      formApi.focus('deliveryMethod');
-    } else {
-      handleSubmit(e);
-    }
+    formApi.change('selectedPackageId', selectedPackageId);
+    
+    handleSubmit(e);
   };
 
   const breakdownData = {};
@@ -205,59 +103,14 @@ const renderForm = formRenderProps => {
       <FormattedMessage id="ProductOrderForm.finePrintNoStockLinkText" />
     </InlineTextButton>
   );
-  const quantityRequiredMsg = intl.formatMessage({ id: 'ProductOrderForm.quantityRequired' });
 
-  // Listing is out of stock if currentStock is zero.
-  // Undefined/null stock means that stock has never been set.
-  const hasNoStockLeft = typeof currentStock != null && currentStock === 0;
   const hasStock = currentStock && currentStock > 0;
-  const hasOneItemLeft = currentStock === 1;
-  const selectableStock =
-    currentStock > MAX_QUANTITY_FOR_DROPDOWN ? MAX_QUANTITY_FOR_DROPDOWN : currentStock;
-  const quantities = hasStock ? [...Array(selectableStock).keys()].map(i => i + 1) : [];
 
   const submitInProgress = fetchLineItemsInProgress;
-  const submitDisabled = !hasStock;
 
   return (
     <Form onSubmit={handleFormSubmit}>
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
-      {hasNoStockLeft ? null : hasOneItemLeft || !allowOrdersOfMultipleItems ? (
-        <FieldTextInput
-          id={`${formId}.quantity`}
-          className={css.quantityField}
-          name="quantity"
-          type="hidden"
-          validate={numberAtLeast(quantityRequiredMsg, 1)}
-        />
-      ) : (
-        <FieldSelect
-          id={`${formId}.quantity`}
-          className={css.quantityField}
-          name="quantity"
-          disabled={!hasStock}
-          label={intl.formatMessage({ id: 'ProductOrderForm.quantityLabel' })}
-          validate={numberAtLeast(quantityRequiredMsg, 1)}
-        >
-          <option disabled value="">
-            {intl.formatMessage({ id: 'ProductOrderForm.selectQuantityOption' })}
-          </option>
-          {quantities.map(quantity => (
-            <option key={quantity} value={quantity}>
-              {intl.formatMessage({ id: 'ProductOrderForm.quantityOption' }, { quantity })}
-            </option>
-          ))}
-        </FieldSelect>
-      )}
-
-      <DeliveryMethodMaybe
-        displayDeliveryMethod={displayDeliveryMethod}
-        hasMultipleDeliveryMethods={hasMultipleDeliveryMethods}
-        deliveryMethod={values?.deliveryMethod}
-        hasStock={hasStock}
-        formId={formId}
-        intl={intl}
-      />
 
       {showBreakdown ? (
         <div className={css.breakdownWrapper}>
@@ -278,9 +131,15 @@ const renderForm = formRenderProps => {
       <FetchLineItemsError error={fetchLineItemsError} />
 
       <div className={css.submitButton}>
-        <PrimaryButton type="button" inProgress={submitInProgress} onClick={onClickContactUser}>
-          <FormattedMessage id="ProductOrderForm.contactButton" />
-        </PrimaryButton>
+        {fromTxPage ? (
+          <PrimaryButton type="submit" inProgress={submitInProgress}>
+            <FormattedMessage id="ProductOrderForm.ctaButton" />
+          </PrimaryButton>
+        ) : (
+          <PrimaryButton type="button" inProgress={submitInProgress} onClick={onClickContactUser}>
+            <FormattedMessage id="ProductOrderForm.contactButton" />
+          </PrimaryButton>
+        )}
       </div>
       <p className={css.finePrint}>
         {payoutDetailsWarning ? (

@@ -18,36 +18,11 @@ const { Money } = types;
 const getItemQuantityAndLineItems = (orderData, publicData, currency) => {
   // Check delivery method and shipping prices
   const quantity = orderData ? orderData.stockReservationQuantity : null;
-  const deliveryMethod = orderData && orderData.deliveryMethod;
-  const isShipping = deliveryMethod === 'shipping';
-  const isPickup = deliveryMethod === 'pickup';
-  const { shippingPriceInSubunitsOneItem, shippingPriceInSubunitsAdditionalItems } =
-    publicData || {};
+  const packageId = orderData ? orderData.selectedPackageId : null;
+  const selectedPackage = publicData?.packages?.find(pkg => pkg.id === packageId);
+  const packagePrice = selectedPackage ? selectedPackage.price : null;
 
-  // Calculate shipping fee if applicable
-  const shippingFee = isShipping
-    ? calculateShippingFee(
-        shippingPriceInSubunitsOneItem,
-        shippingPriceInSubunitsAdditionalItems,
-        currency,
-        quantity
-      )
-    : null;
-
-  // Add line-item for given delivery method.
-  // Note: by default, pickup considered as free and, therefore, we don't add pickup fee line-item
-  const deliveryLineItem = !!shippingFee
-    ? [
-        {
-          code: 'line-item/shipping-fee',
-          unitPrice: shippingFee,
-          quantity: 1,
-          includeFor: ['customer', 'provider'],
-        },
-      ]
-    : [];
-
-  return { quantity, extraLineItems: deliveryLineItem };
+  return { quantity, extraLineItems: [], packagePrice };
 };
 
 const getOfferQuantityAndLineItems = orderData => {
@@ -188,7 +163,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
       ? getOfferQuantityAndLineItems(orderData)
       : {};
 
-  const { quantity, units, seats, extraLineItems } = quantityAndExtraLineItems;
+  const { quantity, units, seats, extraLineItems, packagePrice } = quantityAndExtraLineItems;
 
   // Throw error if there is no quantity information given
   if (!quantity && !(units && seats)) {
@@ -222,7 +197,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const quantityOrSeats = !!units && !!seats ? { units, seats } : { quantity };
   const order = {
     code,
-    unitPrice,
+    unitPrice: packagePrice ? new Money(packagePrice, currency) : unitPrice,
     ...quantityOrSeats,
     includeFor: ['customer', 'provider'],
   };

@@ -14,6 +14,7 @@ import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
 import { stateDataShape } from '../TransactionPage.stateData';
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
 import TextMaybe from '../TextMaybe/TextMaybe';
+import PackageDetailsMaybe from '../PackageDetailsMaybe/PackageDetailsMaybe';
 
 // These are internal components that make this file more readable.
 import BreakdownMaybe from './BreakdownMaybe';
@@ -266,6 +267,13 @@ export class TransactionPanelComponent extends Component {
               text={protectedData?.inquiryMessage}
               isOwn={isCustomer}
               showText={isInquiryProcess}
+            />
+
+            <PackageDetailsMaybe
+              heading={intl.formatMessage({ id: 'TransactionPanel.selectedPackageHeading' })}
+              packageId={protectedData?.packageId}
+              listing={listing}
+              intl={intl}
             />
 
             {requestQuote}

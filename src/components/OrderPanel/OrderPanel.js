@@ -306,6 +306,8 @@ const OrderPanel = props => {
     payoutDetailsWarning,
     showListingImage,
     isCreator,
+    fromTxPage,
+    selectedPackageId,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
@@ -452,15 +454,17 @@ const OrderPanel = props => {
           </div>
         )}
 
-        <PriceMaybe
-          price={price}
-          publicData={publicData}
-          validListingTypes={validListingTypes}
-          intl={intl}
-          marketplaceCurrency={marketplaceCurrency}
-        />
+        {!fromTxPage && (
+          <PriceMaybe
+            price={price}
+            publicData={publicData}
+            validListingTypes={validListingTypes}
+            intl={intl}
+            marketplaceCurrency={marketplaceCurrency}
+          />
+        )}
 
-        {!isCreator && (
+        {!isCreator && !fromTxPage && (
           <div className={css.author}>
             <AvatarSmall user={author} className={css.providerAvatar} />
             <span className={css.providerNameLinked}>
@@ -532,6 +536,8 @@ const OrderPanel = props => {
             shippingEnabled={shippingEnabled && displayShipping}
             displayDeliveryMethod={displayPickup || displayShipping}
             onContactUser={onContactUser}
+            fromTxPage={fromTxPage}
+            selectedPackageId={selectedPackageId}
             {...sharedProps}
           />
         ) : showInquiryForm ? (

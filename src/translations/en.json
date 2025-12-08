@@ -1475,5 +1475,6 @@
   "InquiryForm.packagePlaceholder": "Choose a package to inquire about",
   "InquiryForm.packageRequired": "Please select a package",
   "ProductOrderForm.contactButton": "Contact service provider",
-  "OrderPanel.contactButton": "Contact service provider"
+  "OrderPanel.contactButton": "Contact service provider",
+   "TransactionPanel.selectedPackageHeading": "Selected package"
 }
