@@ -146,9 +146,9 @@ export const handleSubmitInquiry = parameters => values => {
 
   const listingId = new UUID(params.id);
   const listing = getListing(listingId);
-  const { message } = values;
+  const { message, packageId } = values;
 
-  onSendInquiry(listing, message.trim())
+  onSendInquiry(listing, message.trim(), packageId)
     .then(txId => {
       setInquiryModalOpen(false);
 

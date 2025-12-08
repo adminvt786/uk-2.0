@@ -278,12 +278,8 @@ const renderForm = formRenderProps => {
       <FetchLineItemsError error={fetchLineItemsError} />
 
       <div className={css.submitButton}>
-        <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
-          {hasStock ? (
-            <FormattedMessage id="ProductOrderForm.ctaButton" />
-          ) : (
-            <FormattedMessage id="ProductOrderForm.ctaButtonNoStock" />
-          )}
+        <PrimaryButton type="button" inProgress={submitInProgress} onClick={onClickContactUser}>
+          <FormattedMessage id="ProductOrderForm.contactButton" />
         </PrimaryButton>
       </div>
       <p className={css.finePrint}>
@@ -293,7 +289,7 @@ const renderForm = formRenderProps => {
           <FormattedMessage id="ProductOrderForm.ownListing" />
         ) : hasStock ? (
           <FormattedMessage id="ProductOrderForm.finePrint" />
-        ) : showContactUser ? (
+        ) : false && showContactUser ? (
           <FormattedMessage id="ProductOrderForm.finePrintNoStock" values={{ contactSellerLink }} />
         ) : null}
       </p>

@@ -8,6 +8,7 @@ import { propTypes } from '../../../util/types';
 
 import {
   ErrorMessage,
+  FieldSelect,
   FieldTextInput,
   Form,
   Heading,
@@ -47,6 +48,8 @@ const InquiryForm = props => (
         listingTitle,
         authorDisplayName,
         sendInquiryError,
+        isCreator,
+        packages,
       } = fieldRenderProps;
 
       const intl = useIntl();
@@ -67,6 +70,14 @@ const InquiryForm = props => (
       });
       const messageRequired = validators.requiredAndNonEmptyString(messageRequiredMessage);
 
+      // Package selection for creators
+      const packageLabel = intl.formatMessage({ id: 'InquiryForm.packageLabel' });
+      const packagePlaceholder = intl.formatMessage({ id: 'InquiryForm.packagePlaceholder' });
+      const packageRequiredMessage = intl.formatMessage({ id: 'InquiryForm.packageRequired' });
+      const packageRequired = validators.required(packageRequiredMessage);
+
+      const hasPackages = isCreator && packages && packages.length > 0;
+
       const classes = classNames(rootClassName || css.root, className);
       const submitInProgress = inProgress;
       const submitDisabled = submitInProgress;
@@ -77,6 +88,26 @@ const InquiryForm = props => (
           <Heading as="h2" rootClassName={css.heading}>
             <FormattedMessage id="InquiryForm.heading" values={{ listingTitle }} />
           </Heading>
+
+          {hasPackages && (
+            <FieldSelect
+              className={css.field}
+              name="packageId"
+              id={formId ? `${formId}.packageId` : 'packageId'}
+              label={packageLabel}
+              validate={packageRequired}
+            >
+              <option value="" disabled>
+                {packagePlaceholder}
+              </option>
+              {packages.map(pkg => (
+                <option key={pkg.id} value={pkg.id}>
+                  {pkg.title}
+                </option>
+              ))}
+            </FieldSelect>
+          )}
+
           <FieldTextInput
             className={css.field}
             type="textarea"

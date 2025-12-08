@@ -63,7 +63,7 @@ const getDefaultPackages = intl => [
 ];
 
 // Method options for the select field
-const METHOD_OPTIONS = [
+export const METHOD_OPTIONS = [
   { key: 'in-person', label: 'In-Person' },
   { key: 'online-content-promotion', label: 'Online / Content Promotion' },
 ];

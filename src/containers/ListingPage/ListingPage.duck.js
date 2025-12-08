@@ -208,7 +208,7 @@ export const fetchTimeSlots = (listingId, start, end, timeZone, options) => (
 // Send Inquiry //
 //////////////////
 const sendInquiryPayloadCreator = (
-  { listing, message },
+  { listing, message, packageId },
   { dispatch, rejectWithValue, extra: sdk }
 ) => {
   const processAlias = listing?.attributes?.publicData?.transactionProcessAlias;
@@ -227,8 +227,9 @@ const sendInquiryPayloadCreator = (
   const bodyParams = {
     transition: transitions.INQUIRE,
     processAlias,
-    params: { listingId },
+    params: { listingId, protectedData: { packageId } },
   };
+
   return sdk.transactions
     .initiate(bodyParams)
     .then(response => {
@@ -250,8 +251,8 @@ export const sendInquiryThunk = createAsyncThunk(
   sendInquiryPayloadCreator
 );
 // Backward compatible wrapper for the thunk
-export const sendInquiry = (listing, message) => (dispatch, getState, sdk) => {
-  return dispatch(sendInquiryThunk({ listing, message })).unwrap();
+export const sendInquiry = (listing, message, packageId) => (dispatch, getState, sdk) => {
+  return dispatch(sendInquiryThunk({ listing, message, packageId })).unwrap();
 };
 
 // Helper function for loadData call.

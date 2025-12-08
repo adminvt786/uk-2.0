@@ -1469,5 +1469,11 @@
   "ProfileVerificationPanel.or": "or",
   "ProfileVerificationPanel.publishProfile": "Publish Profile",
   "ProfileVerificationPanel.goToProfile": "Go to Profile",
-  "ProfileVerificationPanel.publishNote": "You can always get verified later from your profile settings."
+  "ProfileVerificationPanel.publishNote": "You can always get verified later from your profile settings.",
+  "SectionPackages.title": "Service Packages",
+  "InquiryForm.packageLabel": "Select a package",
+  "InquiryForm.packagePlaceholder": "Choose a package to inquire about",
+  "InquiryForm.packageRequired": "Please select a package",
+  "ProductOrderForm.contactButton": "Contact service provider",
+  "OrderPanel.contactButton": "Contact service provider"
 }

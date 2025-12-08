@@ -25,7 +25,11 @@ import {
   isErrorUserPendingApproval,
   isForbiddenError,
 } from '../../util/errors.js';
-import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers.js';
+import {
+  hasPermissionToViewData,
+  isCreatorUserType,
+  isUserAuthorized,
+} from '../../util/userHelpers.js';
 import { requireListingImage } from '../../util/configHelpers';
 import {
   ensureListing,
@@ -57,6 +61,7 @@ import {
   NamedRedirect,
   OrderPanel,
   LayoutSingleColumn,
+  Heading,
 } from '../../components';
 
 // Related components and modules
@@ -90,8 +95,10 @@ import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
 import SectionGallery from './SectionGallery';
 import CustomListingFields from './CustomListingFields';
+import SectionPackages from './SectionPackages/SectionPackages';
 
 import css from './ListingPage.module.css';
+import UserCard from './UserCard/UserCard.js';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
@@ -325,6 +332,8 @@ export const ListingPageComponent = props => {
   const noIndexMaybe =
     currentListing.attributes.state === LISTING_STATE_CLOSED ? { noIndex: true } : {};
 
+  const isCreator = currentListing?.author ? isCreatorUserType(currentListing.author) : false;
+
   return (
     <Page
       title={schemaTitle}
@@ -393,7 +402,25 @@ export const ListingPageComponent = props => {
                 </H3>
               )}
             </div>
-            <SectionTextMaybe text={description} showAsIngress />
+
+            {isCreator && (
+              <section id="author" className={css.sectionAuthor}>
+                <UserCard
+                  user={currentListing.author}
+                  currentUser={currentUser}
+                  onContactUser={onContactUser}
+                  showContact={false}
+                />
+              </section>
+            )}
+
+            {!isCreator && <SectionTextMaybe text={description} showAsIngress />}
+
+            <SectionPackages
+              packages={publicData.packages}
+              intl={intl}
+              marketplaceCurrency={config.currency}
+            />
 
             <CustomListingFields
               publicData={publicData}
@@ -422,6 +449,7 @@ export const ListingPageComponent = props => {
               onSubmitInquiry={onSubmitInquiry}
               currentUser={currentUser}
               onManageDisableScrolling={onManageDisableScrolling}
+              isCreator={isCreator}
             />
           </div>
           <div className={css.orderColumnForProductLayout}>
@@ -458,6 +486,7 @@ export const ListingPageComponent = props => {
               dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
               marketplaceName={config.marketplaceName}
               showListingImage={showListingImage}
+              isCreator={isCreator}
             />
           </div>
         </div>
@@ -613,7 +642,8 @@ const mapDispatchToProps = dispatch => ({
   callSetInitialValues: (setInitialValues, values, saveToSessionStorage) =>
     dispatch(setInitialValues(values, saveToSessionStorage)),
   onFetchTransactionLineItems: params => dispatch(fetchTransactionLineItems(params)), // for OrderPanel
-  onSendInquiry: (listing, message) => dispatch(sendInquiry(listing, message)),
+  onSendInquiry: (listing, message, packageId) =>
+    dispatch(sendInquiry(listing, message, packageId)),
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
   onFetchTimeSlots: (listingId, start, end, timeZone, options) =>
     dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)), // for OrderPanel

@@ -1,4 +1,3 @@
-import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
 import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from '../../transactions/transaction';
 
@@ -23,10 +22,33 @@ const SectionAuthorMaybe = props => {
     onSubmitInquiry,
     currentUser,
     onManageDisableScrolling,
+    isCreator,
   } = props;
 
-  if (!listing.author) {
-    return null;
+  if (!listing.author || isCreator) {
+    return (
+      <Modal
+        id="ListingPage.inquiry"
+        contentClassName={css.inquiryModalContent}
+        isOpen={isInquiryModalOpen}
+        onClose={onCloseInquiryModal}
+        usePortal
+        onManageDisableScrolling={onManageDisableScrolling}
+        focusElementId={CONTACT_USER_LINK}
+      >
+        <InquiryForm
+          className={css.inquiryForm}
+          submitButtonWrapperClassName={css.inquirySubmitButtonWrapper}
+          listingTitle={title}
+          authorDisplayName={authorDisplayName}
+          sendInquiryError={sendInquiryError}
+          onSubmit={onSubmitInquiry}
+          inProgress={sendInquiryInProgress}
+          isCreator={isCreator}
+          packages={listing?.attributes?.publicData?.packages}
+        />
+      </Modal>
+    );
   }
 
   const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias || '';

@@ -273,3 +273,6 @@ export const getCurrentUserTypeRoles = (config, currentUser) => {
 
 export const isCreatorUserType = currentUser =>
   currentUser?.attributes?.profile?.publicData?.userType === 'creator';
+
+export const isHotelUserType = currentUser =>
+  currentUser?.attributes?.profile?.publicData?.userType === 'travelbrand';

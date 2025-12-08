@@ -305,6 +305,7 @@ const OrderPanel = props => {
     fetchLineItemsError,
     payoutDetailsWarning,
     showListingImage,
+    isCreator,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
@@ -347,8 +348,8 @@ const OrderPanel = props => {
 
   // Show form only when stock is fully loaded. This avoids "Out of stock" UI by
   // default before all data has been downloaded.
-  const showProductOrderForm =
-    mounted && shouldHavePurchase && !isClosed && typeof currentStock === 'number';
+  const showProductOrderForm = mounted && shouldHavePurchase && !isClosed;
+  // && typeof currentStock === 'number'
 
   const showInquiryForm = mounted && !isClosed && isInquiry;
   // if listing is a request, we show the negotiation form (reverse negotiation). User (provider) needs to make an offer first.
@@ -459,15 +460,17 @@ const OrderPanel = props => {
           marketplaceCurrency={marketplaceCurrency}
         />
 
-        <div className={css.author}>
-          <AvatarSmall user={author} className={css.providerAvatar} />
-          <span className={css.providerNameLinked}>
-            <FormattedMessage id="OrderPanel.author" values={{ name: authorLink }} />
-          </span>
-          <span className={css.providerNamePlain}>
-            <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
-          </span>
-        </div>
+        {!isCreator && (
+          <div className={css.author}>
+            <AvatarSmall user={author} className={css.providerAvatar} />
+            <span className={css.providerNameLinked}>
+              <FormattedMessage id="OrderPanel.author" values={{ name: authorLink }} />
+            </span>
+            <span className={css.providerNamePlain}>
+              <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
+            </span>
+          </div>
+        )}
 
         {showPriceMissing ? (
           <PriceMissing />
@@ -577,17 +580,23 @@ const OrderPanel = props => {
         ) : (
           <PrimaryButton
             id={ORDER_PANEL_SUBMIT_BUTTON_ID}
-            onClick={handleSubmit(
-              isOwnListing,
-              isClosed,
-              showInquiryForm || showNegotiationForm,
-              onSubmit,
-              history,
-              location
-            )}
-            disabled={isOutOfStock}
+            onClick={
+              isCreator
+                ? onContactUser
+                : handleSubmit(
+                    isOwnListing,
+                    isClosed,
+                    showInquiryForm || showNegotiationForm,
+                    onSubmit,
+                    history,
+                    location
+                  )
+            }
+            disabled={isCreator ? false : isOutOfStock}
           >
-            {isBooking ? (
+            {isCreator ? (
+              <FormattedMessage id="OrderPanel.contactButton" />
+            ) : isBooking ? (
               <FormattedMessage id="OrderPanel.ctaButtonMessageBooking" />
             ) : isOutOfStock ? (
               <FormattedMessage id="OrderPanel.ctaButtonMessageNoStock" />

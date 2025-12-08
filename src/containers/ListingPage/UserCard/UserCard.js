@@ -10,6 +10,7 @@ import { propTypes } from '../../../util/types';
 import { AvatarLarge, NamedLink, InlineTextButton } from '../../../components';
 
 import css from './UserCard.module.css';
+import { isCreatorUserType } from '../../../util/userHelpers';
 
 // Approximated collapsed size so that there are ~three lines of text
 // in the desktop layout in the author section of the ListingPage.
@@ -90,6 +91,7 @@ const UserCard = props => {
     showContact = true,
     contactLinkId = 'contactUserLink',
   } = props;
+  const isCreator = isCreatorUserType(user);
 
   const userIsCurrentUser = user && user.type === 'currentUser';
   const ensuredUser = userIsCurrentUser ? ensureCurrentUser(user) : ensureUser(user);
@@ -125,17 +127,17 @@ const UserCard = props => {
     </InlineTextButton>
   ) : null;
 
-  const editProfileMobile = (
+  const editProfileMobile = !isCreator ? (
     <span className={css.editProfileMobile}>
       <span className={css.linkSeparator}>•</span>
       <NamedLink name="ProfileSettingsPage">
         <FormattedMessage id="ListingPage.editProfileLink" />
       </NamedLink>
     </span>
-  );
+  ) : null;
 
   const editProfileDesktop =
-    mounted && isCurrentUser ? (
+    mounted && isCurrentUser && !isCreator ? (
       <NamedLink className={css.editProfileDesktop} name="ProfileSettingsPage">
         <FormattedMessage id="ListingPage.editProfileLink" />
       </NamedLink>
@@ -143,9 +145,11 @@ const UserCard = props => {
 
   const links = ensuredUser.id ? (
     <p className={linkClasses}>
-      <NamedLink className={css.link} name="ProfilePage" params={{ id: ensuredUser.id.uuid }}>
-        <FormattedMessage id="UserCard.viewProfileLink" />
-      </NamedLink>
+      {!isCreator && (
+        <NamedLink className={css.link} name="ProfilePage" params={{ id: ensuredUser.id.uuid }}>
+          <FormattedMessage id="UserCard.viewProfileLink" />
+        </NamedLink>
+      )}
       {separator}
       {mounted && isCurrentUser ? editProfileMobile : contact}
     </p>
@@ -154,7 +158,7 @@ const UserCard = props => {
   return (
     <div className={classes}>
       <div className={css.content}>
-        <AvatarLarge className={css.avatar} user={user} />
+        <AvatarLarge className={css.avatar} user={user} disableProfileLink={true} />
         <div className={css.info}>
           <div className={css.headingRow}>
             <FormattedMessage id="UserCard.heading" values={{ name: displayName }} />

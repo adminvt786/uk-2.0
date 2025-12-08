@@ -28,6 +28,7 @@ import { pickCustomFieldProps } from '../../util/fieldHelpers';
 import {
   getCurrentUserTypeRoles,
   hasPermissionToViewData,
+  isCreatorUserType,
   isUserAuthorized,
 } from '../../util/userHelpers';
 import { richText } from '../../util/richText';
@@ -57,6 +58,9 @@ import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionTextMaybe from './SectionTextMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
 import SectionYoutubeVideoMaybe from './SectionYoutubeVideoMaybe';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { useHistory } from 'react-router-dom';
+import { pathByRouteName } from '../../util/routes';
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
@@ -328,12 +332,18 @@ export const MainContent = props => {
  */
 export const ProfilePageComponent = props => {
   const config = useConfiguration();
+  const routeConfiguration = useRouteConfiguration();
+  const history = useHistory();
   const intl = useIntl();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+
+    if (props.user && isCreatorUserType(props.user)) {
+      history.push(pathByRouteName('LandingPage', routeConfiguration, {}));
+    }
+  }, [props.user]);
 
   const {
     scrollingDisabled,
