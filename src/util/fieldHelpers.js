@@ -84,7 +84,7 @@ export const getFieldValue = (data, key) => {
  * @param {Array} categoryLevelOptions array of nested category structure
  * @returns pick valid prefixed properties
  */
-export const pickCategoryFields = (data, prefix, level, categoryLevelOptions = []) => {
+export const pickCategoryFields = (data = {}, prefix, level, categoryLevelOptions = []) => {
   const currentCategoryKey = `${prefix}${level}`;
   const currentCategoryValue = data[currentCategoryKey];
   const isCategoryLevelSet = typeof currentCategoryValue !== 'undefined';

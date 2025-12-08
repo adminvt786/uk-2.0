@@ -90,7 +90,7 @@ const ProfileWizard = props => {
         await dispatch(createProfileListingDraft({ data: values, config }));
       } else if (currentStep === 3 && isDraft) {
         // Publish on final step if still in draft
-        await dispatch(publishProfileListing({ listingId }));
+        await dispatch(publishProfileListing({ listingId, config }));
       } else if (listingId) {
         // Update existing listing for steps 1, 2, or published step 3
         await dispatch(updateProfileListing({ data: { ...values, id: listingId }, config }));

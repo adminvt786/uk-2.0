@@ -39,7 +39,6 @@ const ProfileVerificationPanel = props => {
   // Check if listing is in draft state
   const listingState = profileListing?.attributes?.state;
   const isDraft = listingState === 'draft';
-
   // Button text based on listing state
   const actionButtonText = isDraft
     ? intl.formatMessage({ id: 'ProfileVerificationPanel.publishProfile' })

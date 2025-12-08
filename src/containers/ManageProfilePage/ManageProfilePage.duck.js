@@ -112,6 +112,7 @@ export const createProfileListingDraft = createAsyncThunk(
   'ManageProfilePage/createProfileListingDraft',
   async ({ data, config }, { dispatch, extra: sdk, rejectWithValue }) => {
     try {
+      const { updateUser, profileImageId, ...rest } = data;
       const imageVariantInfo = getImageVariantInfo(config.layout.listingImage);
       const queryParams = {
         expand: true,
@@ -120,10 +121,11 @@ export const createProfileListingDraft = createAsyncThunk(
         ...imageVariantInfo.imageVariants,
       };
 
-      const res = await sdk.ownListings.createDraft(data, queryParams);
+      const res = await sdk.ownListings.createDraft(rest, queryParams);
 
       await dispatch(
         updateProfileThunk({
+          ...(!!profileImageId ? { profileImageId } : {}),
           displayName: data.title,
           bio: data.description,
           publicData: {
