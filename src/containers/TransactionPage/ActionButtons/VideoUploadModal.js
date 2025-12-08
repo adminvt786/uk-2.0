@@ -61,8 +61,8 @@ function VideoUploadModal(props) {
     try {
       // Fetch both URLs in parallel
       const [mainUpload, watermarkUpload] = await Promise.all([
-        getMuxUploadUrl({ txId: txId.uuid }),
-        getMuxUploadUrlWatermark({ txId: txId.uuid }),
+        getMuxUploadUrl({ txId }),
+        getMuxUploadUrlWatermark({ txId }),
       ]);
 
       // Stage 1: Upload main asset

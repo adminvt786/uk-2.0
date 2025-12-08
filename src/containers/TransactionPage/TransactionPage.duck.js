@@ -11,7 +11,7 @@ import {
   stringifyDateToISO8601,
 } from '../../util/dates';
 import { isTransactionsTransitionInvalidTransition, storableError } from '../../util/errors';
-import { transactionLineItems, transitionPrivileged } from '../../util/api';
+import { getMuxAsset, transactionLineItems, transitionPrivileged } from '../../util/api';
 import * as log from '../../util/log';
 import {
   updatedEntities,
@@ -26,6 +26,7 @@ import {
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUserNotifications } from '../../ducks/user.duck';
+import { transitions } from '../../transactions/transactionProcessPurchase';
 
 const { UUID } = sdkTypes;
 
@@ -313,7 +314,7 @@ export const fetchTransaction = (id, txRole, config) => dispatch => {
 ////////////////////
 // makeTransition //
 ////////////////////
-const makeTransitionPayloadCreator = (
+const makeTransitionPayloadCreator = async (
   { txId, transitionName, params },
   { dispatch, rejectWithValue, extra: sdk, getState }
 ) => {
@@ -335,8 +336,35 @@ const makeTransitionPayloadCreator = (
         expand: true,
       },
     });
+
+  let newParams = params || {};
+  if (
+    transitions.COMPLETE === transitionName ||
+    transitions.COMPLETE_AFTER_REPORT_A_PROBLEM === transitionName
+  ) {
+    const { submittedContent } = params.protectedData;
+
+    const originalId = submittedContent[submittedContent.length - 1].originalId;
+    const asset = await getMuxAsset({ uploadId: originalId, txId: txId.uuid });
+
+    const newSubmittedContent = submittedContent.map((elm, i) => {
+      if (i === submittedContent.length - 1) {
+        return { ...elm, status: 'approved', originalPlaybackId: asset.playback_id };
+      } else {
+        return elm;
+      }
+    });
+
+    newParams = {
+      protectedData: { submittedContent: newSubmittedContent },
+    };
+  }
+
   const normalTransition = () =>
-    sdk.transactions.transition({ id: txId, transition: transitionName, params }, { expand: true });
+    sdk.transactions.transition(
+      { id: txId, transition: transitionName, params: newParams },
+      { expand: true }
+    );
   const makeCall = process?.isPrivileged(transitionName) ? privilegedTransition : normalTransition;
 
   return makeCall()
