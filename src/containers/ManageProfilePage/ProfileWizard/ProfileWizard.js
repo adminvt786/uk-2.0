@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import classNames from 'classnames';
+import { useLocation, useHistory } from 'react-router-dom';
 
 // Import shared components
 import { H3 } from '../../../components';
@@ -8,12 +9,30 @@ import { H3 } from '../../../components';
 import ProfileStepIndicator from './ProfileStepIndicator/ProfileStepIndicator';
 import ProfileDetailsPanel from './ProfileDetailsStep/ProfileDetailsPanel';
 import ProfilePackagesPanel from './ProfilePackagesStep/ProfilePackagesPanel';
+import ProfileVerificationPanel from './ProfileVerificationStep/ProfileVerificationPanel';
 import css from './ProfileWizard.module.css';
 import { useDispatch } from 'react-redux';
-import { createProfileListingDraft, updateProfileListing } from '../ManageProfilePage.duck';
+import {
+  createProfileListingDraft,
+  publishProfileListing,
+  updateProfileListing,
+} from '../ManageProfilePage.duck';
 import { useConfiguration } from '../../../context/configurationContext';
 
 const TOTAL_STEPS = 3;
+
+/**
+ * Get the current step from URL params, defaulting to 1
+ * @param {string} search - URL search string
+ * @returns {number}
+ */
+const getStepFromParams = search => {
+  const params = new URLSearchParams(search);
+  const stepParam = params.get('step');
+  const step = stepParam ? parseInt(stepParam, 10) : 1;
+  // Ensure step is valid (between 1 and TOTAL_STEPS)
+  return step >= 1 && step <= TOTAL_STEPS ? step : 1;
+};
 
 /**
  * ProfileWizard component that manages the multi-step profile form.
@@ -33,12 +52,29 @@ const TOTAL_STEPS = 3;
 const ProfileWizard = props => {
   const { className, rootClassName, profileListing, updateInProgress, intl } = props;
   const config = useConfiguration();
-  const [currentStep, setCurrentStep] = useState(1);
+  const location = useLocation();
+  const history = useHistory();
+  const currentStep = getStepFromParams(location.search);
   const dispatch = useDispatch();
-  const isDraft = profileListing?.attributes?.state === 'draft';
-  const isPublished = profileListing?.attributes?.state === 'published';
+  const listingState = profileListing?.attributes?.state;
+  const isDraft = listingState === 'draft';
+  const isPublished = listingState === 'published';
+  const isPendingApproval = listingState === 'pendingApproval';
+
+  // Allow clicking on steps when listing is published or pending approval
+  const allowStepClick = isPublished || isPendingApproval;
 
   const classes = classNames(rootClassName || css.root, className);
+
+  /**
+   * Update the step in URL params
+   * @param {number} step
+   */
+  const setCurrentStep = step => {
+    const params = new URLSearchParams(location.search);
+    params.set('step', step.toString());
+    history.replace({ pathname: location.pathname, search: params.toString() });
+  };
 
   /**
    * Handle step submission - updates listing and moves to next step
@@ -46,25 +82,26 @@ const ProfileWizard = props => {
    */
   const handleStepSubmit = async values => {
     try {
-      if (currentStep === 1) {
-        if (isPublished || isDraft) {
-          await dispatch(
-            updateProfileListing({ data: { ...values, id: profileListing.id.uuid }, config })
-          );
-        } else {
-          await dispatch(createProfileListingDraft({ data: values, config }));
-        }
-      } else if (currentStep === 2) {
-        // Update listing with packages data
-        await dispatch(
-          updateProfileListing({ data: { ...values, id: profileListing.id.uuid }, config })
-        );
+      const listingId = profileListing?.id?.uuid;
+      const hasExistingListing = isPublished || isDraft;
+
+      if (currentStep === 1 && !hasExistingListing) {
+        // Create new draft if no listing exists
+        await dispatch(createProfileListingDraft({ data: values, config }));
+      } else if (currentStep === 3 && isDraft) {
+        // Publish on final step if still in draft
+        await dispatch(publishProfileListing({ listingId }));
+      } else if (listingId) {
+        // Update existing listing for steps 1, 2, or published step 3
+        await dispatch(updateProfileListing({ data: { ...values, id: listingId }, config }));
       }
 
       if (currentStep < TOTAL_STEPS) {
         setCurrentStep(currentStep + 1);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error('ProfileWizard step submission failed:', error);
+    }
   };
 
   /**
@@ -120,11 +157,8 @@ const ProfileWizard = props => {
           />
         );
       case 3:
-        // Placeholder for Step 3
         return (
-          <div className={css.stepPlaceholder}>
-            <p>{intl.formatMessage({ id: 'ProfileWizard.step3Placeholder' })}</p>
-          </div>
+          <ProfileVerificationPanel profileListing={profileListing} onSubmit={handleStepSubmit} />
         );
       default:
         return null;
@@ -133,7 +167,14 @@ const ProfileWizard = props => {
 
   return (
     <main className={classes}>
-      <ProfileStepIndicator currentStep={currentStep} totalSteps={TOTAL_STEPS} intl={intl} />
+      <ProfileStepIndicator
+        currentStep={currentStep}
+        totalSteps={TOTAL_STEPS}
+        intl={intl}
+        allowStepClick={allowStepClick}
+        onStepClick={setCurrentStep}
+        allStepsCompleted={allowStepClick}
+      />
 
       <H3 as="h1" className={css.stepTitle}>
         {getStepTitle()}

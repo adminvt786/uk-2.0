@@ -71,7 +71,7 @@ const priceData = (price, currency, intl) => {
   return {};
 };
 
-const createListingURL = (routes, listing) => {
+export const createListingURL = (routes, listing) => {
   const id = listing.id.uuid;
   const slug = createSlug(listing.attributes.title);
   const isPendingApproval = listing.attributes.state === LISTING_STATE_PENDING_APPROVAL;

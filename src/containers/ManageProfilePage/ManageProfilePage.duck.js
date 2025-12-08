@@ -1,8 +1,8 @@
-import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { storableError } from '../../util/errors';
 import { addMarketplaceEntities, getOwnProfileListingById } from '../../ducks/marketplaceData.duck';
 import { getImageVariantInfo } from '../EditListingPage/EditListingPage.duck';
-import { updateProfile, updateProfileThunk } from '../ProfileSettingsPage/ProfileSettingsPage.duck';
+import { updateProfileThunk } from '../ProfileSettingsPage/ProfileSettingsPage.duck';
 
 // ================ Async thunks ================ //
 
@@ -140,6 +140,30 @@ export const createProfileListingDraft = createAsyncThunk(
   }
 );
 
+export const publishProfileListing = createAsyncThunk(
+  'ManageProfilePage/publishProfileListing',
+  ({ listingId, config }, { dispatch, rejectWithValue, extra: sdk }) => {
+    const imageVariantInfo = getImageVariantInfo(config.layout.listingImage);
+    const queryParams = {
+      expand: true,
+      include: ['author', 'images', 'currentStock'],
+      'fields.image': imageVariantInfo.fieldsImage,
+      ...imageVariantInfo.imageVariants,
+    };
+
+    return sdk.ownListings
+      .publishDraft({ id: listingId }, queryParams)
+      .then(response => {
+        // Add the published listing to the marketplace data
+        dispatch(addMarketplaceEntities(response));
+        return response;
+      })
+      .catch(e => {
+        return rejectWithValue(storableError(e));
+      });
+  }
+);
+
 // ================ Slice ================ //
 
 const manageProfileSlice = createSlice({
@@ -154,6 +178,10 @@ const manageProfileSlice = createSlice({
 
     updateProfileInProgress: false,
     updateProfileError: null,
+
+    // Publish listing state
+    publishListingInProgress: false,
+    publishListingError: null,
 
     // Profile image upload state
     profileImage: null,
@@ -258,6 +286,18 @@ const manageProfileSlice = createSlice({
       .addCase(updateProfileListing.rejected, (state, action) => {
         state.updateProfileInProgress = false;
         state.updateProfileError = action.payload;
+      })
+      // Publish profile listing cases
+      .addCase(publishProfileListing.pending, state => {
+        state.publishListingInProgress = true;
+        state.publishListingError = null;
+      })
+      .addCase(publishProfileListing.fulfilled, (state, action) => {
+        state.publishListingInProgress = false;
+      })
+      .addCase(publishProfileListing.rejected, (state, action) => {
+        state.publishListingInProgress = false;
+        state.publishListingError = action.payload;
       });
   },
 });
@@ -291,6 +331,11 @@ export const updateProfileInProgressSelector = state =>
   state.ManageProfilePage.updateProfileInProgress;
 export const createListingDraftInProgressSelector = state =>
   state.ManageProfilePage.createListingDraftInProgress;
+
+// Publish listing selectors
+export const publishListingInProgressSelector = state =>
+  state.ManageProfilePage.publishListingInProgress;
+export const publishListingErrorSelector = state => state.ManageProfilePage.publishListingError;
 
 // Profile image upload selectors
 export const profileImageSelector = state => state.ManageProfilePage.profileImage;

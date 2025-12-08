@@ -1461,5 +1461,13 @@
   "ProfilePackagesForm.defaultPackage3Title": "Paid Promotional Sharing of Your Hotel Content",
   "ProfilePackagesForm.defaultPackage3Description": "If your hotel already has content you'd like amplified, I will share your preferred videos or photos directly to my audience. This service is ideal for boosting specific campaigns, highlighting new offerings, or supporting occupancy pushes with targeted creator-driven visibility. No travel required — simply send the asset, and I'll handle the exposure.",
   "ProfilePackagesForm.defaultPackage4Title": "Full-Service Hotel Content Creation Package",
-  "ProfilePackagesForm.defaultPackage4Description": "I offer a complete content creation package for hotels and resorts looking for professionally produced, high-quality assets. This includes on-site filming, photography, creative direction, editing, and delivery of hotel-ready content designed for social media, marketing, and website use.\n\nThis package can include:\n• Photo + video production on property\n• Room, dining, amenities, and experience coverage\n• Edited short-form videos (Reels/TikToks)\n• Edited photo sets\n• Optional posting to my social media audience\n• Full usage rights for your brand\n\nThis is ideal for hotels looking for polished, conversion-focused content with no exchange — just a clear service rate."
+  "ProfilePackagesForm.defaultPackage4Description": "I offer a complete content creation package for hotels and resorts looking for professionally produced, high-quality assets. This includes on-site filming, photography, creative direction, editing, and delivery of hotel-ready content designed for social media, marketing, and website use.\n\nThis package can include:\n• Photo + video production on property\n• Room, dining, amenities, and experience coverage\n• Edited short-form videos (Reels/TikToks)\n• Edited photo sets\n• Optional posting to my social media audience\n• Full usage rights for your brand\n\nThis is ideal for hotels looking for polished, conversion-focused content with no exchange — just a clear service rate.",
+  "ProfileVerificationPanel.getVerifiedBadge": "Get Verified Badge",
+  "ProfileVerificationPanel.verificationDescription": "By paying a one-time payment, you can get a verified badge. {link} to know more about badge features.",
+  "ProfileVerificationPanel.clickHere": "Click here",
+  "ProfileVerificationPanel.payForVerification": "Pay for Verification",
+  "ProfileVerificationPanel.or": "or",
+  "ProfileVerificationPanel.publishProfile": "Publish Profile",
+  "ProfileVerificationPanel.goToProfile": "Go to Profile",
+  "ProfileVerificationPanel.publishNote": "You can always get verified later from your profile settings."
 }
