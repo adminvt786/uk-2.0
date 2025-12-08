@@ -8,6 +8,8 @@
     "@loadable/server": "^5.16.5",
     "@mapbox/polyline": "^1.2.1",
     "@mux/mux-node": "^12.8.0",
+    "@mux/mux-player-react": "^3.10.0",
+    "@mux/upchunk": "^3.5.0",
     "@reduxjs/toolkit": "^2.9.0",
     "@sentry/browser": "^8.55.0",
     "@sentry/node": "^8.55.0",

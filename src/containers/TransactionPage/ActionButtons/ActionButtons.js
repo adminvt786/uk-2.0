@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 
 import { useIntl } from '../../../util/reactIntl';
@@ -7,6 +7,10 @@ import { getStartOf } from '../../../util/dates';
 import { PrimaryButton, SecondaryButton, Button } from '../../../components';
 
 import css from './ActionButtons.module.css';
+import { manageDisableScrolling } from '../../../ducks/ui.duck';
+import ReportModal from './ReportModal';
+import VideoUploadModal from './VideoUploadModal';
+import { useDispatch } from 'react-redux';
 
 export const ACTION_BUTTON_1_ID = 'actionButton1';
 export const ACTION_BUTTON_2_ID = 'actionButton2';
@@ -133,9 +137,16 @@ const ActionButtons = props => {
     hasValidData = true,
     errorMessageId,
     timeZone = 'Etc/UTC',
+    openVideoUploader,
+    transactionId,
+    submittedContent,
+    openReportModal,
+    completeAfterProblem,
   } = props;
-
+  const [isOpenReportModal, setIsOpenReportModal] = useState(false);
+  const [isOpenVideoModal, setIsOpenVideoModal] = useState(false);
   const intl = useIntl();
+  const dispatch = useDispatch();
 
   if (isListingDeleted && isProvider) {
     return null;
@@ -175,6 +186,28 @@ const ActionButtons = props => {
     <p className={css.actionError}>{tertiaryButtonProps?.errorText}</p>
   ) : null;
 
+  const handlePrimaryButtonClick = e => {
+    if (openVideoUploader) {
+      setIsOpenVideoModal(true);
+    } else if (openReportModal || completeAfterProblem) {
+      primaryButtonProps?.onAction({
+        protectedData: {
+          submittedContent: submittedContent,
+        },
+      });
+    } else {
+      primaryButtonProps?.onAction(e);
+    }
+  };
+
+  const handleSecondaryButtonClick = e => {
+    if (openReportModal) {
+      setIsOpenReportModal(true);
+    } else {
+      secondaryButtonProps?.onAction(e);
+    }
+  };
+
   const actionButton1 =
     primaryButtonProps && hasValidData
       ? [
@@ -183,7 +216,7 @@ const ActionButtons = props => {
               id={`${containerId}_${ACTION_BUTTON_1_ID}`}
               inProgress={primaryButtonProps.inProgress}
               disabled={buttonsDisabled || primaryDisabled}
-              onClick={primaryButtonProps.onAction}
+              onClick={handlePrimaryButtonClick}
             >
               {primaryButtonProps.buttonText}
             </PrimaryButton>
@@ -199,7 +232,7 @@ const ActionButtons = props => {
               id={`${containerId}_${ACTION_BUTTON_2_ID}`}
               inProgress={secondaryButtonProps?.inProgress}
               disabled={buttonsDisabled || secondaryDisabled}
-              onClick={secondaryButtonProps.onAction}
+              onClick={handleSecondaryButtonClick}
             >
               {secondaryButtonProps.buttonText}
             </SecondaryButton>
@@ -250,6 +283,51 @@ const ActionButtons = props => {
           </div>
         ) : null}
       </div>
+
+      {isOpenVideoModal ? (
+        <VideoUploadModal
+          isModalOpen={isOpenVideoModal}
+          onClose={() => setIsOpenVideoModal(false)}
+          onManageDisableScrolling={(componentId, disableScrolling) =>
+            dispatch(manageDisableScrolling(componentId, disableScrolling))
+          }
+          onSubmit={data => {
+            primaryButtonProps?.onAction({
+              protectedData: {
+                submittedContent: [...submittedContent, { ...data, status: 'pending-approval' }],
+              },
+            });
+            setIsOpenVideoModal(false);
+          }}
+          txId={transactionId}
+        />
+      ) : null}
+
+      {isOpenReportModal ? (
+        <ReportModal
+          isModalOpen={isOpenReportModal}
+          onClose={() => setIsOpenReportModal(false)}
+          onManageDisableScrolling={(componentId, disableScrolling) =>
+            dispatch(manageDisableScrolling(componentId, disableScrolling))
+          }
+          onSubmit={val => {
+            setIsOpenReportModal(false);
+            const newSubmittedContent = submittedContent.map((elm, i) => {
+              if (i === submittedContent.length - 1) {
+                return { ...elm, status: 'problem-reported', issue: val.issue };
+              } else {
+                return elm;
+              }
+            });
+
+            secondaryButtonProps.onAction({
+              protectedData: {
+                submittedContent: newSubmittedContent,
+              },
+            });
+          }}
+        />
+      ) : null}
     </div>
   ) : null;
 };

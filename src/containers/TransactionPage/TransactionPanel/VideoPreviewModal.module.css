@@ -1,0 +1,5 @@
+.muxVideoPlayer {
+  & mux-player {
+    height: 320px;
+  }
+}

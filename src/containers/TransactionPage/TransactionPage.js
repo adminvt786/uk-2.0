@@ -688,6 +688,11 @@ export const TransactionPageComponent = props => {
           transitions={txTransitions}
           {...getDataValidationResult(transaction, process)}
           timeZone={listing?.attributes?.availabilityPlan?.timezone || 'Etc/UTC'}
+          openVideoUploader={stateData?.openVideoUploader}
+          transactionId={transaction?.id?.uuid}
+          submittedContent={transaction?.attributes?.protectedData?.submittedContent || []}
+          openReportModal={stateData?.openReportModal}
+          completeAfterProblem={stateData?.completeAfterProblem}
         />
       )}
       activityFeed={

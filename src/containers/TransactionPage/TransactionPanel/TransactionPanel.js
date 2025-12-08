@@ -27,6 +27,7 @@ import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
 import PanelHeading from './PanelHeading';
 
 import css from './TransactionPanel.module.css';
+import ContentSubmissions from './ContentSubmissions';
 
 // Helper function to get display names for different roles
 const displayNames = (currentUser, provider, customer, intl) => {
@@ -333,6 +334,9 @@ export class TransactionPanelComponent extends Component {
               activityFeed={activityFeed}
               isConversation={isInquiryProcess}
             />
+
+            <ContentSubmissions protectedData={protectedData} />
+
             {showSendMessageForm ? (
               <SendMessageForm
                 formId={this.sendMessageFormName}

@@ -1,0 +1,14 @@
+.inputField {
+  margin: 0 0 24px 0;
+}
+
+.section {
+  @media (max-width: 768px) {
+    margin-top: 50px;
+  }
+}
+
+.buttonWrapper {
+  display: flex;
+  gap: 10px;
+}

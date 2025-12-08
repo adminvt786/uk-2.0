@@ -116,7 +116,8 @@ export const getStateData = (params, process) => {
         intl,
         inProgress: transitionInProgress === transitionName,
         transitionError,
-        onAction: () => onTransition(transaction?.id, transitionName, params),
+        onAction: ({ protectedData = {} } = {}) =>
+          onTransition(transaction?.id, transitionName, { ...params, protectedData }),
         ...rest,
       },
       forRole

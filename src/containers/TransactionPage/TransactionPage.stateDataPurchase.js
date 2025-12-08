@@ -46,37 +46,76 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
         processName,
         processState,
         showDetailCardHeadings: true,
-        showActionButtons: true,
-        showExtraInfo: true,
-        primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED_FROM_PURCHASED, CUSTOMER),
       };
     })
     .cond([states.PURCHASED, PROVIDER], () => {
-      const actionButtonTranslationId = isShippable
-        ? `TransactionPage.${processName}.${PROVIDER}.transition-mark-delivered.actionButtonShipped`
-        : `TransactionPage.${processName}.${PROVIDER}.transition-mark-delivered.actionButton`;
-
       return {
         processName,
         processState,
         showDetailCardHeadings: true,
         showActionButtons: true,
-        primaryButtonProps: actionButtonProps(transitions.MARK_DELIVERED, PROVIDER, {
-          actionButtonTranslationId,
-        }),
+        showExtraInfo: true,
+        primaryButtonProps: actionButtonProps(transitions.ACCEPT, PROVIDER),
+        secondaryButtonProps: actionButtonProps(transitions.DECLINE, PROVIDER),
       };
     })
-    .cond([states.DELIVERED, CUSTOMER], () => {
+    .cond([states.ACCEPTED, CUSTOMER], () => {
       return {
         processName,
         processState,
         showDetailCardHeadings: true,
-        showDispute: true,
-        showActionButtons: true,
-        primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED, CUSTOMER),
+        showExtraInfo: true,
       };
     })
-    .cond([states.COMPLETED, _], () => {
+    .cond([states.ACCEPTED, PROVIDER], () => {
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showActionButtons: true,
+        showExtraInfo: true,
+        primaryButtonProps: actionButtonProps(transitions.SUBMIT_SERVICE, PROVIDER),
+        openVideoUploader: true,
+      };
+    })
+    .cond([states.SERVICE_SUBMITTED, CUSTOMER], () => {
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showActionButtons: true,
+        primaryButtonProps: actionButtonProps(transitions.COMPLETE, CUSTOMER),
+        secondaryButtonProps: actionButtonProps(transitions.CUSTOMER_REPORT_PROBLEM, CUSTOMER),
+        openReportModal: true,
+      };
+    })
+    .cond([states.PROBLEM_REPORTED, CUSTOMER], () => {
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showActionButtons: true,
+        primaryButtonProps: actionButtonProps(
+          transitions.COMPLETE_AFTER_REPORT_A_PROBLEM,
+          CUSTOMER
+        ),
+        completeAfterProblem: true,
+      };
+    })
+    .cond([states.PROBLEM_REPORTED, PROVIDER], () => {
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showActionButtons: true,
+        primaryButtonProps: actionButtonProps(
+          transitions.SUBMIT_SERVICE_AFTER_PROBLEM_FIX,
+          PROVIDER
+        ),
+        openVideoUploader: true,
+      };
+    })
+    .cond([states.COMPLETED, CUSTOMER], () => {
       return {
         processName,
         processState,
@@ -86,24 +125,11 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
         primaryButtonProps: leaveReviewProps,
       };
     })
-    .cond([states.REVIEWED_BY_PROVIDER, CUSTOMER], () => {
+    .cond([states.COMPLETED, PROVIDER], () => {
       return {
         processName,
         processState,
         showDetailCardHeadings: true,
-        showReviewAsSecondLink: true,
-        showActionButtons: true,
-        primaryButtonProps: leaveReviewProps,
-      };
-    })
-    .cond([states.REVIEWED_BY_CUSTOMER, PROVIDER], () => {
-      return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
-        showReviewAsSecondLink: true,
-        showActionButtons: true,
-        primaryButtonProps: leaveReviewProps,
       };
     })
     .cond([states.REVIEWED, _], () => {
