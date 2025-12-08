@@ -18,6 +18,7 @@ import {
 } from '../../../../components';
 
 import css from './TopbarMobileMenu.module.css';
+import { isCreatorUserType } from '../../../../util/userHelpers';
 
 const CustomLinkComponent = ({ linkConfig, currentPage }) => {
   const { group, text, type, href, route } = linkConfig;
@@ -78,7 +79,7 @@ const TopbarMobileMenu = props => {
     onLogout,
     showCreateListingsLink,
   } = props;
-
+  const isCreator = isCreatorUserType(currentUser);
   const user = ensureCurrentUser(currentUser);
 
   const extraLinks = customLinks.map((linkConfig, index) => {
@@ -132,7 +133,7 @@ const TopbarMobileMenu = props => {
 
           <div className={css.spacer} />
         </div>
-        <div className={css.footer}>{createListingsLinkMaybe}</div>
+        {/* <div className={css.footer}>{createListingsLinkMaybe}</div> */}
       </nav>
     );
   }
@@ -150,14 +151,15 @@ const TopbarMobileMenu = props => {
     return currentPage === page || isAccountSettingsPage || isInboxPage ? css.currentPage : null;
   };
 
-  const manageListingsLinkMaybe = showCreateListingsLink ? (
-    <NamedLink
-      className={classNames(css.navigationLink, currentPageClass('ManageListingsPage'))}
-      name="ManageListingsPage"
-    >
-      <FormattedMessage id="TopbarMobileMenu.yourListingsLink" />
-    </NamedLink>
-  ) : null;
+  const manageListingsLinkMaybe =
+    showCreateListingsLink && !isCreator ? (
+      <NamedLink
+        className={classNames(css.navigationLink, currentPageClass('ManageListingsPage'))}
+        name="ManageListingsPage"
+      >
+        <FormattedMessage id="TopbarMobileMenu.yourListingsLink" />
+      </NamedLink>
+    ) : null;
 
   return (
     <div className={css.root}>
@@ -182,7 +184,7 @@ const TopbarMobileMenu = props => {
           {manageListingsLinkMaybe}
           <NamedLink
             className={classNames(css.navigationLink, currentPageClass('ProfileSettingsPage'))}
-            name="ProfileSettingsPage"
+            name={isCreator ? 'ManageProfilePage' : 'ProfileSettingsPage'}
           >
             <FormattedMessage id="TopbarMobileMenu.profileSettingsLink" />
           </NamedLink>
@@ -196,7 +198,7 @@ const TopbarMobileMenu = props => {
         <div className={css.customLinksWrapper}>{extraLinks}</div>
         <div className={css.spacer} />
       </div>
-      <div className={css.footer}>{createListingsLinkMaybe}</div>
+      {!isCreator && <div className={css.footer}>{createListingsLinkMaybe}</div>}
     </div>
   );
 };

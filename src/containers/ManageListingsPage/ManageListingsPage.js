@@ -7,7 +7,11 @@ import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { pathByRouteName } from '../../util/routes';
-import { hasPermissionToPostListings, showCreateListingLinkForUser } from '../../util/userHelpers';
+import {
+  hasPermissionToPostListings,
+  isCreatorUserType,
+  showCreateListingLinkForUser,
+} from '../../util/userHelpers';
 import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
 import { propTypes } from '../../util/types';
 import { isErrorNoPermissionToPostListings } from '../../util/errors';
@@ -138,7 +142,11 @@ export const ManageListingsPageComponent = props => {
       });
       history.push(noAccessPagePath);
     }
-  }, [openingListingError]);
+
+    if (isCreatorUserType(currentUser)) {
+      history.push(pathByRouteName('ManageProfilePage', routeConfiguration, {}));
+    }
+  }, [openingListingError, currentUser]);
 
   const onToggleMenu = listing => {
     setListingMenuOpen(listing);

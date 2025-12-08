@@ -409,3 +409,5 @@ export const hasCurrentUserErrors = state => {
 
 export const currentUserDisplayNameSelector = state =>
   state.user.currentUser?.attributes.profile.displayName;
+export const currentUserTypeSelector = state =>
+  state.user.currentUser?.attributes.profile.publicData.userType;

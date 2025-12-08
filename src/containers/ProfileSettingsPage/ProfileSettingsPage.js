@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
@@ -9,6 +9,7 @@ import { PROFILE_PAGE_PENDING_APPROVAL_VARIANT } from '../../util/urlHelpers';
 import { ensureCurrentUser } from '../../util/data';
 import {
   initialValuesForUserFields,
+  isCreatorUserType,
   isUserAuthorized,
   pickUserFieldsData,
   showCreateListingLinkForUser,
@@ -24,6 +25,9 @@ import ProfileSettingsForm from './ProfileSettingsForm/ProfileSettingsForm';
 
 import { updateProfile, uploadImage } from './ProfileSettingsPage.duck';
 import css from './ProfileSettingsPage.module.css';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { useHistory } from 'react-router-dom';
+import { pathByRouteName } from '../../util/routes';
 
 const onImageUploadHandler = (values, fn) => {
   const { id, imageId, file } = values;
@@ -71,6 +75,8 @@ const ViewProfileLink = props => {
  */
 export const ProfileSettingsPageComponent = props => {
   const config = useConfiguration();
+  const routeConfiguration = useRouteConfiguration();
+  const history = useHistory();
   const intl = useIntl();
   const {
     currentUser,
@@ -83,6 +89,12 @@ export const ProfileSettingsPageComponent = props => {
     uploadImageError,
     uploadInProgress,
   } = props;
+
+  useEffect(() => {
+    if (isCreatorUserType(currentUser)) {
+      history.push(pathByRouteName('ManageProfilePage', routeConfiguration, {}));
+    }
+  }, [currentUser]);
 
   const { userFields, userTypes = [] } = config.user;
   const publicUserFields = userFields.filter(uf => uf.scope === 'public');

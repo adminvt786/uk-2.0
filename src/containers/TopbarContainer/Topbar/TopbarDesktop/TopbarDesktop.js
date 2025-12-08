@@ -18,6 +18,7 @@ import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
 import CustomLinksMenu from './CustomLinksMenu/CustomLinksMenu';
 
 import css from './TopbarDesktop.module.css';
+import { isCreatorUserType } from '../../../../util/userHelpers';
 
 const SignupLink = () => {
   return (
@@ -52,6 +53,8 @@ const InboxLink = ({ notificationCount, inboxTab }) => {
 };
 
 const ProfileMenu = ({ currentPage, currentUser, onLogout, showManageListingsLink, intl }) => {
+  const isCreator = isCreatorUserType(currentUser);
+
   const currentPageClass = page => {
     const isAccountSettingsPage =
       page === 'AccountSettingsPage' && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
@@ -64,7 +67,7 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout, showManageListingsLin
         <Avatar className={css.avatar} user={currentUser} disableProfileLink />
       </MenuLabel>
       <MenuContent className={css.profileMenuContent}>
-        {showManageListingsLink ? (
+        {showManageListingsLink && !isCreator ? (
           <MenuItem key="ManageListingsPage">
             <NamedLink
               className={classNames(css.menuLink, currentPageClass('ManageListingsPage'))}
@@ -75,10 +78,10 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout, showManageListingsLin
             </NamedLink>
           </MenuItem>
         ) : null}
-        <MenuItem key="ProfileSettingsPage">
+        <MenuItem key={isCreator ? 'ManageProfilePage' : 'ProfileSettingsPage'}>
           <NamedLink
             className={classNames(css.menuLink, currentPageClass('ProfileSettingsPage'))}
-            name="ProfileSettingsPage"
+            name={isCreator ? 'ManageProfilePage' : 'ProfileSettingsPage'}
           >
             <span className={css.menuItemBorder} />
             <FormattedMessage id="TopbarDesktop.profileSettingsLink" />
@@ -207,7 +210,7 @@ const TopbarDesktop = props => {
         customLinks={customLinks}
         intl={intl}
         hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
-        showCreateListingsLink={showCreateListingsLink}
+        showCreateListingsLink={showCreateListingsLink && !isCreatorUserType(currentUser)}
       />
 
       {inboxLinkMaybe}

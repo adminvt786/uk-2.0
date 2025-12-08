@@ -5,6 +5,8 @@ import { ACCOUNT_SETTINGS_PAGES } from '../../routing/routeConfiguration';
 import { LinkTabNavHorizontal } from '../../components';
 
 import css from './UserNav.module.css';
+import { useSelector } from 'react-redux';
+import { currentUserTypeSelector } from '../../ducks/user.duck';
 
 /**
  * A component that renders a navigation bar for a user-specific pages.
@@ -18,20 +20,23 @@ import css from './UserNav.module.css';
  */
 const UserNav = props => {
   const { className, rootClassName, currentPage, showManageListingsLink } = props;
+  const currentUserType = useSelector(currentUserTypeSelector);
+  const isCreator = currentUserType === 'creator';
   const intl = useIntl();
   const classes = classNames(rootClassName || css.root, className);
 
-  const manageListingsTabMaybe = showManageListingsLink
-    ? [
-        {
-          text: <FormattedMessage id="UserNav.yourListings" />,
-          selected: currentPage === 'ManageListingsPage',
-          linkProps: {
-            name: 'ManageListingsPage',
+  const manageListingsTabMaybe =
+    showManageListingsLink && !isCreator
+      ? [
+          {
+            text: <FormattedMessage id="UserNav.yourListings" />,
+            selected: currentPage === 'ManageListingsPage',
+            linkProps: {
+              name: 'ManageListingsPage',
+            },
           },
-        },
-      ]
-    : [];
+        ]
+      : [];
 
   const tabs = [
     ...manageListingsTabMaybe,
@@ -40,7 +45,7 @@ const UserNav = props => {
       selected: currentPage === 'ProfileSettingsPage',
       disabled: false,
       linkProps: {
-        name: 'ProfileSettingsPage',
+        name: isCreator ? 'ManageProfilePage' : 'ProfileSettingsPage',
       },
     },
     {

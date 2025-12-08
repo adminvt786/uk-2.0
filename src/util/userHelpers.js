@@ -270,3 +270,6 @@ export const getCurrentUserTypeRoles = (config, currentUser) => {
     }
   );
 };
+
+export const isCreatorUserType = currentUser =>
+  currentUser?.attributes?.profile?.publicData?.userType === 'creator';

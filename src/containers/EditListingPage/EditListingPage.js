@@ -21,7 +21,11 @@ import {
 import { LISTING_STATE_DRAFT, LISTING_STATE_PENDING_APPROVAL, propTypes } from '../../util/types';
 import { isErrorNoPermissionToPostListings } from '../../util/errors';
 import { ensureOwnListing } from '../../util/data';
-import { hasPermissionToPostListings, isUserAuthorized } from '../../util/userHelpers';
+import {
+  hasPermissionToPostListings,
+  isCreatorUserType,
+  isUserAuthorized,
+} from '../../util/userHelpers';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 import {
@@ -194,6 +198,8 @@ export const EditListingPageComponent = props => {
         params={{ missingAccessRight: NO_ACCESS_PAGE_POST_LISTINGS }}
       />
     );
+  } else if (isCreatorUserType(currentUser)) {
+    return <NamedRedirect name="ManageProfilePage" />;
   } else if (shouldRedirectAfterPosting) {
     const isPendingApproval =
       currentListing && currentListingState === LISTING_STATE_PENDING_APPROVAL;
