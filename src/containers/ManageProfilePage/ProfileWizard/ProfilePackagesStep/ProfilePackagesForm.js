@@ -267,13 +267,17 @@ const ProfilePackagesForm = props => {
                         marketplaceCurrency={marketplaceCurrency}
                       />
                     ))}
+                    <button
+                      type="button"
+                      className={css.addPackageButton}
+                      onClick={handleAddPackage}
+                    >
+                      <span className={css.addPackageIcon}>+</span>
+                      <FormattedMessage id="ProfilePackagesForm.addPackage" />
+                    </button>
                   </div>
                 )}
               </FieldArray>
-
-              <button type="button" className={css.addPackageButton} onClick={handleAddPackage}>
-                <FormattedMessage id="ProfilePackagesForm.addPackage" />
-              </button>
             </div>
 
             <Button

@@ -68,6 +68,9 @@
   border-radius: 8px;
   padding: 20px;
   transition: box-shadow 0.2s ease;
+  max-height: 450px;
+  display: flex;
+  flex-direction: column;
 }
 
 .packageCard:hover {
@@ -113,6 +116,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .packageField {
@@ -132,8 +137,10 @@
 }
 
 .packageField textarea {
-  min-height: 120px;
-  resize: vertical;
+  min-height: 100px;
+  max-height: 120px;
+  resize: none;
+  overflow-y: auto;
 }
 
 .packageFieldsRow {
@@ -178,10 +185,12 @@
 /* Add package button */
 .addPackageButton {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  padding: 16px 24px;
+  gap: 12px;
+  min-height: 200px;
+  padding: 24px;
   border: 2px dashed var(--colorGrey200);
   border-radius: 8px;
   background-color: transparent;
@@ -195,6 +204,19 @@
 .addPackageButton:hover {
   border-color: var(--marketplaceColor);
   background-color: var(--colorGrey50);
+}
+
+.addPackageIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--marketplaceColor);
+  color: var(--colorWhite);
+  font-size: 28px;
+  font-weight: var(--fontWeightBold);
 }
 
 /* Submit button */
