@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "PurchaseNewOrder.Subjectttt" "{providerDisplayName} re-submitted the content" providerDisplayName=transaction.provider.display-name }}
