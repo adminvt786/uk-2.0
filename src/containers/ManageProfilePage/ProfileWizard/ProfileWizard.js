@@ -7,6 +7,7 @@ import { H3 } from '../../../components';
 // Import modules from this directory
 import ProfileStepIndicator from './ProfileStepIndicator/ProfileStepIndicator';
 import ProfileDetailsPanel from './ProfileDetailsStep/ProfileDetailsPanel';
+import ProfilePackagesPanel from './ProfilePackagesStep/ProfilePackagesPanel';
 import css from './ProfileWizard.module.css';
 import { useDispatch } from 'react-redux';
 import { createProfileListingDraft, updateProfileListing } from '../ManageProfilePage.duck';
@@ -30,16 +31,7 @@ const TOTAL_STEPS = 3;
  * @returns {JSX.Element}
  */
 const ProfileWizard = props => {
-  const {
-    className,
-    rootClassName,
-    profileListing,
-    disabled,
-    onSubmit,
-    updateInProgress,
-    errors,
-    intl,
-  } = props;
+  const { className, rootClassName, profileListing, updateInProgress, intl } = props;
   const config = useConfiguration();
   const [currentStep, setCurrentStep] = useState(1);
   const dispatch = useDispatch();
@@ -62,6 +54,11 @@ const ProfileWizard = props => {
         } else {
           await dispatch(createProfileListingDraft({ data: values, config }));
         }
+      } else if (currentStep === 2) {
+        // Update listing with packages data
+        await dispatch(
+          updateProfileListing({ data: { ...values, id: profileListing.id.uuid }, config })
+        );
       }
 
       if (currentStep < TOTAL_STEPS) {
@@ -114,11 +111,13 @@ const ProfileWizard = props => {
           />
         );
       case 2:
-        // Placeholder for Step 2
         return (
-          <div className={css.stepPlaceholder}>
-            <p>{intl.formatMessage({ id: 'ProfileWizard.step2Placeholder' })}</p>
-          </div>
+          <ProfilePackagesPanel
+            profileListing={profileListing}
+            onSubmit={handleStepSubmit}
+            submitButtonText={submitButtonText}
+            config={config}
+          />
         );
       case 3:
         // Placeholder for Step 3

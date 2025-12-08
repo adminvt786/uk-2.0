@@ -1,0 +1,209 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root {
+  /* Dimensions */
+  width: 100%;
+  height: auto;
+
+  /* Layout */
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  padding-top: 1px;
+
+  @media (--viewportMedium) {
+    padding-top: 2px;
+  }
+}
+
+.error {
+  color: var(--colorFail);
+  margin-bottom: 16px;
+}
+
+.sectionContainer {
+  padding: 0;
+  margin-bottom: 36px;
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-bottom: 56px;
+  }
+}
+
+.sectionTitle {
+  margin-bottom: 8px;
+}
+
+.sectionDescription {
+  color: var(--colorGrey700);
+  margin-top: 0;
+  margin-bottom: 24px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Packages container */
+.packagesContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (--viewportLarge) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Individual package card */
+.packageCard {
+  position: relative;
+  background-color: var(--colorWhite);
+  border: 1px solid var(--colorGrey100);
+  border-radius: 8px;
+  padding: 20px;
+  transition: box-shadow 0.2s ease;
+}
+
+.packageCard:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.packageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.packageNumber {
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 14px;
+  color: var(--colorGrey700);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.removePackageButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--colorGrey50);
+  color: var(--colorGrey700);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.removePackageButton:hover {
+  background-color: var(--colorFail);
+  color: var(--colorWhite);
+}
+
+.packageContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.packageField {
+  margin-bottom: 0;
+}
+
+.packageField input,
+.packageField textarea {
+  width: 100%;
+}
+
+.packageField input:disabled,
+.packageField textarea:disabled {
+  background-color: var(--colorGrey50);
+  color: var(--colorGrey700);
+  cursor: not-allowed;
+}
+
+.packageField textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.packageFieldsRow {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @media (--viewportMedium) {
+    flex-direction: row;
+    gap: 24px;
+  }
+}
+
+.methodField {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.priceField {
+  flex: 1;
+  margin-bottom: 0;
+
+  @media (--viewportMedium) {
+    max-width: 200px;
+  }
+}
+
+.defaultBadge {
+  position: absolute;
+  top: 12px;
+  right: 60px;
+  background-color: var(--marketplaceColor);
+  color: var(--colorWhite);
+  font-size: 11px;
+  font-weight: var(--fontWeightSemiBold);
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Add package button */
+.addPackageButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 16px 24px;
+  border: 2px dashed var(--colorGrey200);
+  border-radius: 8px;
+  background-color: transparent;
+  color: var(--marketplaceColor);
+  font-size: 16px;
+  font-weight: var(--fontWeightSemiBold);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.addPackageButton:hover {
+  border-color: var(--marketplaceColor);
+  background-color: var(--colorGrey50);
+}
+
+/* Submit button */
+.submitButton {
+  margin-top: 24px;
+  flex-shrink: 0;
+
+  @media (--viewportLarge) {
+    display: inline-block;
+    width: 241px;
+  }
+}
