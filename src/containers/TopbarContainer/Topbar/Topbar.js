@@ -361,6 +361,7 @@ const TopbarComponent = props => {
           layout={'mobile'}
           alt={intl.formatMessage({ id: 'Topbar.logoIcon' })}
           linkToExternalSite={config?.topbar?.logoLink}
+          isScrolled={isScrolled}
         />
          <Button
           id={MOBILE_MENU_BUTTON_ID}

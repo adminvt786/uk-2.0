@@ -88,14 +88,17 @@ export const LogoComponent = props => {
       width <= 188 ? `${width}px` : `(max-width: 500px) calc(100vw - 132px), ${width}px`;
     return (
       <div className={logoClasses}>
-        <ResponsiveImage
+         {isScrolled ? 
+      <img className={logoImageClasses} src={logoBlack} alt={marketplaceName} {...rest} /> :
+      <ResponsiveImage
           rootClassName={logoImageClasses}
           alt={marketplaceName}
-          image={logoImageMobile}
+          image={logoImageDesktop}
           variants={variantNames}
-          sizes={sizes}
+          sizes={`${width}px`}
           width={width}
-        />
+          height={logoSettings?.height}
+        /> }
       </div>
     );
   } else if (layout === 'desktop') {

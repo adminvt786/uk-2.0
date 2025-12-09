@@ -21,7 +21,11 @@
   max-width: min(calc(100vw - 132px), 100%, 370px);
   object-fit: contain;
   object-position: center;
-
+  @media (max-width: 767px) {
+    max-height: 40px;
+    height: 40px;
+    width: 130px;
+  }
   @media (--viewportLarge) {
     max-width: min(100%, 370px);
   }
