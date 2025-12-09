@@ -4,13 +4,13 @@
 .root {
   /* Size */
   width: 100%;
-  height: var(--topbarHeightDesktop);
+  height: 82px;
 
   /* Layout for child components */
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   padding: 0 12px 0 0;
 
   /* fill */
@@ -19,15 +19,172 @@
   /* shadows */
   box-shadow: var(--boxShadowLight);
 
+  /* Transition for background color change */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
   @media (--viewportLarge) {
-    padding: 0 24px 0 0;
+    padding: 0 50px 0 0;
   }
+}
+.topbarLinks{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 50px;
+}
+
+.landingMenuItem {
+  flex-shrink: 0;
+  border-bottom: 0px solid;
+  transition: var(--transitionStyleButton);
+  font-family: Inter;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: CAP_HEIGHT;
+  line-height: 100%;
+  letter-spacing: 0%;
+  
+  color: var(--colorWhite);
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+}
+
+.landingMenuItem:hover {
+  color: var(--colorWhite);
+  opacity: 0.8;
+  border-bottom: 4px solid var(--colorWhite);
+  border-radius: 0;
+  text-decoration: none;
+}
+
+.landingMenuItemLabel {
+  display: inline-block;
+  margin: 28px 0;
+  text-decoration: inherit;
+}
+
+.getStartedButton {
+  border-radius: 0;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--colorWhite);
+  color: var(--colorBlack);
+  font-weight: var(--fontWeightMedium);
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0;
+  padding: 12px 24px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  height: 52px;
+  margin: 0;
+  border: none;
+  white-space: nowrap;
+}
+
+.getStartedButton:hover {
+  background-color: #f5f5f5;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  color: var(--colorBlack);
+}
+
+.getStartedButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.getStartedText {
+  display: inline-block;
+  text-decoration: inherit;
+}
+
+.getStartedArrow {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+/* Landing page menu items styling when transparent */
+.root.transparent .landingMenuItem {
+  color: var(--colorWhite);
+}
+
+.root.transparent .landingMenuItem:hover {
+  color: var(--colorWhite);
+  opacity: 0.8;
+  border-bottom-color: var(--colorWhite);
+}
+
+/* Landing page menu items styling when scrolled */
+.root.scrolled .landingMenuItem {
+  color: var(--colorGrey700);
+}
+
+.root.scrolled .landingMenuItem:hover {
+  color: var(--colorBlack);
+  border-bottom-color: var(--marketplaceColor);
+}
+/* Transparent background for landing page when at top */
+.root.transparent {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.root.transparent .topbarLink {
+  color: var(--colorWhite);
+}
+
+.root.transparent .topbarLink:hover {
+  color: var(--colorWhite);
+  opacity: 0.8;
+  border-bottom-color: var(--colorWhite);
+}
+
+.root.transparent .profileMenuLabel {
+  color: var(--colorWhite);
+}
+
+.root.transparent .profileMenuLabel:hover {
+  border-bottom-color: var(--colorWhite);
+}
+
+.root.transparent .logoLink {
+  /* filter: brightness(0) invert(1); */
+}
+
+.root.transparent .logoLink:hover {
+  /* filter: brightness(0) invert(1); */
+  border-bottom-color: var(--colorWhite);
+}
+
+.root.transparent .searchLink {
+  border-left-color: rgba(255, 255, 255, 0.3);
+}
+
+/* White background when scrolled */
+.root.scrolled {
+  background-color: var(--colorWhite);
+  box-shadow: var(--boxShadowLight);
 }
 
 /* logo */
 .logoLink {
   border-bottom: 0px solid;
   transition: var(--transitionStyleButton);
+  &>div{
+      width: 146px !important;
+      & img{
+        width: 146px !important;
+      }
+  }
 }
 .logoLink:hover {
   border-bottom: 4px solid var(--marketplaceColor);

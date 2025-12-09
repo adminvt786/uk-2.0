@@ -3,6 +3,7 @@ import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { ResponsiveImage } from '../../components/';
+import logoBlack from '../../assets/LogoBlack.png';
 
 import css from './Logo.module.css';
 
@@ -43,6 +44,7 @@ export const LogoComponent = props => {
     logoImageDesktop,
     logoImageMobile,
     logoSettings,
+    isScrolled,
     ...rest
   } = props;
 
@@ -60,7 +62,9 @@ export const LogoComponent = props => {
     const { width } = getVariantData(variants);
     return (
       <div className={logoClasses} style={{ width: `${width}px` }}>
-        <ResponsiveImage
+      {isScrolled ? 
+      <img className={logoImageClasses} src={logoBlack} alt={marketplaceName} {...rest} /> :
+      <ResponsiveImage
           rootClassName={logoImageClasses}
           alt={marketplaceName}
           image={logoImageDesktop}
@@ -68,7 +72,7 @@ export const LogoComponent = props => {
           sizes={`${width}px`}
           width={width}
           height={logoSettings?.height}
-        />
+        /> }
       </div>
     );
   } else if (isImageAsset(logoImageMobile) && hasValidLogoSettings && layout === 'mobile') {
@@ -84,14 +88,17 @@ export const LogoComponent = props => {
       width <= 188 ? `${width}px` : `(max-width: 500px) calc(100vw - 132px), ${width}px`;
     return (
       <div className={logoClasses}>
-        <ResponsiveImage
+         {isScrolled ? 
+      <img className={logoImageClasses} src={logoBlack} alt={marketplaceName} {...rest} /> :
+      <ResponsiveImage
           rootClassName={logoImageClasses}
           alt={marketplaceName}
-          image={logoImageMobile}
+          image={logoImageDesktop}
           variants={variantNames}
-          sizes={sizes}
+          sizes={`${width}px`}
           width={width}
-        />
+          height={logoSettings?.height}
+        /> }
       </div>
     );
   } else if (layout === 'desktop') {
@@ -122,7 +129,7 @@ export const LogoComponent = props => {
  */
 const Logo = props => {
   const config = useConfiguration();
-  const { layout = 'desktop', ...rest } = props;
+  const { layout = 'desktop', isScrolled, ...rest } = props;
   // NOTE: logo images are set in hosted branding.json asset or src/config/brandingConfig.js
   const { logoImageDesktop, logoImageMobile, logoSettings } = config.branding;
 
@@ -134,6 +141,7 @@ const Logo = props => {
       logoImageMobile={logoImageMobile}
       logoSettings={logoSettings}
       marketplaceName={config.marketplaceName}
+      isScrolled={isScrolled}
     />
   );
 };

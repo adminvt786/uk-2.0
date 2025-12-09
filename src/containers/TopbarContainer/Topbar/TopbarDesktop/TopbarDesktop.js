@@ -147,17 +147,50 @@ const TopbarDesktop = props => {
     inboxTab,
   } = props;
   const [mounted, setMounted] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Handle scroll effect for landing page
+  useEffect(() => {
+    const isLandingPage = currentPage === 'LandingPage';
+    
+    if (!isLandingPage) {
+      setIsScrolled(true); // Always show white background on other pages
+      return;
+    }
+
+    const handleScroll = () => {
+      const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+      setIsScrolled(scrollPosition > 50);
+    };
+
+    // Set initial state
+    handleScroll();
+
+    // Add scroll listener
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [currentPage]);
 
   const marketplaceName = config.marketplaceName;
   const authenticatedOnClientSide = mounted && isAuthenticated;
   const isAuthenticatedOrJustHydrated = isAuthenticated || !mounted;
 
   const giveSpaceForSearch = customLinks == null || customLinks?.length === 0;
-  const classes = classNames(rootClassName || css.root, className);
+  const classes = classNames(
+    rootClassName || css.root,
+    className,
+    {
+      [css.scrolled]: isScrolled,
+      [css.transparent]: !isScrolled && currentPage === 'LandingPage',
+    }
+  );
 
   const inboxLinkMaybe = authenticatedOnClientSide ? (
     <InboxLink notificationCount={notificationCount} inboxTab={inboxTab} />
@@ -191,6 +224,36 @@ const TopbarDesktop = props => {
       })}
     />
   );
+  const mainLandingPage = currentPage === 'LandingPage';
+
+  // Landing page menu items
+  const landingPageMenuItems = mainLandingPage ? (
+    <>
+      <NamedLink name="LandingPage" className={css.landingMenuItem}>
+        <span className={css.landingMenuItemLabel}>For Hotels</span>
+      </NamedLink>
+      <NamedLink name="LandingPage" className={css.landingMenuItem}>
+        <span className={css.landingMenuItemLabel}>For Creators</span>
+      </NamedLink>
+      <NamedLink name="LandingPage" className={css.landingMenuItem}>
+        <span className={css.landingMenuItemLabel}>Case Studies</span>
+      </NamedLink>
+      <NamedLink name="LandingPage" className={css.landingMenuItem}>
+        <span className={css.landingMenuItemLabel}>About</span>
+      </NamedLink>
+    </>
+  ) : null;
+
+  // Landing page "Get Started" button
+  const getStartedButton = mainLandingPage ? (
+    <NamedLink name="SignupPage" className={css.getStartedButton}>
+      <span className={css.getStartedText}>Get Started</span>
+      <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M0.625 5.625L13.9583 5.625M13.9583 5.625L8.95833 10.625M13.9583 5.625L8.95833 0.625" stroke="black" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+    </NamedLink>
+  ) : null;
 
   return (
     <nav
@@ -202,21 +265,29 @@ const TopbarDesktop = props => {
         layout="desktop"
         alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
         linkToExternalSite={config?.topbar?.logoLink}
+        isScrolled={isScrolled}
       />
-      {searchFormMaybe}
+      {/* {searchFormMaybe} */}
 
-      <CustomLinksMenu
-        currentPage={currentPage}
-        customLinks={customLinks}
-        intl={intl}
-        hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
-        showCreateListingsLink={showCreateListingsLink && !isCreatorUserType(currentUser)}
-      />
-
-      {inboxLinkMaybe}
-      {profileMenuMaybe}
-      {signupLinkMaybe}
-      {loginLinkMaybe}
+      {mainLandingPage ? (
+        <div className={css.topbarLinks}>
+          {landingPageMenuItems}
+        </div>
+      ) : (
+        <div className={css.topbarLinks}>
+          <CustomLinksMenu
+            currentPage={currentPage}
+            customLinks={customLinks}
+            intl={intl}
+            hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
+            showCreateListingsLink={showCreateListingsLink && !isCreatorUserType(currentUser)}
+          />
+          {inboxLinkMaybe}
+          {profileMenuMaybe}
+          {loginLinkMaybe}
+        </div>
+      )}
+      {mainLandingPage ? getStartedButton : signupLinkMaybe}
     </nav>
   );
 };

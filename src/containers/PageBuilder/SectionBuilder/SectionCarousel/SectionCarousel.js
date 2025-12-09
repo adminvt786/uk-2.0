@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 
 import Field, { hasDataInFields } from '../../Field';
@@ -84,6 +84,11 @@ const SectionCarousel = props => {
   const sliderId = `${props.sectionId}-slider`;
   const numberOfBlocks = blocks?.length;
   const hasBlocks = numberOfBlocks > 0;
+  const [currentSlide, setCurrentSlide] = useState(0);
+  // On mobile, show one dot per block (numColumns is effectively 1)
+  // On desktop, calculate based on actual numColumns
+  const totalSlides = Math.ceil(numberOfBlocks / numColumns);
+  const mobileTotalSlides = numberOfBlocks; // One dot per block on mobile
 
   useEffect(() => {
     const setCarouselWidth = () => {
@@ -103,6 +108,37 @@ const SectionCarousel = props => {
     window.addEventListener('resize', setCarouselWidth);
     return () => window.removeEventListener('resize', setCarouselWidth);
   }, []);
+
+  // Track scroll position to update current slide
+  useEffect(() => {
+    if (!hasBlocks || mobileTotalSlides <= 1) return;
+
+    const slider = window.document.getElementById(sliderId);
+    if (!slider) return;
+
+    const updateCurrentSlide = () => {
+      const firstBlock = slider.firstChild;
+      if (!firstBlock) return;
+
+      const blockWidth = firstBlock.clientWidth;
+      const gap = 16; // margin-right from CSS
+      // On mobile, treat as 1 column for pagination (one dot per block)
+      const isMobile = window.innerWidth <= 767;
+      const effectiveColumns = isMobile ? 1 : numColumns;
+      const slideWidth = blockWidth * effectiveColumns + gap * (effectiveColumns - 1);
+      const scrollLeft = slider.scrollLeft;
+      const slideIndex = Math.round(scrollLeft / slideWidth);
+      const clampedIndex = Math.max(0, Math.min(slideIndex, mobileTotalSlides - 1));
+      setCurrentSlide(clampedIndex);
+    };
+
+    slider.addEventListener('scroll', updateCurrentSlide, { passive: true });
+    updateCurrentSlide(); // Set initial slide
+
+    return () => {
+      slider.removeEventListener('scroll', updateCurrentSlide);
+    };
+  }, [hasBlocks, numColumns, mobileTotalSlides, sliderId]);
 
   // If external mapping has been included for fields
   // E.g. { h1: { component: MyAwesomeHeader } }
@@ -125,6 +161,21 @@ const SectionCarousel = props => {
     slider.scrollLeft = slider.scrollLeft + slideWidth;
     // Fix for Safari
     e.target.focus();
+  };
+
+  const onDotClick = (index) => {
+    const slider = window.document.getElementById(sliderId);
+    if (!slider || !slider.firstChild) return;
+    
+    const blockWidth = slider.firstChild.clientWidth;
+    const gap = 16; // margin-right from CSS
+    // On mobile, treat as 1 column for pagination (one dot per block)
+    const isMobile = window.innerWidth <= 767;
+    const effectiveColumns = isMobile ? 1 : numColumns;
+    const slideWidth = blockWidth * effectiveColumns + gap * (effectiveColumns - 1);
+    const scrollPosition = index * slideWidth;
+    
+    slider.scrollTo({ left: scrollPosition, behavior: 'smooth' });
   };
 
   const onKeyDown = e => {
@@ -178,6 +229,20 @@ const SectionCarousel = props => {
               options={options}
             />
           </div>
+          {numberOfBlocks > 1 && (
+            <div className={css.paginationDots}>
+              {Array.from({ length: mobileTotalSlides }).map((_, index) => (
+                <button
+                  key={index}
+                  className={classNames(css.paginationDot, {
+                    [css.paginationDotActive]: currentSlide === index,
+                  })}
+                  onClick={() => onDotClick(index)}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       ) : null}
     </SectionContainer>

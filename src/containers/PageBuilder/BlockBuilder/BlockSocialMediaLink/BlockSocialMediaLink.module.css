@@ -3,24 +3,18 @@
 .root {
   display: inline-block;
 
-  &:first-child .link {
-    padding-left: 0px;
-  }
 
-  &:last-child .link {
-    padding-right: 0px;
-  }
 }
 
 .link {
-  padding: 12px 10px;
+  padding: 8px;
 
   &:hover {
     color: var(--colorGrey700);
   }
 
   @media (--viewportMedium) {
-    padding: 12px 12px;
+    padding: 8px;
   }
 }
 

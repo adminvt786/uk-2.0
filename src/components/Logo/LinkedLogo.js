@@ -29,6 +29,7 @@ const LinkedLogo = props => {
     layout = 'desktop',
     linkToExternalSite,
     alt,
+    isScrolled,
     ...rest
   } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -49,6 +50,7 @@ const LinkedLogo = props => {
         className={logoClassName}
         logoImageClassName={logoImageClassName}
         alt={alt}
+        isScrolled={isScrolled}
       />
     </NamedLink>
   );

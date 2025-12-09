@@ -115,7 +115,7 @@ const SectionFooter = props => {
     >
       <div className={css.footer}>
         <div className={classNames(css.content, getContentCss(numberOfColumns))}>
-          <div>
+          <div className={css.logoWrapperMain}>
             <LinkedLogo
               rootClassName={css.logoLink}
               logoClassName={css.logoWrapper}
@@ -136,13 +136,42 @@ const SectionFooter = props => {
                 <BlockBuilder blocks={linksWithBlockId} sectionId={sectionId} options={options} />
               </div>
             ) : null}
-            <Field data={copyright} className={css.copyright} />
+            {/* <Field data={copyright} className={css.copyright} /> */}
           </div>
           <div className={classNames(css.grid, getGridCss(numberOfColumns))}>
             <BlockBuilder blocks={blocks} sectionId={sectionId} options={options} />
           </div>
         </div>
+        <div className={css.newsletterSection}>
+          <div className={css.newsletterContent}>
+            <h6 className={css.newsletterLabel}>STAY UPDATED</h6>
+            <h2 className={css.newsletterTitle}>Join Our Newsletter</h2>
+            <p className={css.newsletterDescription}>
+              Get the latest insights on travel creator marketing and exclusive opportunities.
+            </p>
+            <form className={css.newsletterForm}>
+              <input
+                type="email"
+                placeholder="Your Email Address"
+                className={css.newsletterInput}
+                aria-label="Email address"
+              />
+            </form>
+          </div>
+          <div className={css.newsletterSeparator}></div>
+          <div className={css.footerBottom}>
+            <div className={css.footerBottomLeft}>
+              <Field data={copyright} className={css.copyright} />
+            </div>
+            <div className={css.footerBottomRight}>
+              <a href="#" className={css.footerLink}>Privacy Policy</a>
+              <a href="#" className={css.footerLink}>Terms of Service</a>
+              <a href="#" className={css.footerLink}>Cookie Policy</a>
+            </div>
+          </div>
+        </div>
       </div>
+
     </SectionContainer>
   );
 };
