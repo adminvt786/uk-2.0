@@ -46,7 +46,7 @@ const ThreeDotsIcon = ({ className }) => (
  * @param {Object} intl - The intl object
  * @returns {string} The formatted date string
  */
-const formatDate = (date, intl) => {
+export const formatDate = (date, intl) => {
   if (!date) return '-';
 
   // Handle Unix timestamp (seconds) - convert to milliseconds if needed

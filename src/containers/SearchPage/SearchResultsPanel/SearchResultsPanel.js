@@ -1,10 +1,14 @@
-import React from 'react';
 import classNames from 'classnames';
 
+import { useConfiguration } from '../../../context/configurationContext';
 import { propTypes } from '../../../util/types';
 import { ListingCard, PaginationLinks } from '../../../components';
 
+import SearchRequestCard from './SearchRequestCard/SearchRequestCard';
 import css from './SearchResultsPanel.module.css';
+import { handleNavigateToRequestQuotePage } from '../../ListingPage/ListingPage.shared';
+import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
+import { useHistory } from 'react-router-dom';
 
 /**
  * SearchResultsPanel component
@@ -21,6 +25,9 @@ import css from './SearchResultsPanel.module.css';
  * @returns {JSX.Element}
  */
 const SearchResultsPanel = props => {
+  const config = useConfiguration();
+  const routes = useRouteConfiguration();
+  const history = useHistory();
   const {
     className,
     rootClassName,
@@ -72,18 +79,45 @@ const SearchResultsPanel = props => {
     }
   };
 
+  const isHotel = listingTypeParam === 'hotels';
+
+  const handleApply = listingId => {
+    const getListing = id => listings.find(l => l.id.uuid === id.uuid);
+
+    handleNavigateToRequestQuotePage({
+      getListing,
+      params: { id: listingId.uuid },
+      history,
+      routes,
+    })();
+  };
+
   return (
     <div className={classes}>
-      <div className={isMapVariant ? css.listingCardsMapVariant : css.listingCards}>
-        {listings.map(l => (
-          <ListingCard
-            className={css.listingCard}
-            key={l.id.uuid}
-            listing={l}
-            renderSizes={cardRenderSizes(isMapVariant)}
-            setActiveListing={setActiveListing}
-          />
-        ))}
+      <div
+        className={
+          isHotel ? css.requestCards : isMapVariant ? css.listingCardsMapVariant : css.listingCards
+        }
+      >
+        {listings.map(l =>
+          isHotel ? (
+            <SearchRequestCard
+              className={css.requestCard}
+              key={l.id.uuid}
+              listing={l}
+              config={config}
+              onApply={handleApply}
+            />
+          ) : (
+            <ListingCard
+              className={css.listingCard}
+              key={l.id.uuid}
+              listing={l}
+              renderSizes={cardRenderSizes(isMapVariant)}
+              setActiveListing={setActiveListing}
+            />
+          )
+        )}
         {props.children}
       </div>
       {paginationLinks}

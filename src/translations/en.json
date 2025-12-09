@@ -1525,5 +1525,11 @@
   "RequestListingCard.openListing": "Open request",
   "RequestListingCard.closeListing": "Close request",
   "RequestListingCard.editListing": "Edit request",
+  "SearchRequestCard.applyButton": "Apply",
+  "SearchRequestCard.descriptionLabel": "Expectations from creator",
+  "SearchRequestCard.creatorRequirementsLabel": "Creator requirements",
+  "SearchRequestCard.collaborationTypeLabel": "Collaboration type",
+  "SearchRequestCard.travelCompensatedLabel": "Is travel compensated?",
+  "SearchRequestCard.priceLabel": "How much?",
   "ManageListingsPage.createRequest": "Create Request"
 }
