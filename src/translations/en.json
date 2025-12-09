@@ -1531,5 +1531,6 @@
   "SearchRequestCard.collaborationTypeLabel": "Collaboration type",
   "SearchRequestCard.travelCompensatedLabel": "Is travel compensated?",
   "SearchRequestCard.priceLabel": "How much?",
-  "ManageListingsPage.createRequest": "Create Request"
+  "ManageListingsPage.createRequest": "Create Request",
+  "ListingCard.packagesStartFrom": "Packages start from {price}"
 }

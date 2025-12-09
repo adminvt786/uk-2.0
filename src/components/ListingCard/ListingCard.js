@@ -15,12 +15,14 @@ import { ensureListing, ensureUser } from '../../util/data';
 import { richText } from '../../util/richText';
 import { createSlug } from '../../util/urlHelpers';
 import { isBookingProcessAlias } from '../../transactions/transaction';
+import { obfuscatedCoordinates } from '../../util/maps';
 
 import {
   AspectRatioWrapper,
   NamedLink,
   ResponsiveImage,
   ListingCardThumbnail,
+  Map,
 } from '../../components';
 
 import css from './ListingCard.module.css';
@@ -47,42 +49,6 @@ const priceData = (price, currency, intl) => {
 };
 
 const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRendering: 3000 });
-
-const PriceMaybe = props => {
-  const { price, publicData, config, intl, listingTypeConfig } = props;
-  const showPrice = displayPrice(listingTypeConfig);
-  if (!showPrice && price) {
-    return null;
-  }
-
-  const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, listingTypeConfig);
-  const hasMultiplePriceVariants = isPriceVariationsInUse && publicData?.priceVariants?.length > 1;
-
-  const isBookable = isBookingProcessAlias(publicData?.transactionProcessAlias);
-  const { formattedPrice, priceTitle } = priceData(price, config.currency, intl);
-
-  const priceValue = <span className={css.priceValue}>{formattedPrice}</span>;
-  const pricePerUnit = isBookable ? (
-    <span className={css.perUnit}>
-      <FormattedMessage id="ListingCard.perUnit" values={{ unitType: publicData?.unitType }} />
-    </span>
-  ) : (
-    ''
-  );
-
-  return (
-    <div className={css.price} title={priceTitle}>
-      {hasMultiplePriceVariants ? (
-        <FormattedMessage
-          id="ListingCard.priceStartingFrom"
-          values={{ priceValue, pricePerUnit }}
-        />
-      ) : (
-        <FormattedMessage id="ListingCard.price" values={{ priceValue, pricePerUnit }} />
-      )}
-    </div>
-  );
-};
 
 /**
  * ListingCardImage
@@ -116,8 +82,7 @@ const ListingCardImage = props => {
     style,
   } = props;
 
-  const firstImage =
-    currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
+  const firstImage = currentListing.author.profileImage ? currentListing.author.profileImage : null;
   const variants = firstImage
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
@@ -147,6 +112,49 @@ const ListingCardImage = props => {
       height={aspectHeight}
       setActivePropsMaybe={setActivePropsMaybe}
     />
+  );
+};
+
+/**
+ * ListingCardMap
+ * Component responsible for rendering a small map preview below the listing card image.
+ * Shows obfuscated location if fuzzy maps are enabled.
+ * @component
+ * @param {Object} props
+ * @param {Object} props.geolocation the listing's geolocation {lat, lng}
+ * @param {Object} props.publicData the listing's publicData
+ * @param {string} props.listingId the listing's id for cache key
+ * @param {Object} props.mapsConfig maps configuration
+ * @returns {JSX.Element|null} small map preview or null if no geolocation
+ */
+const ListingCardMap = props => {
+  const { geolocation, publicData, listingId, mapsConfig } = props;
+
+  if (!geolocation) {
+    return null;
+  }
+
+  const address = publicData?.location?.address || '';
+  const cacheKey = listingId ? `${listingId}_${geolocation.lat}_${geolocation.lng}` : null;
+
+  const mapProps = mapsConfig?.fuzzy?.enabled
+    ? { obfuscatedCenter: obfuscatedCoordinates(geolocation, mapsConfig.fuzzy.offset, cacheKey) }
+    : { address, center: geolocation };
+
+  // Truncate address for display
+  const displayAddress = address
+    ? address.length > 30
+      ? `Around ${address.substring(0, 27)}...`
+      : `Around ${address}`
+    : '';
+
+  return (
+    <>
+      <div className={css.mapWrapper}>
+        <Map {...mapProps} useStaticMap={true} mapsConfig={mapsConfig} />
+      </div>
+      {displayAddress && <div className={css.locationText}>{displayAddress}</div>}
+    </>
   );
 };
 
@@ -186,7 +194,11 @@ export const ListingCard = props => {
   const author = ensureUser(listing.author);
   const authorName = author.attributes.profile.displayName;
 
-  const { listingType, cardStyle } = publicData || {};
+  // Get formatted price for "Packages start from" display
+  const { formattedPrice } = priceData(price, config.currency, intl);
+
+  const { listingType, cardStyle, location } = publicData || {};
+  const geolocation = currentListing.attributes.geolocation;
   const validListingTypes = config.listing.listingTypes;
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const showListingImage = requireListingImage(foundListingTypeConfig);
@@ -219,29 +231,30 @@ export const ListingCard = props => {
         style={cardStyle}
         showListingImage={showListingImage}
       />
-      <div className={css.info}>
-        <PriceMaybe
-          price={price}
-          publicData={publicData}
-          config={config}
-          intl={intl}
-          listingTypeConfig={foundListingTypeConfig}
-        />
-        <div className={css.mainInfo}>
-          {showListingImage && (
-            <div className={css.title}>
-              {richText(title, {
-                longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
-                longWordClass: css.longWord,
-              })}
-            </div>
-          )}
-          {showAuthorInfo ? (
-            <div className={css.authorInfo}>
-              <FormattedMessage id="ListingCard.author" values={{ authorName }} />
-            </div>
-          ) : null}
+      <div className={css.cardContent}>
+        <div className={css.info}>
+          <div className={css.mainInfo}>
+            {showListingImage && (
+              <div className={css.title}>
+                {richText(title, {
+                  longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
+                  longWordClass: css.longWord,
+                })}
+              </div>
+            )}
+          </div>
         </div>
+        <ListingCardMap
+          geolocation={geolocation}
+          publicData={publicData}
+          listingId={id}
+          mapsConfig={config.maps}
+        />
+        {formattedPrice && (
+          <div className={css.packagesPrice}>
+            <FormattedMessage id="ListingCard.packagesStartFrom" values={{ price: formattedPrice }} />
+          </div>
+        )}
       </div>
     </NamedLink>
   );
