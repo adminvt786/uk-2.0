@@ -11,7 +11,7 @@
 .container {
   /* Size */
   width: 100%;
-  height: var(--topbarHeight);
+  height: 66px;
 
   /* Layout for child components */
   display: flex;
@@ -23,7 +23,10 @@
   background-color: var(--colorWhite);
 
   /* shadows */
-  box-shadow: var(--boxShadow);
+  box-shadow: var(--boxShadowLight);
+
+  /* Transition for background color change */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 
   @media (--viewportMedium) {
     height: var(--topbarHeightDesktop);
@@ -31,6 +34,32 @@
 
   @media (--viewportLarge) {
     display: none;
+  }
+}
+
+.container.transparent {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.container.transparent .menuIcon {
+  fill: var(--colorWhite);
+}
+
+.container.transparent .menu {
+  color: var(--colorWhite);
+}
+
+.container.scrolled {
+  background-color: var(--colorWhite);
+  box-shadow: var(--boxShadowLight);
+  & .menu{
+    & svg{
+      fill: var(--colorBlack);
+      & path{
+        fill: var(--colorBlack);
+      }
+    }
   }
 }
 
@@ -68,7 +97,7 @@
 }
 
 .menu {
-  padding: 15px 24px;
+  padding: 15px 20px;
   position: relative;
 
   @media (--viewportMedium) {
@@ -138,7 +167,8 @@
 
 /* Icon component styles */
 .rootMenuIcon {
-  fill: var(--colorGrey700);
+  fill: #fff;
+  width: 24px;
 }
 .rootSearchIcon {
   stroke: var(--colorGrey700);

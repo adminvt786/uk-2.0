@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import pickBy from 'lodash/pickBy';
 import classNames from 'classnames';
 
@@ -246,6 +246,33 @@ const TopbarComponent = props => {
   const isMobileMenuOpen = isMobileLayout && mobilemenu === 'open';
   const isMobileSearchOpen = isMobileLayout && mobilesearch === 'open';
 
+  // Handle scroll effect for landing page (mobile)
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const isLandingPage = resolvedCurrentPage === 'LandingPage';
+    
+    if (!isLandingPage) {
+      setIsScrolled(true); // Always show white background on other pages
+      return;
+    }
+
+    const handleScroll = () => {
+      const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+      setIsScrolled(scrollPosition > 50);
+    };
+
+    // Set initial state
+    handleScroll();
+
+    // Add scroll listener
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [resolvedCurrentPage]);
+
   const mobileMenu = (
     <TopbarMobileMenu
       isAuthenticated={isAuthenticated}
@@ -321,8 +348,21 @@ const TopbarComponent = props => {
         onLogout={handleLogout}
         currentPage={resolvedCurrentPage}
       />
-      <nav className={classNames(mobileRootClassName || css.container, mobileClassName)}>
-        <Button
+      <nav className={classNames(
+        mobileRootClassName || css.container, 
+        mobileClassName,
+        {
+          [css.scrolled]: isScrolled,
+          [css.transparent]: !isScrolled && resolvedCurrentPage === 'LandingPage',
+        }
+      )}>
+       
+        <LinkedLogo
+          layout={'mobile'}
+          alt={intl.formatMessage({ id: 'Topbar.logoIcon' })}
+          linkToExternalSite={config?.topbar?.logoLink}
+        />
+         <Button
           id={MOBILE_MENU_BUTTON_ID}
           rootClassName={css.menu}
           onClick={() => redirectToURLWithModalState(history, location, 'mobilemenu')}
@@ -334,12 +374,7 @@ const TopbarComponent = props => {
           />
           {notificationDot}
         </Button>
-        <LinkedLogo
-          layout={'mobile'}
-          alt={intl.formatMessage({ id: 'Topbar.logoIcon' })}
-          linkToExternalSite={config?.topbar?.logoLink}
-        />
-        {mobileSearchButtonMaybe}
+        {/* {mobileSearchButtonMaybe} */}
       </nav>
       <div className={css.desktop}>
         <TopbarDesktop

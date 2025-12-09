@@ -2,9 +2,11 @@
 
 .carouselContainer {
   display: flex;
+  flex-direction: column;
   align-items: center;
   scroll-behavior: smooth;
   padding: 64px 0 0 0;
+  position: relative;
 
   &:hover .carouselArrows {
     opacity: 1;
@@ -71,6 +73,7 @@
   flex-wrap: nowrap;
   width: var(--carouselWidth);
   padding-bottom: 24px;
+  position: relative;
 
   overflow-x: auto;
   -ms-overflow-style: none;
@@ -80,6 +83,11 @@
 
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  @media (max-width: 767px) {
+    width: 100%;
+    padding-bottom: 0;
   }
 }
 
@@ -172,4 +180,45 @@
       width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px) / 4);
     }
   }
+}
+
+.paginationDots {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 0 0 0;
+  margin-top: 0;
+  width: 100%;
+
+  @media (max-width: 767px) {
+    display: flex;
+    padding: 20px 0 0 0;
+  }
+}
+
+.paginationDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+.paginationDotActive {
+  background: linear-gradient(180deg, #10506D 0%, #1A98A6 100%);
+
+  width: 8px;
+  height: 8px;
 }
