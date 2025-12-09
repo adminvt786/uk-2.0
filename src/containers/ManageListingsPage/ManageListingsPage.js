@@ -1,68 +1,70 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
 
-import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { useConfiguration } from '../../context/configurationContext';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
+import { isErrorNoPermissionToPostListings } from '../../util/errors';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { pathByRouteName } from '../../util/routes';
+import { propTypes } from '../../util/types';
+import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
 import {
   hasPermissionToPostListings,
   isCreatorUserType,
   showCreateListingLinkForUser,
 } from '../../util/userHelpers';
-import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
-import { propTypes } from '../../util/types';
-import { isErrorNoPermissionToPostListings } from '../../util/errors';
-import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
 
 import {
   H3,
+  LayoutSingleColumn,
   Page,
   PaginationLinks,
+  PrimaryButton,
   UserNav,
-  LayoutSingleColumn,
-  NamedLink,
-  Modal,
 } from '../../components';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
-import ManageListingCard from './ManageListingCard/ManageListingCard';
+import RequestListingCard from './RequestListingCard/RequestListingCard';
 
+import CreateRequestModal from './CreateRequestModal/CreateRequestModal';
 import {
   closeListing,
-  openListing,
-  getOwnListingsById,
   discardDraft,
+  getOwnListingsById,
+  openListing,
 } from './ManageListingsPage.duck';
 import css from './ManageListingsPage.module.css';
-import DiscardDraftModal from './DiscardDraftModal/DiscardDraftModal';
 
 const Heading = props => {
-  const { listingsAreLoaded, pagination } = props;
+  const { listingsAreLoaded, pagination, onOpenCreateRequestModal } = props;
   const hasResults = listingsAreLoaded && pagination.totalItems > 0;
   const hasNoResults = listingsAreLoaded && pagination.totalItems === 0;
 
   return hasResults ? (
-    <H3 as="h1" className={css.heading}>
-      <FormattedMessage
-        id="ManageListingsPage.youHaveListings"
-        values={{ count: pagination.totalItems }}
-      />
-    </H3>
+    <div className={css.headingContainer}>
+      <H3 as="h1" className={css.heading}>
+        <FormattedMessage
+          id="ManageListingsPage.youHaveListings"
+          values={{ count: pagination.totalItems }}
+        />
+      </H3>
+      <PrimaryButton className={css.createRequestButton} onClick={onOpenCreateRequestModal}>
+        <FormattedMessage id="ManageListingsPage.createRequest" />
+      </PrimaryButton>
+    </div>
   ) : hasNoResults ? (
     <div className={css.noResultsContainer}>
       <H3 as="h1" className={css.headingNoListings}>
         <FormattedMessage id="ManageListingsPage.noResults" />
       </H3>
-      <p className={css.createListingParagraph}>
-        <NamedLink className={css.createListingLink} name="NewListingPage">
-          <FormattedMessage id="ManageListingsPage.createListing" />
-        </NamedLink>
-      </p>
+      <PrimaryButton className={css.createRequestButton} onClick={onOpenCreateRequestModal}>
+        <FormattedMessage id="ManageListingsPage.createRequest" />
+      </PrimaryButton>
     </div>
   ) : null;
 };
@@ -108,8 +110,8 @@ const PaginationLinksMaybe = props => {
  */
 export const ManageListingsPageComponent = props => {
   const [listingMenuOpen, setListingMenuOpen] = useState(null);
-  const [discardDraftModalOpen, setDiscardDraftModalOpen] = useState(null);
-  const [discardDraftModalId, setDiscardDraftModalId] = useState(null);
+  const [createRequestModalOpen, setCreateRequestModalOpen] = useState(false);
+  const [editListingId, setEditListingId] = useState(null);
   const history = useHistory();
   const routeConfiguration = useRouteConfiguration();
   const config = useConfiguration();
@@ -133,6 +135,10 @@ export const ManageListingsPageComponent = props => {
     queryParams,
     scrollingDisabled,
     onManageDisableScrolling,
+    createListingInProgress,
+    createListingError,
+    updateRequestInProgress,
+    updateRequestError,
   } = props;
 
   useEffect(() => {
@@ -165,17 +171,6 @@ export const ManageListingsPageComponent = props => {
     }
   };
 
-  const openDiscardDraftModal = listingId => {
-    setDiscardDraftModalId(listingId);
-    setDiscardDraftModalOpen(true);
-  };
-
-  const handleDiscardDraft = () => {
-    onDiscardDraft(discardDraftModalId);
-    setDiscardDraftModalOpen(false);
-    setDiscardDraftModalId(null);
-  };
-
   const hasPaginationInfo = !!pagination && pagination.totalItems != null;
   const listingsAreLoaded = !queryInProgress && hasPaginationInfo;
 
@@ -194,18 +189,6 @@ export const ManageListingsPageComponent = props => {
       </H3>
     </div>
   );
-
-  const closingErrorListingId = !!closingListingError && closingListingError.listingId;
-  const openingErrorListingId = !!openingListingError && openingListingError.listingId;
-  const discardingErrorListingId = !!discardingDraftError && discardingDraft.listingId;
-
-  const panelWidth = 62.5;
-  // Render hints for responsive image
-  const renderSizes = [
-    `(max-width: 767px) 100vw`,
-    `(max-width: 1920px) ${panelWidth / 2}vw`,
-    `${panelWidth / 3}vw`,
-  ].join(', ');
 
   const showManageListingsLink = showCreateListingLinkForUser(config, currentUser);
 
@@ -230,37 +213,41 @@ export const ManageListingsPageComponent = props => {
         {queryListingsError ? queryError : null}
 
         <div className={css.listingPanel}>
-          <Heading listingsAreLoaded={listingsAreLoaded} pagination={pagination} />
+          <Heading
+            listingsAreLoaded={listingsAreLoaded}
+            pagination={pagination}
+            onOpenCreateRequestModal={() => setCreateRequestModalOpen(true)}
+          />
 
           <div className={css.listingCards}>
             {listings.map(l => (
-              <ManageListingCard
-                className={css.listingCard}
+              <RequestListingCard
                 key={l.id.uuid}
                 listing={l}
+                config={config}
                 isMenuOpen={!!listingMenuOpen && listingMenuOpen.id.uuid === l.id.uuid}
                 actionsInProgressListingId={openingListing || closingListing || discardingDraft}
                 onToggleMenu={onToggleMenu}
-                onCloseListing={onCloseListing}
                 onOpenListing={handleOpenListing}
-                onDiscardDraft={openDiscardDraftModal}
-                hasOpeningError={openingErrorListingId.uuid === l.id.uuid}
-                hasClosingError={closingErrorListingId.uuid === l.id.uuid}
-                hasDiscardingError={discardingErrorListingId.uuid === l.id.uuid}
-                renderSizes={renderSizes}
+                onCloseListing={onCloseListing}
+                onEditListing={listingId => {
+                  setEditListingId(listingId);
+                  setCreateRequestModalOpen(true);
+                }}
               />
             ))}
           </div>
-          {onManageDisableScrolling && discardDraftModalOpen ? (
-            <DiscardDraftModal
-              id="ManageListingsPage"
-              isOpen={discardDraftModalOpen}
+
+          {onManageDisableScrolling && createRequestModalOpen ? (
+            <CreateRequestModal
+              id="ManageListingsPageCreateRequest"
+              isOpen={createRequestModalOpen}
               onManageDisableScrolling={onManageDisableScrolling}
-              onCloseModal={() => setDiscardDraftModalOpen(false)}
-              onDiscardDraft={handleDiscardDraft}
-              focusElementId={
-                discardDraftModalId ? `discardButton_${discardDraftModalId.uuid}` : null
-              }
+              onCloseModal={() => setCreateRequestModalOpen(false)}
+              config={config}
+              inProgress={createListingInProgress || updateRequestInProgress}
+              error={createListingError || updateRequestError}
+              editListingId={editListingId}
             />
           ) : null}
 
@@ -289,6 +276,10 @@ const mapStateToProps = state => {
     closingListingError,
     discardingDraft,
     discardingDraftError,
+    createListingInProgress,
+    createListingError,
+    updateRequestInProgress,
+    updateRequestError,
   } = state.ManageListingsPage;
   const listings = getOwnListingsById(state, currentPageResultIds);
   return {
@@ -306,6 +297,10 @@ const mapStateToProps = state => {
     closingListingError,
     discardingDraft,
     discardingDraftError,
+    createListingInProgress,
+    createListingError,
+    updateRequestInProgress,
+    updateRequestError,
   };
 };
 
