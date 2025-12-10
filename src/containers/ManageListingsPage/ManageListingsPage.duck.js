@@ -5,6 +5,8 @@ import { createImageVariantConfig } from '../../util/sdkLoader';
 import { parse } from '../../util/urlHelpers';
 
 import { fetchCurrentUser } from '../../ducks/user.duck';
+import { getImageVariantInfo } from '../EditListingPage/EditListingPage.duck';
+import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
 // Pagination page size might need to be dynamic on responsive page layouts
 // Current design has max 3 columns 42 is divisible by 2 and 3
@@ -30,6 +32,50 @@ export const getOwnListingsById = (state, listingIds) => {
 };
 
 // ================ Async Thunks ================ //
+
+export const createRequestListing = createAsyncThunk(
+  'ManageListingsPage/createRequestListing',
+  async ({ data, config }, { dispatch, extra: sdk, rejectWithValue }) => {
+    try {
+      const imageVariantInfo = getImageVariantInfo(config.layout.listingImage);
+      const queryParams = {
+        expand: true,
+        include: ['author', 'images', 'currentStock'],
+        'fields.image': imageVariantInfo.fieldsImage,
+        ...imageVariantInfo.imageVariants,
+      };
+
+      const res = await sdk.ownListings.create(data, queryParams);
+
+      dispatch(addMarketplaceEntities(res));
+      return res;
+    } catch (error) {
+      return rejectWithValue(storableError(error));
+    }
+  }
+);
+
+export const updateRequestListing = createAsyncThunk(
+  'ManageListingsPage/updateRequestListing',
+  async ({ data, config }, { dispatch, extra: sdk, rejectWithValue }) => {
+    try {
+      const imageVariantInfo = getImageVariantInfo(config.layout.listingImage);
+      const queryParams = {
+        expand: true,
+        include: ['author', 'images', 'currentStock'],
+        'fields.image': imageVariantInfo.fieldsImage,
+        ...imageVariantInfo.imageVariants,
+      };
+
+      const res = await sdk.ownListings.update(data, queryParams);
+
+      dispatch(addMarketplaceEntities(res));
+      return res;
+    } catch (error) {
+      return rejectWithValue(storableError(error));
+    }
+  }
+);
 
 ////////////////////////
 // Query Own Listings //
@@ -167,6 +213,11 @@ const manageListingsPageSlice = createSlice({
     closingListingError: null,
     discardingDraft: null,
     discardingDraftError: null,
+
+    createListingInProgress: false,
+    createListingError: null,
+    updateRequestInProgress: false,
+    updateRequestError: null,
   },
   reducers: {
     clearOpenListingError: state => {
@@ -201,7 +252,31 @@ const manageListingsPageSlice = createSlice({
         state.queryInProgress = false;
         state.queryListingsError = action.payload;
       });
-
+    // Create request listing  cases
+    builder
+      .addCase(createRequestListing.pending, state => {
+        state.createListingInProgress = true;
+        state.createListingError = null;
+      })
+      .addCase(createRequestListing.fulfilled, (state, action) => {
+        state.createListingInProgress = false;
+      })
+      .addCase(createRequestListing.rejected, (state, action) => {
+        state.createListingInProgress = false;
+        state.createListingError = action.payload;
+      })
+      // Update profile listing cases
+      .addCase(updateRequestListing.pending, state => {
+        state.updateRequestInProgress = true;
+        state.updateRequestError = null;
+      })
+      .addCase(updateRequestListing.fulfilled, (state, action) => {
+        state.updateRequestInProgress = false;
+      })
+      .addCase(updateRequestListing.rejected, (state, action) => {
+        state.updateRequestInProgress = false;
+        state.updateRequestError = action.payload;
+      });
     // Open listing
     builder
       .addCase(openListingThunk.pending, (state, action) => {
@@ -310,3 +385,8 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
       throw e;
     });
 };
+
+//selectors
+export const requestListingSelector = (state, listingId) => {
+  return listingId ? getOwnListingsById(state, [listingId])[0] : null;
+}

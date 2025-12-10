@@ -200,7 +200,7 @@ export const handleNavigateToMakeOfferPage = parameters => () => {
  * @param {Object} parameters.routes The routes object from react-router.
  * @returns {Function} A function that navigates to RequestQuotePage.
  */
-export const handleNavigateToRequestQuotePage = parameters => () => {
+export const handleNavigateToRequestQuotePage = (parameters) => () => {
   const { getListing, params, history, routes } = parameters;
 
   const listingId = new UUID(params.id);

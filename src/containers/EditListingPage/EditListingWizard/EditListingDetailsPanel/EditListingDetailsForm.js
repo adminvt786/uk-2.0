@@ -60,7 +60,7 @@ const FieldHidden = props => {
 // - listingType              Set of predefined configurations for each listing type
 // - transactionProcessAlias  Initiate correct transaction against Marketplace API
 // - unitType                 Main use case: pricing unit
-const FieldSelectListingType = props => {
+export const FieldSelectListingType = props => {
   const {
     name,
     listingTypes,

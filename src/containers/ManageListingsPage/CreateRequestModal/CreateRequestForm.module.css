@@ -1,0 +1,129 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  /* Dimensions */
+  width: 100%;
+  height: auto;
+
+  /* Layout */
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  padding-top: 1px;
+
+  @media (--viewportMedium) {
+    padding-top: 2px;
+  }
+}
+
+.error {
+  color: var(--colorFail);
+}
+
+.formMargins {
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 32px;
+  }
+}
+
+.title {
+  composes: formMargins;
+}
+
+.description {
+  composes: formMargins;
+  flex-shrink: 0;
+}
+
+.listingTypeSelect {
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 32px;
+  }
+}
+
+.selectedLabel {
+  composes: label from global;
+}
+
+.selectedValue {
+  margin-top: 0;
+  margin-bottom: 6px;
+
+  @media (--viewportMedium) {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 2px 0 6px 0;
+  }
+}
+
+.unitTypeHidden {
+  display: none;
+}
+
+.submitButton {
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.input {
+  flex-shrink: 0;
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 32px;
+  }
+}
+
+.locationAutocompleteInput {
+  /* Safari bugfix: without this Safari will print placeholder to a wrong place */
+  &::-webkit-input-placeholder {
+    line-height: normal;
+  }
+}
+
+.locationAutocompleteInputIcon {
+  display: none;
+}
+
+.predictionsRoot {
+  position: absolute;
+  width: 100%;
+  top: 36px;
+  left: 0;
+  background-color: var(--marketplaceColor);
+  border-bottom-left-radius: var(--borderRadius);
+  border-bottom-right-radius: var(--borderRadius);
+  box-shadow: var(--boxShadowPopup);
+  z-index: calc(var(--zIndexPopup) + 1);
+
+  @media (--viewportMedium) {
+    top: 40px;
+  }
+}
+
+.dateFields {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    flex-direction: row;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+}
+
+.dateField {
+  flex: 1;
+}
+
+.priceField {
+  flex: 1;
+  margin-bottom: 20px;
+}
