@@ -248,7 +248,7 @@ const TopbarComponent = props => {
 
   // Handle scroll effect for landing page (mobile)
   const [isScrolled, setIsScrolled] = useState(false);
-  const isLandingPage = resolvedCurrentPage === 'LandingPage' || (resolvedCurrentPage && resolvedCurrentPage.includes('CMSPage:landing-page-2'));
+  const isLandingPage = resolvedCurrentPage === 'LandingPage' || (resolvedCurrentPage && resolvedCurrentPage.includes('CMSPage:landing-page-2')) || (resolvedCurrentPage && resolvedCurrentPage.includes('CMSPage:creator-landing-page'));
 
   useEffect(() => {
     if (!isLandingPage) {
