@@ -222,7 +222,7 @@ const SectionCarousel = props => {
     }
   };
 
-
+  const isLongDot = (sectionId === 'paid_columns_section' || sectionId === 'pre_columns_section');
 
   return (
     <SectionContainer
@@ -264,7 +264,7 @@ const SectionCarousel = props => {
             />
           </div>
           {numberOfBlocks > 1 && (
-            <div className={classNames(css.paginationDots, sectionId === 'paid_columns_section' ? css.paidColumnsPaginationDots : '')}>
+            <div className={classNames(css.paginationDots, isLongDot ? css.paidColumnsPaginationDots : '')}>
               {Array.from({ length: mobileTotalSlides }).map((_, index) => (
                 <button
                   key={index}
