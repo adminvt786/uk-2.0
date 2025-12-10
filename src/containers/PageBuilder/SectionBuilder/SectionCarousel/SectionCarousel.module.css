@@ -207,13 +207,6 @@
   padding: 0;
   transition: background-color 0.3s ease, transform 0.2s ease;
 
-  &:hover {
-    transform: scale(1.2);
-  }
-
-  &:active {
-    transform: scale(0.9);
-  }
 }
 
 .paginationDotActive {
@@ -221,4 +214,13 @@
 
   width: 8px;
   height: 8px;
+}
+.paidColumnsPaginationDots{
+  gap: 4px !important;
+  padding: 30px 0 0 0 !important;
+  & .paginationDotActive{
+    background: #D9A441 !important;
+    width: 45px !important;
+    border-radius: 40px !important;
+  }
 }

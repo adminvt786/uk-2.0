@@ -264,7 +264,7 @@ const SectionCarousel = props => {
             />
           </div>
           {numberOfBlocks > 1 && (
-            <div className={css.paginationDots}>
+            <div className={classNames(css.paginationDots, sectionId === 'paid_columns_section' ? css.paidColumnsPaginationDots : '')}>
               {Array.from({ length: mobileTotalSlides }).map((_, index) => (
                 <button
                   key={index}

@@ -5,18 +5,16 @@
   }
   & > div {
     &:nth-child(2) {
-      padding: 186px 0 80px;
+      padding: 170px 0 170px;
       @media (max-width: 1023px) {
         padding: 120px 0 80px;
       }
       @media (max-width: 767px) {
         padding: 147px 0 111px;
         background: linear-gradient(180deg, rgba(0, 0, 0, 0) -133.57%, #000000 200%);
-
       }
     }
     & > div {
-      padding-top: 20px;
       max-width: 100%;
       @media (max-width: 767px) {
         padding: 16px 20px 0;
@@ -300,7 +298,7 @@
               padding: 0 0;
               margin: 90px auto 0;
               list-style: none;
-              max-width: 1000px;
+              max-width: 1100px;
               @media (max-width: 1023px) {
                 gap: 16px;
               }
@@ -327,7 +325,7 @@
 
                 color: #fff;
 
-                backdrop-filter: blur(64px);
+                backdrop-filter: blur(40px);
                 background: #ffffff1a;
                 border-radius: 20px;
                 border: 0.2px solid #ffffff33;
@@ -377,7 +375,7 @@
                   text-transform: uppercase;
 
                   text-align: center;
-                  margin: 0 0 16px;
+                  margin: 0 0 12px;
 
                   display: flex;
                   flex-direction: column;
@@ -416,15 +414,14 @@
 }
 :global(#paid_columns_section) {
   background-color: #fff;
-  width: 100vw;
-  
+  max-width: 100vw;
+
   & > div {
     padding: 100px 0;
     @media (max-width: 1023px) {
-      padding: 50px 0;
+      padding: 80px 0;
     }
     @media (max-width: 767px) {
-      padding: 40px 0;
     }
     & > div {
       padding-top: 0;
@@ -506,7 +503,7 @@
                 leading-trim: CAP_HEIGHT;
                 line-height: 30px;
                 letter-spacing: 0%;
-                color: #0B2F52;
+                color: #0b2f52;
                 padding: 0;
                 margin: 0 0 16px;
                 text-align: center;
@@ -530,7 +527,7 @@
                 line-height: 30px;
                 letter-spacing: 0%;
                 text-align: center;
-                color: #3C3C3C;
+                color: #3c3c3c;
                 padding: 0;
                 margin: 0;
                 @media (max-width: 1023px) {
@@ -550,21 +547,21 @@
   }
 }
 :global(#how_it_works_creators) {
-  background: #F9FAFB;
-  & h3{
+  background: #f9fafb;
+  & h3 {
     font-family: Inter;
-font-weight: 500;
-font-style: Medium;
-font-size: 20px;
-leading-trim: CAP_HEIGHT;
-line-height: 30px;
-letter-spacing: 0%;
-color: #0B2F52;
-padding: 0;
-margin: 0 0 24px;
-@media (max-width: 767px) {
-  margin: 0 0 12px;
-}
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 20px;
+    leading-trim: CAP_HEIGHT;
+    line-height: 30px;
+    letter-spacing: 0%;
+    color: #0b2f52;
+    padding: 0;
+    margin: 0 0 24px;
+    @media (max-width: 767px) {
+      margin: 0 0 12px;
+    }
   }
   & > div {
     padding: 70px 0;
@@ -577,24 +574,23 @@ margin: 0 0 24px;
     & > div {
       padding-top: 0;
       max-width: calc(1340px + 64px);
-      grid-template-columns: repeat(4,1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 20px;
       @media (max-width: 1023px) {
-        grid-template-columns: repeat(2,1fr);
+        grid-template-columns: repeat(2, 1fr);
         padding: 0 40px;
       }
       @media (max-width: 767px) {
-   
-        grid-template-columns: repeat(1,1fr);
+        grid-template-columns: repeat(1, 1fr);
         gap: 40px;
       }
-   
+
       & > div {
         background-color: #fff;
         padding: 20px;
         border-radius: 20px;
         position: relative;
-        &::after{
+        &::after {
           position: absolute;
           content: '';
           display: block;
@@ -602,7 +598,7 @@ margin: 0 0 24px;
           right: -20px;
           width: 20px;
           height: 1px;
-          background-color: #D9A441;
+          background-color: #d9a441;
           @media (max-width: 767px) {
             margin-bottom: 12px;
             width: 1px;
@@ -615,17 +611,17 @@ margin: 0 0 24px;
           }
         }
         @media (max-width: 1023px) {
-          &:nth-child(2)::after{
+          &:nth-child(2)::after {
             display: none;
           }
         }
         @media (max-width: 767px) {
-          &:nth-child(2)::after{
+          &:nth-child(2)::after {
             display: block;
           }
         }
-        &:last-child{
-          &::after{
+        &:last-child {
+          &::after {
             display: none;
           }
         }
@@ -645,7 +641,7 @@ margin: 0 0 24px;
             &:nth-child(1) {
               & > div {
                 &::after {
-             background-image: url("data:image/svg+xml,%3Csvg width='66' height='34' viewBox='0 0 66 34' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath opacity='0.2' d='M16.8799 33.84C13.6266 33.84 10.7199 33.12 8.15993 31.68C5.59993 30.24 3.59993 28.2667 2.15993 25.76C0.719932 23.2 -6.82771e-05 20.3467 -6.82771e-05 17.2C-6.82771e-05 14.0534 0.719932 11.2534 2.15993 8.80005C3.59993 6.29338 5.59993 4.34671 8.15993 2.96005C10.7199 1.57338 13.6266 0.880047 16.8799 0.880047C20.1333 0.880047 23.0133 1.60005 25.5199 3.04005C28.0266 4.42671 29.9733 6.37338 31.3599 8.88005C32.7999 11.3867 33.5199 14.2134 33.5199 17.36C33.5199 20.5067 32.7999 23.3334 31.3599 25.84C29.9733 28.3467 27.9999 30.32 25.4399 31.76C22.9333 33.1467 20.0799 33.84 16.8799 33.84ZM17.6799 32.32C20.3999 32.32 22.4533 31.0934 23.8399 28.64C25.2266 26.1867 25.9199 22.7734 25.9199 18.4C25.9199 13.0667 24.9866 9.06672 23.1199 6.40005C21.3066 3.73338 18.9866 2.40005 16.1599 2.40005C13.3866 2.40005 11.2533 3.68005 9.75993 6.24005C8.2666 8.74671 7.51993 12.1334 7.51993 16.4C7.51993 21.0934 8.45327 24.9334 10.3199 27.92C12.1866 30.8534 14.6399 32.32 17.6799 32.32ZM38.7649 30.96C43.4583 26.8534 46.9249 23.68 49.1649 21.44C51.4583 19.1467 53.0849 17.1734 54.0449 15.52C55.0049 13.8667 55.4849 12.1867 55.4849 10.48C55.4849 8.40005 54.9249 6.66671 53.8049 5.28005C52.6849 3.84005 51.1649 3.12005 49.2449 3.12005C47.2183 3.12005 45.5116 4.00005 44.1249 5.76005C42.7916 7.46671 41.5649 10.0534 40.4449 13.52C40.4449 13.5734 40.3383 13.6 40.1249 13.6C39.6449 13.6 39.4316 13.4934 39.4849 13.28L42.8449 0.160047C42.8449 0.0533802 42.9516 4.673e-05 43.1649 4.673e-05C43.3249 4.673e-05 43.4583 0.0533802 43.5649 0.160047C43.7249 0.213381 43.7783 0.266715 43.7249 0.320047C43.6716 0.586714 43.6449 0.906714 43.6449 1.28005C43.6449 2.13338 44.0449 2.56005 44.8449 2.56005C45.3249 2.56005 46.1249 2.37338 47.2449 2.00005C49.5916 1.25338 51.6449 0.880047 53.4049 0.880047C56.2849 0.880047 58.5249 1.60005 60.1249 3.04005C61.7783 4.42671 62.6049 6.26671 62.6049 8.56005C62.6049 10.48 62.0183 12.3467 60.8449 14.16C59.6716 15.92 58.2316 17.5467 56.5249 19.04C54.8183 20.5334 52.4983 22.3734 49.5649 24.56L46.6849 26.72C46.5249 26.88 46.4716 27.0134 46.5249 27.12C46.6316 27.2267 46.8183 27.28 47.0849 27.28C51.8849 27.28 55.3783 27.2 57.5649 27.04C59.8049 26.88 61.5116 26.5067 62.6849 25.92C63.8583 25.28 64.6316 24.24 65.0049 22.8C65.0049 22.6934 65.1383 22.64 65.4049 22.64C65.7783 22.64 65.9649 22.72 65.9649 22.88L64.4449 31.92C64.4449 32.1334 64.3649 32.3467 64.2049 32.56C64.0983 32.72 63.9383 32.8 63.7249 32.8H39.2449C38.9783 32.8 38.7649 32.56 38.6049 32.08C38.4983 31.5467 38.5516 31.1734 38.7649 30.96Z' fill='%23D9A441'/%3E%3C/svg%3E%0A");
+                  background-image: url("data:image/svg+xml,%3Csvg width='66' height='34' viewBox='0 0 66 34' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath opacity='0.2' d='M16.8799 33.84C13.6266 33.84 10.7199 33.12 8.15993 31.68C5.59993 30.24 3.59993 28.2667 2.15993 25.76C0.719932 23.2 -6.82771e-05 20.3467 -6.82771e-05 17.2C-6.82771e-05 14.0534 0.719932 11.2534 2.15993 8.80005C3.59993 6.29338 5.59993 4.34671 8.15993 2.96005C10.7199 1.57338 13.6266 0.880047 16.8799 0.880047C20.1333 0.880047 23.0133 1.60005 25.5199 3.04005C28.0266 4.42671 29.9733 6.37338 31.3599 8.88005C32.7999 11.3867 33.5199 14.2134 33.5199 17.36C33.5199 20.5067 32.7999 23.3334 31.3599 25.84C29.9733 28.3467 27.9999 30.32 25.4399 31.76C22.9333 33.1467 20.0799 33.84 16.8799 33.84ZM17.6799 32.32C20.3999 32.32 22.4533 31.0934 23.8399 28.64C25.2266 26.1867 25.9199 22.7734 25.9199 18.4C25.9199 13.0667 24.9866 9.06672 23.1199 6.40005C21.3066 3.73338 18.9866 2.40005 16.1599 2.40005C13.3866 2.40005 11.2533 3.68005 9.75993 6.24005C8.2666 8.74671 7.51993 12.1334 7.51993 16.4C7.51993 21.0934 8.45327 24.9334 10.3199 27.92C12.1866 30.8534 14.6399 32.32 17.6799 32.32ZM38.7649 30.96C43.4583 26.8534 46.9249 23.68 49.1649 21.44C51.4583 19.1467 53.0849 17.1734 54.0449 15.52C55.0049 13.8667 55.4849 12.1867 55.4849 10.48C55.4849 8.40005 54.9249 6.66671 53.8049 5.28005C52.6849 3.84005 51.1649 3.12005 49.2449 3.12005C47.2183 3.12005 45.5116 4.00005 44.1249 5.76005C42.7916 7.46671 41.5649 10.0534 40.4449 13.52C40.4449 13.5734 40.3383 13.6 40.1249 13.6C39.6449 13.6 39.4316 13.4934 39.4849 13.28L42.8449 0.160047C42.8449 0.0533802 42.9516 4.673e-05 43.1649 4.673e-05C43.3249 4.673e-05 43.4583 0.0533802 43.5649 0.160047C43.7249 0.213381 43.7783 0.266715 43.7249 0.320047C43.6716 0.586714 43.6449 0.906714 43.6449 1.28005C43.6449 2.13338 44.0449 2.56005 44.8449 2.56005C45.3249 2.56005 46.1249 2.37338 47.2449 2.00005C49.5916 1.25338 51.6449 0.880047 53.4049 0.880047C56.2849 0.880047 58.5249 1.60005 60.1249 3.04005C61.7783 4.42671 62.6049 6.26671 62.6049 8.56005C62.6049 10.48 62.0183 12.3467 60.8449 14.16C59.6716 15.92 58.2316 17.5467 56.5249 19.04C54.8183 20.5334 52.4983 22.3734 49.5649 24.56L46.6849 26.72C46.5249 26.88 46.4716 27.0134 46.5249 27.12C46.6316 27.2267 46.8183 27.28 47.0849 27.28C51.8849 27.28 55.3783 27.2 57.5649 27.04C59.8049 26.88 61.5116 26.5067 62.6849 25.92C63.8583 25.28 64.6316 24.24 65.0049 22.8C65.0049 22.6934 65.1383 22.64 65.4049 22.64C65.7783 22.64 65.9649 22.72 65.9649 22.88L64.4449 31.92C64.4449 32.1334 64.3649 32.3467 64.2049 32.56C64.0983 32.72 63.9383 32.8 63.7249 32.8H39.2449C38.9783 32.8 38.7649 32.56 38.6049 32.08C38.4983 31.5467 38.5516 31.1734 38.7649 30.96Z' fill='%23D9A441'/%3E%3C/svg%3E%0A");
                 }
               }
             }
@@ -656,7 +652,7 @@ margin: 0 0 24px;
             &:nth-child(1) {
               & > div {
                 &::after {
-                background-image: url("data:image/svg+xml,%3Csvg width='65' height='55' viewBox='0 0 65 55' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath opacity='0.2' d='M16.8802 33.76C13.6268 33.76 10.7202 33.04 8.16018 31.6C5.60018 30.16 3.60018 28.1866 2.16018 25.68C0.720176 23.12 0.000175864 20.2666 0.000175864 17.12C0.000175864 13.9733 0.720176 11.1733 2.16018 8.71997C3.60018 6.2133 5.60018 4.26664 8.16018 2.87997C10.7202 1.4933 13.6268 0.799969 16.8802 0.799969C20.1335 0.799969 23.0135 1.51997 25.5202 2.95997C28.0268 4.34664 29.9735 6.2933 31.3602 8.79997C32.8002 11.3066 33.5202 14.1333 33.5202 17.28C33.5202 20.4266 32.8002 23.2533 31.3602 25.76C29.9735 28.2666 28.0002 30.24 25.4402 31.68C22.9335 33.0666 20.0802 33.76 16.8802 33.76ZM17.6802 32.24C20.4002 32.24 22.4535 31.0133 23.8402 28.56C25.2268 26.1066 25.9202 22.6933 25.9202 18.32C25.9202 12.9866 24.9868 8.98664 23.1202 6.31997C21.3068 3.6533 18.9868 2.31997 16.1602 2.31997C13.3868 2.31997 11.2535 3.59997 9.76018 6.15997C8.26684 8.66664 7.52018 12.0533 7.52018 16.32C7.52018 21.0133 8.45351 24.8533 10.3202 27.84C12.1868 30.7733 14.6402 32.24 17.6802 32.24ZM40.2852 54.72C40.0718 54.7733 39.8852 54.64 39.7252 54.32C39.6185 54.0533 39.6718 53.8933 39.8852 53.84C45.9118 51.6 50.2318 48.6933 52.8452 45.12C55.4585 41.6 56.7652 38.08 56.7652 34.56C56.7652 31.52 55.9652 29.04 54.3652 27.12C52.8185 25.2 50.6318 24.24 47.8052 24.24C46.7385 24.24 45.5918 24.4 44.3652 24.72C44.2052 24.7733 44.0718 24.64 43.9652 24.32C43.8585 24 43.8852 23.8133 44.0452 23.76C47.8852 22.7466 50.6585 21.28 52.3652 19.36C54.1252 17.3866 55.0052 14.6933 55.0052 11.28C55.0052 8.6133 54.5518 6.55997 53.6452 5.11997C52.7385 3.62664 51.3518 2.87997 49.4852 2.87997C47.2452 2.87997 45.2452 3.6533 43.4852 5.19997C41.7252 6.74664 40.2852 9.03997 39.1652 12.08C39.1118 12.1333 39.0052 12.16 38.8452 12.16C38.3652 12.16 38.1518 12.0533 38.2052 11.84L41.1652 0.15997C41.2718 0.0533034 41.3785 -3.00407e-05 41.4852 -3.00407e-05C41.6452 -3.00407e-05 41.8052 0.0533034 41.9652 0.15997C42.1252 0.213303 42.1785 0.266636 42.1252 0.319968C42.0185 0.746636 41.9652 1.03997 41.9652 1.19997C41.9652 2.10664 42.4185 2.55997 43.3252 2.55997C43.9652 2.55997 44.8452 2.34664 45.9652 1.91997C47.1918 1.54664 48.2318 1.27997 49.0852 1.11997C49.9918 0.906636 51.0052 0.799969 52.1252 0.799969C55.2185 0.799969 57.6452 1.70664 59.4052 3.51997C61.1652 5.27997 62.0452 7.4133 62.0452 9.91997C62.0452 12.96 60.9518 15.76 58.7652 18.32C56.6318 20.8266 53.7518 22.4533 50.1252 23.2L50.6052 22C55.1385 22.1066 58.5785 23.28 60.9252 25.52C63.2718 27.76 64.4452 30.4533 64.4452 33.6C64.4452 36.16 63.5652 38.7466 61.8052 41.36C60.0452 44.0266 57.3518 46.5333 53.7252 48.88C50.0985 51.2266 45.6185 53.1733 40.2852 54.72Z' fill='%23D9A441'/%3E%3C/svg%3E%0A");
+                  background-image: url("data:image/svg+xml,%3Csvg width='65' height='55' viewBox='0 0 65 55' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath opacity='0.2' d='M16.8802 33.76C13.6268 33.76 10.7202 33.04 8.16018 31.6C5.60018 30.16 3.60018 28.1866 2.16018 25.68C0.720176 23.12 0.000175864 20.2666 0.000175864 17.12C0.000175864 13.9733 0.720176 11.1733 2.16018 8.71997C3.60018 6.2133 5.60018 4.26664 8.16018 2.87997C10.7202 1.4933 13.6268 0.799969 16.8802 0.799969C20.1335 0.799969 23.0135 1.51997 25.5202 2.95997C28.0268 4.34664 29.9735 6.2933 31.3602 8.79997C32.8002 11.3066 33.5202 14.1333 33.5202 17.28C33.5202 20.4266 32.8002 23.2533 31.3602 25.76C29.9735 28.2666 28.0002 30.24 25.4402 31.68C22.9335 33.0666 20.0802 33.76 16.8802 33.76ZM17.6802 32.24C20.4002 32.24 22.4535 31.0133 23.8402 28.56C25.2268 26.1066 25.9202 22.6933 25.9202 18.32C25.9202 12.9866 24.9868 8.98664 23.1202 6.31997C21.3068 3.6533 18.9868 2.31997 16.1602 2.31997C13.3868 2.31997 11.2535 3.59997 9.76018 6.15997C8.26684 8.66664 7.52018 12.0533 7.52018 16.32C7.52018 21.0133 8.45351 24.8533 10.3202 27.84C12.1868 30.7733 14.6402 32.24 17.6802 32.24ZM40.2852 54.72C40.0718 54.7733 39.8852 54.64 39.7252 54.32C39.6185 54.0533 39.6718 53.8933 39.8852 53.84C45.9118 51.6 50.2318 48.6933 52.8452 45.12C55.4585 41.6 56.7652 38.08 56.7652 34.56C56.7652 31.52 55.9652 29.04 54.3652 27.12C52.8185 25.2 50.6318 24.24 47.8052 24.24C46.7385 24.24 45.5918 24.4 44.3652 24.72C44.2052 24.7733 44.0718 24.64 43.9652 24.32C43.8585 24 43.8852 23.8133 44.0452 23.76C47.8852 22.7466 50.6585 21.28 52.3652 19.36C54.1252 17.3866 55.0052 14.6933 55.0052 11.28C55.0052 8.6133 54.5518 6.55997 53.6452 5.11997C52.7385 3.62664 51.3518 2.87997 49.4852 2.87997C47.2452 2.87997 45.2452 3.6533 43.4852 5.19997C41.7252 6.74664 40.2852 9.03997 39.1652 12.08C39.1118 12.1333 39.0052 12.16 38.8452 12.16C38.3652 12.16 38.1518 12.0533 38.2052 11.84L41.1652 0.15997C41.2718 0.0533034 41.3785 -3.00407e-05 41.4852 -3.00407e-05C41.6452 -3.00407e-05 41.8052 0.0533034 41.9652 0.15997C42.1252 0.213303 42.1785 0.266636 42.1252 0.319968C42.0185 0.746636 41.9652 1.03997 41.9652 1.19997C41.9652 2.10664 42.4185 2.55997 43.3252 2.55997C43.9652 2.55997 44.8452 2.34664 45.9652 1.91997C47.1918 1.54664 48.2318 1.27997 49.0852 1.11997C49.9918 0.906636 51.0052 0.799969 52.1252 0.799969C55.2185 0.799969 57.6452 1.70664 59.4052 3.51997C61.1652 5.27997 62.0452 7.4133 62.0452 9.91997C62.0452 12.96 60.9518 15.76 58.7652 18.32C56.6318 20.8266 53.7518 22.4533 50.1252 23.2L50.6052 22C55.1385 22.1066 58.5785 23.28 60.9252 25.52C63.2718 27.76 64.4452 30.4533 64.4452 33.6C64.4452 36.16 63.5652 38.7466 61.8052 41.36C60.0452 44.0266 57.3518 46.5333 53.7252 48.88C50.0985 51.2266 45.6185 53.1733 40.2852 54.72Z' fill='%23D9A441'/%3E%3C/svg%3E%0A");
                 }
               }
             }
@@ -709,7 +705,7 @@ margin: 0 0 24px;
               leading-trim: CAP_HEIGHT;
               line-height: 28px;
               letter-spacing: 0%;
-              color: #3C3C3C;
+              color: #3c3c3c;
               padding: 0;
               margin: 0;
               @media (max-width: 767px) {
@@ -736,10 +732,10 @@ margin: 0 0 24px;
       line-height: 60px;
       letter-spacing: 0%;
       text-align: center;
-      
+
       padding: 0;
       margin: 0 auto 16px;
-      color: #0B2F52;
+      color: #0b2f52;
       @media (max-width: 1023px) {
         font-size: 30px;
         line-height: 36px;
@@ -758,9 +754,9 @@ margin: 0 0 24px;
       letter-spacing: 0%;
       text-align: center;
       text-wrap: unset;
-      
+
       text-align: center;
-      color: #3C3C3C;
+      color: #3c3c3c;
       margin: 0 auto 70px;
       padding: 0;
       @media (max-width: 1023px) {
@@ -800,13 +796,150 @@ margin: 0 0 24px;
 }
 
 :global(#trusted_hotels_worldwide) {
-  display: none;
-  background-color: red;
+  background-color: #f9fafb;
+  & header {
+    justify-content: center;
+  }
+  & > div {
+    padding: 70px 0;
+    @media (max-width: 1023px) {
+      padding: 50px 0;
+    }
+    @media (max-width: 767px) {
+      padding: 40px 0;
+    }
+    & > div {
+      padding-top: 0;
+      max-width: calc(1340px + 64px);
+      margin: 0 auto;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 20px;
+      @media (max-width: 1200px) {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      @media (max-width: 767px) {
+        padding: 0 20px;
+      }
+      @media (max-width: 580px) {
+        padding: 0 20px;
+        grid-template-columns: repeat(2, 1fr);
+      }
+      & > div {
+        & > div {
+          &:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+          }
+        }
+      }
+    }
+  }
+  & h3 {
+    font-family: Inter;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 16px;
+    leading-trim: CAP_HEIGHT;
+    line-height: 30px;
+    letter-spacing: 0%;
+    color: #0b2f52;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+  }
+  & h2 {
+    font-family: Inter;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 20px;
+    leading-trim: CAP_HEIGHT;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: center;
+    text-transform: uppercase;
+    color: #0b2f52;
+    padding: 0;
+    margin: 0 auto 64px;
+  }
 }
+:global(#number_columns) {
+  background-color: #0b2f52;
+  &::before {
+    content: '';
+    /* position: absolute; */
+    display: block;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(
+      270deg,
+      rgba(255, 255, 255, 0) 0%,
+      #ffffff 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+  & > div {
+    padding: 30px 0 70px;
+    &>div{
+      max-width: calc(1340px + 64px);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      @media (max-width: 767px) {
+        display: grid;
+        column-gap: 30px;
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  }
+  & h3 {
+    font-family: Cormorant Garamond;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 80px;
+    leading-trim: CAP_HEIGHT;
+    line-height: 85px;
+    letter-spacing: 0%;
+    text-align: center;
+    padding: 0;
+    margin: 0 0 16px;
+    color: #d9a441;
+    @media (max-width: 1023px) {
+      font-size: 50px;
+      line-height: 55px;
+    }
+    @media (max-width: 767px) {
+      font-size: 60px;
+      line-height: 65px;
+    }
+  }
+  & p{
+    font-family: Inter;
+font-weight: 400;
+font-style: Regular;
+font-size: 18px;
+leading-trim: CAP_HEIGHT;
+line-height: 32px;
+letter-spacing: 0%;
+color: #fff;
+padding: 0;
+margin: 0;
+text-align: center;
+    @media (max-width: 767px) {
+      font-size: 16px;
+      line-height: 28px;
+    }
+  }
+}
+
 :global(#join_the_elite) {
   position: relative;
   overflow: hidden;
-display: none;
   &::before {
     content: '';
     position: absolute;
@@ -814,12 +947,8 @@ display: none;
     left: 0;
     right: 0;
     bottom: 0;
-    background: 
-        /* linear-gradient(0deg, #000000, #000000), */ linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0) -133.57%,
-      #000000 100%
-    );
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) -106.06%, rgba(0, 0, 0, 0.6) 100%);
+
     z-index: 1;
     pointer-events: none;
     opacity: 0.85;
@@ -832,7 +961,7 @@ display: none;
   & > div {
     &:nth-child(2) {
       @media (max-width: 767px) {
-        padding: 40px 0px 50px;
+        padding: 40px 0px 57px;
       }
     }
     & > div {
@@ -855,16 +984,24 @@ display: none;
     letter-spacing: 0%;
     text-align: center;
     text-transform: uppercase;
+
+    border: 0.5px solid #ffffff33;
+    backdrop-filter: blur(54px);
+    background-color: #ffffff0d;
+    border-radius: 40px;
+    padding: 12px 30px;
+
+    text-align: center;
+    text-transform: uppercase;
     color: #fff;
-    padding: 0;
+    width: fit-content;
+    margin: 0 auto;
     @media (max-width: 1023px) {
       font-size: 14px;
       line-height: 28px;
     }
     @media (max-width: 767px) {
-      font-size: 12px;
-      line-height: 24px;
-      padding: 0 20px;
+      padding: 8px 30px;
     }
   }
   & h2 {
@@ -890,22 +1027,32 @@ display: none;
   }
   & h1 {
     font-family: Cormorant Garamond;
-    font-weight: 400;
-    font-style: Italic;
-    font-size: 80px;
+    font-weight: 600;
+    font-style: SemiBold;
+    font-size: 50px;
     leading-trim: CAP_HEIGHT;
-    line-height: 85px;
+    line-height: 65px;
     letter-spacing: 0%;
     text-align: center;
+    text-wrap: unset;
+
+    text-align: center;
     color: #fff;
+    max-width: 530px;
+    margin: 16px auto 0;
     @media (max-width: 1023px) {
-      font-size: 60px;
-      line-height: 65px;
+      font-size: 40px;
+      line-height: 55px;
     }
     @media (max-width: 767px) {
-      font-size: 32px;
+      font-size: 30px;
       line-height: 40px;
       padding: 0 0;
+    }
+    & em {
+      color: #d9a441;
+      display: block;
+      font-style: normal;
     }
   }
   & p {
@@ -917,6 +1064,7 @@ display: none;
     line-height: 32px;
     letter-spacing: 0%;
     text-align: center;
+    max-width: 670px;
 
     color: #faf8f4;
     padding: 0;
@@ -924,20 +1072,54 @@ display: none;
     @media (max-width: 1023px) {
       font-size: 16px;
       line-height: 28px;
+      margin: 12px 0 20px;
     }
   }
-  & :global(#get_started_today-block-2) {
+  & :global(#join_the_elite-block-2) {
     & > div {
-      &:nth-child(1) {
-        width: 216px;
-        margin: 0 auto;
+      & ul {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+        list-style: none;
+        padding: 0;
         @media (max-width: 767px) {
-          width: 180px;
+          gap: 12px;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+        & li {
+          font-family: Inter;
+          font-weight: 400;
+          font-style: Regular;
+          font-size: 16px;
+          leading-trim: CAP_HEIGHT;
+          line-height: 32px;
+          letter-spacing: 0%;
+          text-align: center;
+          color: #ffffff;
+          padding: 0;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          &::before {
+            content: '';
+            display: block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: #d9a441;
+          }
         }
       }
     }
   }
-  & :global(#get_started_today-block-1) {
+  & :global(#join_the_elite-block-1) {
     & > div {
       & ul {
         display: flex;
@@ -953,7 +1135,7 @@ display: none;
         }
         @media (max-width: 767px) {
           flex-direction: column;
-          gap: 16px;
+          gap: 10px;
           padding: 0 20px 24px;
           width: 100%;
         }
@@ -974,8 +1156,9 @@ display: none;
               letter-spacing: 0%;
 
               padding: 12px 30px;
-              background-color: #fff;
-              height: 52px;
+              background-color: #d9a441;
+              border-radius: 40px;
+              height: 60px;
               align-content: center;
               color: #000;
               text-decoration: none;
@@ -985,16 +1168,15 @@ display: none;
               gap: 10px;
               transition: all 0.3s ease;
               cursor: pointer;
+              width: fit-content;
               @media (max-width: 1023px) {
                 font-size: 14px;
                 padding: 10px 24px;
-                height: 48px;
+                height: 50px;
               }
               @media (max-width: 767px) {
                 font-size: 14px;
                 padding: 12px 24px;
-                height: 48px;
-                width: 100%;
                 text-align: center;
                 width: fit-content;
                 margin: 0 auto;
@@ -1038,10 +1220,11 @@ display: none;
               line-height: 100%;
               letter-spacing: 0%;
 
+              border-radius: 40px;
               padding: 12px 30px;
-              height: 52px;
+              height: 60px;
               align-content: center;
-              color: #fff;
+              color: #3c3c3c;
               text-decoration: none;
               display: flex;
               align-items: center;
@@ -1049,16 +1232,18 @@ display: none;
               gap: 10px;
               transition: all 0.3s ease;
               cursor: pointer;
+              background-color: #ffffff;
+              width: fit-content;
+              margin: 0 auto;
               @media (max-width: 1023px) {
                 font-size: 14px;
                 padding: 10px 24px;
-                height: 48px;
+                height: 50px;
               }
               @media (max-width: 767px) {
                 font-size: 14px;
                 padding: 12px 24px;
-                height: 48px;
-                width: 100%;
+                height: 50px;
                 text-align: center;
               }
               &:hover {
@@ -1070,7 +1255,7 @@ display: none;
                 transform: translateY(0);
                 box-shadow: 0 2px 6px rgba(255, 255, 255, 0.15);
               }
-              &::before {
+              &::after {
                 content: '';
                 display: block;
                 width: 18px;
@@ -1078,7 +1263,7 @@ display: none;
                 background-size: contain;
                 background-repeat: no-repeat;
                 background-position: center;
-                background-image: url("data:image/svg+xml,%3Csvg width='20' height='21' viewBox='0 0 20 21' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0.75 8.75H18.75M14.75 0.75V4.75M4.75 0.75V4.75M14.75 2.75H4.75C3.68913 2.75 2.67172 3.17143 1.92157 3.92157C1.17143 4.67172 0.75 5.68913 0.75 6.75V15.5C0.75 16.5609 1.17143 17.5783 1.92157 18.3284C2.67172 19.0786 3.68913 19.5 4.75 19.5H14.75C15.8109 19.5 16.8283 19.0786 17.5784 18.3284C18.3286 17.5783 18.75 16.5609 18.75 15.5V6.75C18.75 5.68913 18.3286 4.67172 17.5784 3.92157C16.8283 3.17143 15.8109 2.75 14.75 2.75Z' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+                background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M14.5835 14.5835L11.4724 11.4724M13.0279 6.80572C13.0279 8.45595 12.3724 10.0386 11.2055 11.2055C10.0386 12.3724 8.45595 13.0279 6.80572 13.0279C5.15548 13.0279 3.57284 12.3724 2.40594 11.2055C1.23905 10.0386 0.583496 8.45595 0.583496 6.80572C0.583496 5.15548 1.23905 3.57284 2.40594 2.40594C3.57284 1.23905 5.15548 0.583496 6.80572 0.583496C8.45595 0.583496 10.0386 1.23905 11.2055 2.40594C12.3724 3.57284 13.0279 5.15548 13.0279 6.80572Z' stroke='%233C3C3C' stroke-width='1.16667' stroke-miterlimit='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
                 transition: transform 0.3s ease;
               }
               &:hover::before {
@@ -1090,7 +1275,4 @@ display: none;
       }
     }
   }
-}
-:global(#creator_benefits_section) {
-  display: none;
 }

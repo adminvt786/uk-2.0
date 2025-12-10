@@ -82,6 +82,16 @@ const SuccessStoriesTwo = () => {
                                 clickable: true,
                             }}
                             className={css.swiper}
+                            breakpoints={{
+                                0: {
+                                    spaceBetween: 20,
+                                    slidesPerView: 1,
+                                },
+                                768: {
+                                    spaceBetween: 20,
+                                    slidesPerView: 1,
+                                },
+                            }}
                         >
                             {successStories.map((story) => (
                                 <SwiperSlide key={story.id} className={css.swiperSlide}>
