@@ -106,6 +106,7 @@ const calculateContainerWidth = (containerRefTarget, parentWidth) => {
  * @returns component to be placed inside TopbarDesktop
  */
 const CustomLinksMenu = ({
+  isScrolled,
   currentPage,
   customLinks = [],
   hasClientSideContentReady,
@@ -203,8 +204,8 @@ const CustomLinksMenu = ({
   const hasPriorityLinks = isMeasured && priorityLinks.length > 0;
 
   return (
-    <div className={css.customLinksMenu} ref={containerRef} {...styleMaybe}>
-      <PriorityLinks links={links} priorityLinks={priorityLinks} setLinks={setLinks} />
+    <div className={css.customLinksMenu} ref={containerRef} >
+      <PriorityLinks links={links} priorityLinks={priorityLinks} setLinks={setLinks} isScrolled={isScrolled} />
       {mounted && hasMenuLinks ? (
         <LinksMenu
           id="linksMenu"

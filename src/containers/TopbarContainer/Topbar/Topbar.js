@@ -248,10 +248,9 @@ const TopbarComponent = props => {
 
   // Handle scroll effect for landing page (mobile)
   const [isScrolled, setIsScrolled] = useState(false);
+  const isLandingPage = resolvedCurrentPage === 'LandingPage' || (resolvedCurrentPage && resolvedCurrentPage.includes('CMSPage:landing-page-2'));
 
   useEffect(() => {
-    const isLandingPage = resolvedCurrentPage === 'LandingPage';
-    
     if (!isLandingPage) {
       setIsScrolled(true); // Always show white background on other pages
       return;
@@ -317,7 +316,7 @@ const TopbarComponent = props => {
     searchFormDisplay === SEARCH_DISPLAY_ONLY_SEARCH_PAGE &&
     ['SearchPage', 'SearchPageWithListingType'].includes(resolvedCurrentPage);
   const showSearchNotOnLandingPage =
-    searchFormDisplay === SEARCH_DISPLAY_NOT_LANDING_PAGE && resolvedCurrentPage !== 'LandingPage';
+    searchFormDisplay === SEARCH_DISPLAY_NOT_LANDING_PAGE && !isLandingPage;
 
   const showSearchForm =
     showSearchOnAllPages || showSearchOnSearchPage || showSearchNotOnLandingPage;
@@ -337,6 +336,7 @@ const TopbarComponent = props => {
   ) : (
     <div className={css.searchMenu} />
   );
+  const isSearchPage = resolvedCurrentPage === 'SearchPage';
 
   return (
     <div className={classes}>
@@ -353,10 +353,10 @@ const TopbarComponent = props => {
         mobileClassName,
         {
           [css.scrolled]: isScrolled,
-          [css.transparent]: !isScrolled && resolvedCurrentPage === 'LandingPage',
+          [css.transparent]: !isScrolled && isLandingPage,
         }
       )}>
-       
+               {isSearchPage ? mobileSearchButtonMaybe : null}
         <LinkedLogo
           layout={'mobile'}
           alt={intl.formatMessage({ id: 'Topbar.logoIcon' })}
@@ -375,7 +375,7 @@ const TopbarComponent = props => {
           />
           {notificationDot}
         </Button>
-        {/* {mobileSearchButtonMaybe} */}
+
       </nav>
       <div className={css.desktop}>
         <TopbarDesktop

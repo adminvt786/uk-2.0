@@ -62,6 +62,7 @@ const PriorityLink = ({ linkConfig }) => {
  * @returns container div with priority links included.
  */
 const PriorityLinks = props => {
+  const { isScrolled } = props;
   const containerRef = useRef(null);
 
   // With this useEffect, we measure the widths of each rendered priority link
@@ -100,7 +101,7 @@ const PriorityLinks = props => {
   const linkConfigs = isMeasured ? priorityLinks : links;
 
   return isMeasured || isServer ? (
-    <div className={css.priorityLinkWrapper} {...styleWrapper} ref={containerRef}>
+    <div className={classNames(css.priorityLinkWrapper, { [css.scrolledHeader]: isScrolled })} {...styleWrapper} ref={containerRef}>
       {linkConfigs.map((linkConfig, index) => {
         return <PriorityLink key={`${linkConfig.text}_${index}`} linkConfig={linkConfig} />;
       })}

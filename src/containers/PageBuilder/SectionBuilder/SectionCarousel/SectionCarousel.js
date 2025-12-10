@@ -6,7 +6,8 @@ import BlockBuilder from '../../BlockBuilder';
 
 import SectionContainer from '../SectionContainer';
 import css from './SectionCarousel.module.css';
-
+import CreatorBenefitsSection from '../../../../components/CreatorBenefitsSection/CreatorBenefitsSection';
+import WeAcceptApplicants from '../../../../components/WeAcceptApplicants/WeAcceptApplicants';
 const KEY_CODE_ARROW_LEFT = 37;
 const KEY_CODE_ARROW_RIGHT = 39;
 
@@ -90,6 +91,35 @@ const SectionCarousel = props => {
   const totalSlides = Math.ceil(numberOfBlocks / numColumns);
   const mobileTotalSlides = numberOfBlocks; // One dot per block on mobile
 
+  
+  if(sectionId === 'we_accept_applicants') {
+    return (
+      <WeAcceptApplicants
+        title={title}
+        description={description}
+        blocks={blocks}
+        defaultClasses={defaultClasses}
+        appearance={appearance}
+        options={options}
+        sectionId={sectionId}
+      />
+    );
+  }
+  if(sectionId === 'creator_benefits_section') {
+    return (
+      <CreatorBenefitsSection
+        title={title}
+        description={description}
+        blocks={blocks}
+        defaultClasses={defaultClasses}
+        appearance={appearance}
+        options={options}
+        sectionId={sectionId}
+      />
+    );
+  }
+
+
   useEffect(() => {
     const setCarouselWidth = () => {
       if (hasBlocks) {
@@ -108,6 +138,8 @@ const SectionCarousel = props => {
     window.addEventListener('resize', setCarouselWidth);
     return () => window.removeEventListener('resize', setCarouselWidth);
   }, []);
+
+  
 
   // Track scroll position to update current slide
   useEffect(() => {
@@ -189,6 +221,8 @@ const SectionCarousel = props => {
       onSlideRight(e);
     }
   };
+
+
 
   return (
     <SectionContainer

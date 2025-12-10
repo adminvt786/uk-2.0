@@ -8,6 +8,7 @@ import SectionContainer from '../SectionContainer';
 import css from './SectionArticle.module.css';
 import FeaturedCreators from '../../../../components/FeaturedCreators/FeaturedCreators';
 import SuccessStories from '../../../../components/SuccessStories/SuccessStories';
+import SuccessStoriesTwo from '../../../../components/SuccessStoriesTwo/SuccessStoriesTwo';
 
 /**
  * @typedef {Object} BlockConfig
@@ -70,6 +71,11 @@ const SectionArticle = props => {
   const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
   const hasBlocks = blocks?.length > 0;
 
+  if(sectionId === 'success_stories_two') {
+    return (
+      <SuccessStoriesTwo/>
+    );
+  }
   if(sectionId === 'featured_creators_section') {
     return (
       <FeaturedCreators/>

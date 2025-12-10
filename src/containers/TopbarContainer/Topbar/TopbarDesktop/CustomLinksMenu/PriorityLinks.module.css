@@ -5,7 +5,7 @@
   height: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: right;
+  justify-content: center;
 }
 
 .priorityLink {
@@ -16,11 +16,11 @@
   font-size: 14px;
   line-height: 18px;
   letter-spacing: 0;
-  color: var(--colorGrey700);
+  color: #fff;
 
   flex-shrink: 0;
   height: 100%;
-  padding: 0 12px 0 12px;
+  padding: 0 20px 0 20px;
   margin: 0;
 
   &:hover {
@@ -44,9 +44,21 @@
 }
 
 .priorityLinkLabel {
-  composes: textSmall from global;
+  font-family: Inter;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: CAP_HEIGHT;
+  line-height: 100%;
+  letter-spacing: 0%;
+  
   display: inline-block;
-  margin: 28px 0;
+  margin: 33px 0;
   text-decoration: inherit;
   text-wrap: nowrap;
+}
+.scrolledHeader{
+  & .priorityLinkLabel{
+    color: #1E1E1E;
+  }
 }

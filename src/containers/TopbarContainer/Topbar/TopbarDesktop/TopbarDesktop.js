@@ -153,9 +153,11 @@ const TopbarDesktop = props => {
     setMounted(true);
   }, []);
 
+  const isLandingPage = currentPage === 'LandingPage' || currentPage.includes('CMSPage:landing-page-2');
+
   // Handle scroll effect for landing page
   useEffect(() => {
-    const isLandingPage = currentPage === 'LandingPage';
+   
     
     if (!isLandingPage) {
       setIsScrolled(true); // Always show white background on other pages
@@ -188,7 +190,7 @@ const TopbarDesktop = props => {
     className,
     {
       [css.scrolled]: isScrolled,
-      [css.transparent]: !isScrolled && currentPage === 'LandingPage',
+      [css.transparent]: !isScrolled && isLandingPage,
     }
   );
 
@@ -224,28 +226,11 @@ const TopbarDesktop = props => {
       })}
     />
   );
-  const mainLandingPage = currentPage === 'LandingPage';
+  const isSearchPage = currentPage === 'SearchPage';
 
-  // Landing page menu items
-  const landingPageMenuItems = mainLandingPage ? (
-    <>
-      <NamedLink name="LandingPage" className={css.landingMenuItem}>
-        <span className={css.landingMenuItemLabel}>For Hotels</span>
-      </NamedLink>
-      <NamedLink name="LandingPage" className={css.landingMenuItem}>
-        <span className={css.landingMenuItemLabel}>For Creators</span>
-      </NamedLink>
-      <NamedLink name="LandingPage" className={css.landingMenuItem}>
-        <span className={css.landingMenuItemLabel}>Case Studies</span>
-      </NamedLink>
-      <NamedLink name="LandingPage" className={css.landingMenuItem}>
-        <span className={css.landingMenuItemLabel}>About</span>
-      </NamedLink>
-    </>
-  ) : null;
 
   // Landing page "Get Started" button
-  const getStartedButton = mainLandingPage ? (
+  const getStartedButton = isAuthenticatedOrJustHydrated ? null : (
     <NamedLink name="SignupPage" className={css.getStartedButton}>
       <span className={css.getStartedText}>Get Started</span>
       <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -253,7 +238,7 @@ const TopbarDesktop = props => {
 </svg>
 
     </NamedLink>
-  ) : null;
+  );
 
   return (
     <nav
@@ -267,27 +252,27 @@ const TopbarDesktop = props => {
         linkToExternalSite={config?.topbar?.logoLink}
         isScrolled={isScrolled}
       />
-      {/* {searchFormMaybe} */}
-
-      {mainLandingPage ? (
-        <div className={css.topbarLinks}>
-          {landingPageMenuItems}
-        </div>
-      ) : (
-        <div className={css.topbarLinks}>
-          <CustomLinksMenu
+      {isSearchPage ?
+      searchFormMaybe 
+      :
+        <CustomLinksMenu
+        isScrolled={isScrolled}
             currentPage={currentPage}
             customLinks={customLinks}
             intl={intl}
             hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
             showCreateListingsLink={showCreateListingsLink && !isCreatorUserType(currentUser)}
-          />
+          />}
+
+        <div className={css.topbarLinks}>
+        
           {inboxLinkMaybe}
           {profileMenuMaybe}
           {loginLinkMaybe}
+          { getStartedButton}
         </div>
-      )}
-      {mainLandingPage ? getStartedButton : signupLinkMaybe}
+      {/* {signupLinkMaybe} */}
+
     </nav>
   );
 };

@@ -30,7 +30,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 50px;
+  gap: 24px;
 }
 
 .landingMenuItem {
@@ -72,7 +72,9 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background-color: var(--colorWhite);
+  background-color: #D9A441;
+  border-radius: 40px;
+
   color: var(--colorBlack);
   font-weight: var(--fontWeightMedium);
   font-size: 14px;
@@ -85,6 +87,9 @@
   margin: 0;
   border: none;
   white-space: nowrap;
+  & svg{
+    display: none;
+  }
 }
 
 .getStartedButton:hover {
@@ -136,6 +141,17 @@
 .root.transparent {
   background-color: transparent;
   box-shadow: none;
+  
+  & .getStartedButton{
+    background-color: var(--colorWhite);
+    border-radius: 0px;
+    & svg{
+      display: block;
+    }
+  }
+  & .getStartedText{
+    color: #000;
+  }
 }
 
 .root.transparent .topbarLink {
@@ -273,9 +289,17 @@
 .topbarLinkLabel {
   composes: textSmall from global;
   display: inline-block;
-  margin: 28px 0;
+  margin: 33px 0;
   text-decoration: inherit;
   position: relative;
+  font-family: Inter;
+font-weight: 400;
+font-style: Regular;
+font-size: 16px;
+leading-trim: CAP_HEIGHT;
+line-height: 100%;
+letter-spacing: 0%;
+
 }
 
 .notificationDot {
@@ -349,7 +373,7 @@
 }
 
 .avatar {
-  margin: 16px 0;
+  margin: 19px 0;
 }
 
 .profileMenuContent {
