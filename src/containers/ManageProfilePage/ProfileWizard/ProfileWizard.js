@@ -8,6 +8,7 @@ import { H3 } from '../../../components';
 // Import modules from this directory
 import ProfileStepIndicator from './ProfileStepIndicator/ProfileStepIndicator';
 import ProfileDetailsPanel from './ProfileDetailsStep/ProfileDetailsPanel';
+import ProfileListingTypesPanel from './ProfileListingTypesStep/ProfileListingTypesPanel';
 import ProfilePackagesPanel from './ProfilePackagesStep/ProfilePackagesPanel';
 import ProfileVerificationPanel from './ProfileVerificationStep/ProfileVerificationPanel';
 import css from './ProfileWizard.module.css';
@@ -19,7 +20,7 @@ import {
 } from '../ManageProfilePage.duck';
 import { useConfiguration } from '../../../context/configurationContext';
 
-const TOTAL_STEPS = 3;
+const TOTAL_STEPS = 4;
 
 /**
  * Get the current step from URL params, defaulting to 1
@@ -88,7 +89,7 @@ const ProfileWizard = props => {
       if (currentStep === 1 && !hasExistingListing) {
         // Create new draft if no listing exists
         await dispatch(createProfileListingDraft({ data: values, config }));
-      } else if (currentStep === 3 && isDraft) {
+      } else if (currentStep === 4 && isDraft) {
         // Publish on final step if still in draft
         await dispatch(publishProfileListing({ listingId, config }));
       } else if (listingId) {
@@ -124,6 +125,8 @@ const ProfileWizard = props => {
         return intl.formatMessage({ id: 'ProfileWizard.step2Title' });
       case 3:
         return intl.formatMessage({ id: 'ProfileWizard.step3Title' });
+      case 4:
+        return intl.formatMessage({ id: 'ProfileWizard.step4Title' });
       default:
         return '';
     }
@@ -149,6 +152,15 @@ const ProfileWizard = props => {
         );
       case 2:
         return (
+          <ProfileListingTypesPanel
+            profileListing={profileListing}
+            onSubmit={handleStepSubmit}
+            onBack={handleBack}
+            submitButtonText={submitButtonText}
+          />
+        );
+      case 3:
+        return (
           <ProfilePackagesPanel
             profileListing={profileListing}
             onSubmit={handleStepSubmit}
@@ -156,7 +168,7 @@ const ProfileWizard = props => {
             config={config}
           />
         );
-      case 3:
+      case 4:
         return (
           <ProfileVerificationPanel profileListing={profileListing} onSubmit={handleStepSubmit} />
         );
@@ -182,7 +194,7 @@ const ProfileWizard = props => {
 
       {renderCurrentStep()}
 
-      {currentStep > 1 && (
+      {currentStep > 1 && currentStep !== 2 && (
         <button
           type="button"
           className={css.backButton}

@@ -26,7 +26,7 @@ function ManageProfilePage(props) {
       title={intl.formatMessage({ id: 'ManageProfilePage.title' })}
       scrollingDisabled={scrollingDisabled}
     >
-      <LayoutSingleColumn topbar={<TopbarContainer />} footer={<FooterContainer />}>
+      <LayoutSingleColumn topbar={<TopbarContainer />}>
         {profileListingInProgress ? (
           <IconSpinner className={css.iconSpinner} />
         ) : (

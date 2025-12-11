@@ -1,7 +1,4 @@
-import React from 'react';
 import classNames from 'classnames';
-
-// Import modules from this directory
 import ProfileDetailsForm from './ProfileDetailsForm';
 import css from './ProfileDetailsPanel.module.css';
 import { useDispatch, useSelector } from 'react-redux';
@@ -169,8 +166,6 @@ const ProfileDetailsPanel = props => {
             images,
             ...rest
           } = values;
-
-          console.log('ProfileDetailsPanel onSubmit values:', values);
 
           const nestedCategories = pickCategoryFields(rest, categoryKey, 1, listingCategories);
           // Remove old categories by explicitly saving null for them.

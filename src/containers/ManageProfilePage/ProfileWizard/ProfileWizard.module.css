@@ -16,6 +16,7 @@
 .stepTitle {
   margin-top: 24px;
   margin-bottom: 24px;
+  text-align: center;
 
   @media (--viewportMedium) {
     margin-top: 32px;
