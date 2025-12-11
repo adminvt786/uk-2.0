@@ -1,4 +1,3 @@
-import React from 'react';
 import classNames from 'classnames';
 import { useLocation, useHistory } from 'react-router-dom';
 
@@ -171,7 +170,11 @@ const ProfileWizard = props => {
         );
       case 4:
         return (
-          <ProfileVerificationPanel profileListing={profileListing} onSubmit={handleStepSubmit} />
+          <ProfileVerificationPanel
+            profileListing={profileListing}
+            onSubmit={handleStepSubmit}
+            onBack={handleBack}
+          />
         );
       default:
         return null;
@@ -194,17 +197,6 @@ const ProfileWizard = props => {
       </H3>
 
       {renderCurrentStep()}
-
-      {currentStep > 1 && currentStep !== 2 && (
-        <button
-          type="button"
-          className={css.backButton}
-          onClick={handleBack}
-          disabled={updateInProgress}
-        >
-          {intl.formatMessage({ id: 'ProfileWizard.back' })}
-        </button>
-      )}
     </main>
   );
 };

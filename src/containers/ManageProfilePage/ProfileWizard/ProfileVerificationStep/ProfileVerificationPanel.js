@@ -82,24 +82,30 @@ const ProfileVerificationPanel = props => {
         </Button>
       </div>
 
-      {/* Divider */}
-      <div className={css.divider}>
-        <span className={css.dividerText}>
-          <FormattedMessage id="ProfileVerificationPanel.or" />
-        </span>
-      </div>
-
-      {/* Publish/Go to Profile Section */}
-      <div className={css.publishSection}>
-        <Button className={css.publishButton} onClick={handleActionClick} inProgress={inProgress}>
-          {actionButtonText}
-        </Button>
-
-        {isDraft && (
-          <p className={css.publishNote}>
-            <FormattedMessage id="ProfileVerificationPanel.publishNote" />
-          </p>
-        )}
+      <div className={css.footer}>
+        <div className={css.footerContent}>
+          <div className={css.footerLeft}>
+            <button
+              type="button"
+              className={css.backButton}
+              onClick={props.onBack}
+              disabled={inProgress}
+            >
+              {intl.formatMessage({ id: 'ProfilePackagesPanel.back' })}
+            </button>
+            <p className={css.progressText}>
+              {intl.formatMessage({ id: 'ProfilePackagesPanel.progressSaved' })}
+            </p>
+          </div>
+          <Button
+            className={css.continueButton}
+            onClick={handleActionClick}
+            inProgress={inProgress}
+            disabled={inProgress}
+          >
+            {actionButtonText}
+          </Button>
+        </div>
       </div>
     </div>
   );
