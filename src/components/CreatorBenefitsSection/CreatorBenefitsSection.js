@@ -96,7 +96,7 @@ const CreatorBenefitsSection = props => {
               <Swiper
                 modules={[PaginationModule]}
                 spaceBetween={16}
-                slidesPerView={1.2}
+                slidesPerView={1.3}
                 centeredSlides={true}
                 pagination={{
                   clickable: true,
