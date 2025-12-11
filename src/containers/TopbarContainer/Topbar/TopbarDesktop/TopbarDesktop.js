@@ -261,7 +261,7 @@ const TopbarDesktop = props => {
             customLinks={customLinks}
             intl={intl}
             hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
-            showCreateListingsLink={showCreateListingsLink && !isCreatorUserType(currentUser)}
+            showCreateListingsLink={false && showCreateListingsLink && !isCreatorUserType(currentUser)}
           />}
 
         <div className={css.topbarLinks}>

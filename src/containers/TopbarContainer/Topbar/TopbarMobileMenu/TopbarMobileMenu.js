@@ -198,7 +198,7 @@ const TopbarMobileMenu = props => {
         <div className={css.customLinksWrapper}>{extraLinks}</div>
         <div className={css.spacer} />
       </div>
-      {!isCreator && <div className={css.footer}>{createListingsLinkMaybe}</div>}
+      {/* {!isCreator && <div className={css.footer}>{createListingsLinkMaybe}</div>} */}
     </div>
   );
 };
