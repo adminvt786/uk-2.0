@@ -87,8 +87,8 @@
 }
 
 .stepCompleted .stepDot {
-  background-color: var(--colorSuccess);
-  border-color: var(--colorSuccess);
+  background-color: var(--marketplaceColor);
+  border-color: var(--marketplaceColor);
 }
 
 .stepLine {
@@ -103,7 +103,7 @@
 }
 
 .stepLineCompleted {
-  background-color: var(--colorSuccess);
+  background-color: var(--marketplaceColor);
 }
 
 .stepClickable {
