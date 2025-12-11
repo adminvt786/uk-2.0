@@ -580,7 +580,7 @@
     max-width: 1440px;
     margin: 0 auto;
     @media (max-width: 767px) {
-      padding: 0 20px;
+      padding: 0px;
     }
     & > div {
       padding: 0;
@@ -672,7 +672,7 @@
     }
     & :global(#for_creators_section-block-2) {
       position: relative;
-      padding: 73px 0;
+      padding: 73px 20px;
       @media (min-width: 768px) {
         padding: 24px 0;
       }
@@ -931,6 +931,12 @@
                 display: block;
                 top: -24px;
                 position: absolute;
+                @media (max-width: 767px) {
+                 
+                  height: 60px;
+                  width: 80px;
+                  background-size: contain;
+                }
               }
               & img {
                 position: relative;
@@ -1126,6 +1132,9 @@
             width: 70px;
             height: 70px;
             margin: 0 auto 24px;
+            @media (max-width: 767px) {
+              margin: 0 auto 20px;
+            }
           }
         }
         &:nth-child(1) {

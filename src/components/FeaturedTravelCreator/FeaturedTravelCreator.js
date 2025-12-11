@@ -99,7 +99,7 @@ const FeaturedTravelCreator = props => {
               <Swiper
                 modules={[PaginationModule]}
                 spaceBetween={16}
-                slidesPerView={1.16}
+                slidesPerView={1.3}
                 centeredSlides={true}
                 pagination={false}
                 className={css.swiper}

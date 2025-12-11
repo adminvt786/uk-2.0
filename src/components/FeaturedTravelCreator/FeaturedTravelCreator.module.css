@@ -85,7 +85,7 @@
   display: none;
   @media (max-width: 767px) {
     display: block;
-    padding: 0 24px;
+    padding: 0;
     :global(.swiper-pagination) {
       bottom: 0px !important;
       position: absolute;
@@ -186,65 +186,65 @@
   gap: 0px;
   flex: 1;
   & p {
-    font-family: Inter;
-    font-weight: 400;
+    font-family: Inter !important;
+    font-weight: 400 !important;
     font-style: Regular;
-    font-size: 14px;
+    font-size: 14px !important;
     leading-trim: CAP_HEIGHT;
-    line-height: 32px;
+    line-height: 32px !important;
     letter-spacing: 0%;
     text-align: left;
-    padding: 0;
-    margin: 0;
-    color: #3c3c3c;
+    padding: 0 !important;
+    margin: 0 !important;
+    color: #3c3c3c !important;
   }
 }
 
 .cardTitle {
-  font-family: Cormorant Garamond;
-  font-weight: 600;
+  font-family: Cormorant Garamond !important;
+  font-weight: 600 !important;
   font-style: SemiBold;
-  font-size: 24px;
+  font-size: 24px !important;
   leading-trim: CAP_HEIGHT;
-  line-height: 32px;
+  line-height: 32px !important;
   letter-spacing: 0%;
 
-  color: #0b2f52;
-  margin: 0 0 6px 0;
-  padding: 0;
+  color: #0b2f52 !important;
+  margin: 0 0 6px 0 !important;
+  padding: 0 !important;
 }
 
 .cardTitle h3,
 .cardTitle h2,
 .cardTitle h1 {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 22px;
-  font-weight: 600;
-  color: #0b2f52;
-  margin: 0;
-  padding: 0;
-  line-height: 1.3;
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  color: #0b2f52 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.3 !important;
   letter-spacing: -0.01em;
 }
 
 .cardDescription {
-  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  font-size: 13px;
-  font-weight: 400;
-  color: #9ca3af;
-  line-height: 1.5;
-  margin: 0;
-  padding: 0;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: #9ca3af !important;
+  line-height: 1.5 !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .cardDescription p {
-  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  font-size: 13px;
-  font-weight: 400;
-  color: #9ca3af;
-  margin: 0;
-  padding: 0;
-  line-height: 1.5;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: #9ca3af !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.5 !important;
 }
 
 .ctaButtonFooter {
@@ -277,12 +277,26 @@
   padding: 0 32px;
   backdrop-filter: blur(54px);
   border: 1px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
   @media (max-width: 767px) {
     margin: 40px auto 0 auto;
   }
   &:hover {
     background-color: #e5e7eb;
     text-decoration: none;
+  }
+  &::after{
+    content: "";
+    height: 16px;
+    width: 16px;
+    display: block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath fill='%230B2F52' d='m20 12l.354-.354l.353.354l-.353.354zm-15 .5a.5.5 0 0 1 0-1zm9.354-6.854l6 6l-.708.708l-6-6zm6 6.708l-6 6l-.708-.708l6-6zM20 12.5H5v-1h15z'/%3E%3C/svg%3E");
   }
 }
 .ctaButton {
