@@ -8,7 +8,6 @@ import { types as sdkTypes } from '../../../util/sdkLoader';
 import { H4 } from '../../../components';
 
 import css from './SectionPackages.module.css';
-import { METHOD_OPTIONS } from '../../ManageProfilePage/ProfileWizard/ProfilePackagesStep/ProfilePackagesForm';
 
 const { Money } = sdkTypes;
 
@@ -16,7 +15,7 @@ const { Money } = sdkTypes;
  * Get method label from METHOD_OPTIONS
  */
 const getMethodLabel = method => {
-  const option = METHOD_OPTIONS.find(opt => opt.key === method);
+  const option = [].find(opt => opt.key === method);
   return option ? option.label : method;
 };
 

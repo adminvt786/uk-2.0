@@ -164,6 +164,7 @@ const ProfileWizard = props => {
           <ProfilePackagesPanel
             profileListing={profileListing}
             onSubmit={handleStepSubmit}
+            onBack={handleBack}
             submitButtonText={submitButtonText}
             config={config}
           />

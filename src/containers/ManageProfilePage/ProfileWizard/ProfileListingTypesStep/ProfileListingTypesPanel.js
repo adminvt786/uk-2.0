@@ -93,7 +93,9 @@ const ProfileListingTypesPanel = props => {
     const updateValues = {
       id: profileListing?.id?.uuid,
       publicData: {
-        packages: PACKAGE_TYPES.filter(pkg => selectedTypes.includes(pkg.id)),
+        packages: PACKAGE_TYPES.filter(pkg => selectedTypes.includes(pkg.id)).map(pkg => ({
+          id: pkg.id,
+        })),
       },
     };
     onSubmit(updateValues);

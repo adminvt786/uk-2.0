@@ -1,11 +1,18 @@
 .root {
   flex-grow: 1;
   width: 100%;
-  height: auto;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 24px 120px 24px;
   display: flex;
   flex-direction: column;
+  margin-top: -20px;
 }
 
-.form {
-  flex-grow: 1;
+.subtitle {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #666;
+  text-align: center;
+  margin: 0 0 32px 0;
 }

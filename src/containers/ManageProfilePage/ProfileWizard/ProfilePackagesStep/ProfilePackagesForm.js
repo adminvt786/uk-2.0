@@ -1,301 +1,336 @@
 import classNames from 'classnames';
 import arrayMutators from 'final-form-arrays';
-import { Form as FinalForm } from 'react-final-form';
+import { Field, Form as FinalForm } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
-
-// Import util modules
-import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
-import { required, moneySubUnitAmountAtLeast } from '../../../../util/validators';
-
-// Import shared components
+import { useIntl } from '../../../../util/reactIntl';
+import { moneySubUnitAmountAtLeast } from '../../../../util/validators';
 import {
-  Button,
   FieldCurrencyInput,
   FieldSelect,
   FieldTextInput,
   Form,
-  H4,
-  IconClose,
+  PrimaryButton
 } from '../../../../components';
-
-// Import modules from this directory
-import css from './ProfilePackagesForm.module.css';
 import appSettings from '../../../../config/settings';
+import css from './ProfilePackagesForm.module.css';
 
-// Function to get default packages with translated content
-const getDefaultPackages = intl => [
-  {
-    id: 'default-1',
-    title: intl.formatMessage({ id: 'ProfilePackagesForm.defaultPackage1Title' }),
-    description: intl.formatMessage({ id: 'ProfilePackagesForm.defaultPackage1Description' }),
-    method: 'in-person',
-    price: { amount: 0, currency: 'USD' },
-    isDefault: true,
-    isRequired: true, // Cannot be deleted
+// Package type definitions with emojis
+export const PACKAGE_TYPES = {
+  'content-creation': {
+    emoji: '📸',
+    titleKey: 'ProfilePackagesPanel.contentCreationTitle',
+    descriptionKey: 'ProfilePackagesPanel.contentCreationDescription',
   },
-  {
-    id: 'default-2',
-    title: intl.formatMessage({ id: 'ProfilePackagesForm.defaultPackage2Title' }),
-    description: intl.formatMessage({ id: 'ProfilePackagesForm.defaultPackage2Description' }),
-    method: 'online-content-promotion',
-    price: { amount: 50000, currency: 'USD' },
-    isDefault: true,
-    isRequired: false,
+  'native-posting': {
+    emoji: '📲',
+    titleKey: 'ProfilePackagesPanel.nativePostingTitle',
+    descriptionKey: 'ProfilePackagesPanel.nativePostingDescription',
   },
-  {
-    id: 'default-3',
-    title: intl.formatMessage({ id: 'ProfilePackagesForm.defaultPackage3Title' }),
-    description: intl.formatMessage({ id: 'ProfilePackagesForm.defaultPackage3Description' }),
-    method: 'online-content-promotion',
-    price: { amount: 30000, currency: 'USD' },
-    isDefault: true,
-    isRequired: false,
+  'amplified-sharing': {
+    emoji: '🚀',
+    titleKey: 'ProfilePackagesPanel.amplifiedSharingTitle',
+    descriptionKey: 'ProfilePackagesPanel.amplifiedSharingDescription',
   },
-  {
-    id: 'default-4',
-    title: intl.formatMessage({ id: 'ProfilePackagesForm.defaultPackage4Title' }),
-    description: intl.formatMessage({ id: 'ProfilePackagesForm.defaultPackage4Description' }),
-    method: 'in-person',
-    price: { amount: 250000, currency: 'USD' },
-    isDefault: true,
-    isRequired: false,
-  },
-];
-
-// Method options for the select field
-export const METHOD_OPTIONS = [
-  { key: 'in-person', label: 'In-Person' },
-  { key: 'online-content-promotion', label: 'Online / Content Promotion' },
-];
-
-/**
- * Error message component
- */
-const ErrorMessage = props => {
-  const { fetchErrors } = props;
-  const { updateListingError, showListingsError } = fetchErrors || {};
-
-  const errorMessage = updateListingError ? (
-    <FormattedMessage id="ProfilePackagesForm.updateFailed" />
-  ) : showListingsError ? (
-    <FormattedMessage id="ProfilePackagesForm.showListingFailed" />
-  ) : null;
-
-  if (errorMessage) {
-    return <p className={css.error}>{errorMessage}</p>;
-  }
-  return null;
 };
 
 /**
- * Single Package Card component
+ * Pill-style checkbox group for "What's Included" field
  */
-const PackageCard = props => {
-  const { name, index, pkg, onRemove, intl, marketplaceCurrency } = props;
-
-  const isDefault = pkg?.isDefault;
-  const isRequired = pkg?.isRequired;
-  const canDelete = !isRequired;
-
+const PillCheckboxGroup = ({ name, label, options }) => {
   return (
-    <div className={css.packageCard}>
-      <div className={css.packageHeader}>
-        <span className={css.packageNumber}>
-          <FormattedMessage id="ProfilePackagesForm.packageNumber" values={{ number: index + 1 }} />
-        </span>
-        {canDelete && (
-          <button type="button" className={css.removePackageButton} onClick={() => onRemove(index)}>
-            <IconClose size="small" />
-          </button>
-        )}
-      </div>
-
-      <div className={css.packageContent}>
-        {/* Title - read-only for default packages */}
-        <FieldTextInput
-          id={`${name}.title`}
-          name={`${name}.title`}
-          className={css.packageField}
-          type="text"
-          label={intl.formatMessage({ id: 'ProfilePackagesForm.titleLabel' })}
-          placeholder={intl.formatMessage({ id: 'ProfilePackagesForm.titlePlaceholder' })}
-          validate={required(intl.formatMessage({ id: 'ProfilePackagesForm.titleRequired' }))}
-          disabled={isDefault}
-        />
-
-        {/* Description - read-only for default packages */}
-        <FieldTextInput
-          id={`${name}.description`}
-          name={`${name}.description`}
-          className={css.packageField}
-          type="textarea"
-          label={intl.formatMessage({ id: 'ProfilePackagesForm.descriptionLabel' })}
-          placeholder={intl.formatMessage({ id: 'ProfilePackagesForm.descriptionPlaceholder' })}
-          validate={required(intl.formatMessage({ id: 'ProfilePackagesForm.descriptionRequired' }))}
-          disabled={isDefault}
-        />
-
-        <div className={css.packageFieldsRow}>
-          {/* Method - editable */}
-          <FieldSelect
-            id={`${name}.method`}
-            name={`${name}.method`}
-            className={css.methodField}
-            label={intl.formatMessage({ id: 'ProfilePackagesForm.methodLabel' })}
-            validate={required(intl.formatMessage({ id: 'ProfilePackagesForm.methodRequired' }))}
-          >
-            <option value="" disabled>
-              {intl.formatMessage({ id: 'ProfilePackagesForm.methodPlaceholder' })}
-            </option>
-            {METHOD_OPTIONS.map(option => (
-              <option key={option.key} value={option.key}>
-                {option.label}
-              </option>
-            ))}
-          </FieldSelect>
-
-          {/* Price - editable */}
-          <FieldCurrencyInput
-            id={`${name}.price`}
-            name={`${name}.price`}
-            className={css.priceField}
-            label={intl.formatMessage({ id: 'ProfilePackagesForm.priceLabel' })}
-            placeholder={intl.formatMessage({ id: 'ProfilePackagesForm.pricePlaceholder' })}
-            currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
-            validate={moneySubUnitAmountAtLeast(
-              intl.formatMessage({ id: 'ProfilePackagesForm.priceTooLow' }),
-              0
-            )}
+    <div className={css.pillCheckboxGroup}>
+      {label && <label className={css.pillCheckboxLabel}>{label}</label>}
+      <div className={css.pillCheckboxOptions}>
+        {options.map(option => (
+          <Field
+            key={option.key}
+            name={name}
+            type="checkbox"
+            value={option.key}
+            render={({ input }) => {
+              const isSelected = input.checked;
+              return (
+                <label
+                  className={classNames(css.pillCheckbox, {
+                    [css.pillCheckboxSelected]: isSelected,
+                  })}
+                >
+                  <input {...input} className={css.pillCheckboxInput} />
+                  <span className={css.pillCheckboxText}>{option.label}</span>
+                </label>
+              );
+            }}
           />
-        </div>
+        ))}
       </div>
-
-      {isDefault && (
-        <div className={css.defaultBadge}>
-          <FormattedMessage id="ProfilePackagesForm.defaultPackage" />
-        </div>
-      )}
     </div>
   );
 };
 
 /**
- * ProfilePackagesForm component - Form for Step 2 of the profile wizard.
- * Manages creator packages/addons.
+ * Add-ons pill checkbox group with + when unselected, x when selected
+ */
+const AddOnsPillGroup = ({ name, label, options }) => {
+  return (
+    <div className={css.pillCheckboxGroup}>
+      {label && <label className={css.pillCheckboxLabel}>{label}</label>}
+      <div className={css.pillCheckboxOptions}>
+        {options.map(option => (
+          <Field
+            key={option.key}
+            name={name}
+            type="checkbox"
+            value={option.key}
+            render={({ input }) => {
+              const isSelected = input.checked;
+              return (
+                <label
+                  className={classNames(css.addOnPill, {
+                    [css.addOnPillSelected]: isSelected,
+                  })}
+                >
+                  <input {...input} className={css.pillCheckboxInput} />
+                  <span className={css.addOnIcon}>{isSelected ? '×' : '+'}</span>
+                  <span className={css.pillCheckboxText}>{option.label}</span>
+                </label>
+              );
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+/**
+ * Single Package Card with form fields
+ */
+const PackageFormCard = ({ pkg, name, intl, marketplaceCurrency, listingFields }) => {
+  const packageConfig = PACKAGE_TYPES[pkg.id] || {};
+  const whatsIncludedField = listingFields?.find(field => field.key === 'whats_included');
+  const whatsIncludedOptions =
+    whatsIncludedField?.enumOptions?.map(o => ({
+      key: o.option,
+      label: o.label,
+    })) || [];
+  const whatsIncludedLabel = whatsIncludedField?.showConfig?.label;
+
+  const deliveryMethodField = listingFields?.find(field => field.key === 'delivery_method');
+  const deliveryMethodOptions = deliveryMethodField?.enumOptions || [];
+  const deliveryMethodLabel = deliveryMethodField?.showConfig?.label;
+
+  const turnaroundTimeField = listingFields?.find(field => field.key === 'turnaround_time');
+  const turnaroundTimeOptions = turnaroundTimeField?.enumOptions || [];
+  const turnaroundTimeLabel = turnaroundTimeField?.showConfig?.label;
+
+  const addOnsField = listingFields?.find(field => field.key === 'add_ons');
+  const addOnsOptions =
+    addOnsField?.enumOptions?.map(o => ({
+      key: o.option,
+      label: o.label,
+    })) || [];
+  const addOnsLabel = addOnsField?.showConfig?.label;
+
+  const title = packageConfig.titleKey
+    ? intl.formatMessage({ id: packageConfig.titleKey })
+    : pkg.title || pkg.id;
+  const description = packageConfig.descriptionKey
+    ? intl.formatMessage({ id: packageConfig.descriptionKey })
+    : pkg.description || '';
+
+  return (
+    <div className={css.packageFormCard}>
+      {/* Header */}
+      <div className={css.packageHeader}>
+        <div className={css.packageHeaderLeft}>
+          <div className={css.packageEmoji}>{packageConfig.emoji || '📦'}</div>
+          <div className={css.packageHeaderInfo}>
+            <h3 className={css.packageHeaderTitle}>{title}</h3>
+            <p className={css.packageHeaderDescription}>{description}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Form content */}
+      <div className={css.packageFormContent}>
+        <FieldTextInput
+          id={`${name}.title`}
+          name={`${name}.title`}
+          className={css.formField}
+          type="text"
+          label={intl.formatMessage({ id: 'ProfilePackagesPanel.titleLabel' })}
+          placeholder={intl.formatMessage({ id: 'ProfilePackagesPanel.titlePlaceholder' })}
+        />
+
+        <FieldTextInput
+          id={`${name}.customDescription`}
+          name={`${name}.description`}
+          className={css.formField}
+          type="textarea"
+          label={
+            <span className={css.descriptionLabelWrapper}>
+              {intl.formatMessage({ id: 'ProfilePackagesPanel.descriptionLabel' })}
+              <span className={css.descriptionHint}>
+                {intl.formatMessage({ id: 'ProfilePackagesPanel.descriptionHint' })}
+              </span>
+            </span>
+          }
+          placeholder={intl.formatMessage({ id: 'ProfilePackagesPanel.descriptionPlaceholder' })}
+        />
+
+        {/* What's Included - pill checkboxes */}
+        {whatsIncludedOptions.length > 0 && (
+          <div className={css.formField}>
+            <PillCheckboxGroup
+              name={`${name}.whats_included`}
+              label={whatsIncludedLabel}
+              options={whatsIncludedOptions}
+            />
+          </div>
+        )}
+
+        {/* Delivery Method & Turnaround Time - same row */}
+        {(deliveryMethodOptions.length > 0 || turnaroundTimeOptions.length > 0) && (
+          <div className={css.formFieldRow}>
+            {deliveryMethodOptions.length > 0 && (
+              <FieldSelect
+                id={`${name}.delivery_method`}
+                name={`${name}.delivery_method`}
+                className={css.formFieldHalf}
+                label={deliveryMethodLabel}
+              >
+                {deliveryMethodOptions.map(opt => (
+                  <option key={opt.option} value={opt.option}>
+                    {opt.label}
+                  </option>
+                ))}
+              </FieldSelect>
+            )}
+            {turnaroundTimeOptions.length > 0 && (
+              <FieldSelect
+                id={`${name}.turnaround_time`}
+                name={`${name}.turnaround_time`}
+                className={css.formFieldHalf}
+                label={turnaroundTimeLabel}
+              >
+                {turnaroundTimeOptions.map(opt => (
+                  <option key={opt.option} value={opt.option}>
+                    {opt.label}
+                  </option>
+                ))}
+              </FieldSelect>
+            )}
+          </div>
+        )}
+
+        {/* Price */}
+        <FieldCurrencyInput
+          id={`${name}.price`}
+          name={`${name}.price`}
+          className={css.formField}
+          label={intl.formatMessage({ id: 'ProfilePackagesPanel.priceLabel' })}
+          placeholder={intl.formatMessage({ id: 'ProfilePackagesPanel.pricePlaceholder' })}
+          currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
+          validate={moneySubUnitAmountAtLeast(
+            intl.formatMessage({ id: 'ProfilePackagesPanel.priceTooLow' }),
+            0
+          )}
+        />
+
+        {/* Add-ons - pill checkboxes with +/x */}
+        {addOnsOptions.length > 0 && (
+          <div className={css.formField}>
+            <AddOnsPillGroup name={`${name}.add_ons`} label={addOnsLabel} options={addOnsOptions} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+/**
+ * ProfilePackagesForm component - Form for Step 3 of the profile wizard.
+ * Manages creator packages customization.
  *
  * @component
  * @param {Object} props
- * @param {string} [props.className] - Custom class that extends the default class for the root element
- * @param {string} [props.formId] - The form id
- * @param {boolean} props.disabled - Whether the form is disabled
- * @param {boolean} props.ready - Whether the form is ready
- * @param {boolean} props.updated - Whether the form is updated
- * @param {boolean} props.updateInProgress - Whether the update is in progress
- * @param {Object} props.fetchErrors - The fetch errors object
+ * @param {string} [props.className] - Custom class
  * @param {Object} props.initialValues - The initial form values
- * @param {string} props.saveActionMsg - The submit button text
  * @param {Function} props.onSubmit - The submit function
+ * @param {Function} props.onBack - The back button handler
+ * @param {string} props.submitButtonText - The submit button text
+ * @param {boolean} props.updateInProgress - Whether the update is in progress
  * @param {string} props.marketplaceCurrency - The marketplace currency
  * @returns {JSX.Element}
  */
 const ProfilePackagesForm = props => {
-  const { marketplaceCurrency = 'USD' } = props;
+  const {
+    className,
+    initialValues,
+    onSubmit,
+    onBack,
+    submitButtonText,
+    updateInProgress,
+    marketplaceCurrency = 'USD',
+    listingFields,
+  } = props;
+
+  const intl = useIntl();
+  const classes = classNames(css.root, className);
 
   return (
     <FinalForm
-      {...props}
+      initialValues={initialValues}
+      onSubmit={onSubmit}
       mutators={{ ...arrayMutators }}
-      render={formRenderProps => {
-        const {
-          className,
-          disabled,
-          ready,
-          formId = 'ProfilePackagesForm',
-          handleSubmit,
-          invalid,
-          pristine,
-          saveActionMsg,
-          updated,
-          updateInProgress,
-          fetchErrors,
-          form,
-          values,
-        } = formRenderProps;
+      render={({ handleSubmit, values }) => (
+        <Form className={classes} onSubmit={handleSubmit}>
+          <FieldArray name="packages">
+            {({ fields }) => (
+              <div className={css.packagesContainer}>
+                {fields.map((name, index) => (
+                  <PackageFormCard
+                    key={name}
+                    name={name}
+                    pkg={values.packages?.[index] || {}}
+                    intl={intl}
+                    marketplaceCurrency={marketplaceCurrency}
+                    listingFields={listingFields}
+                  />
+                ))}
+              </div>
+            )}
+          </FieldArray>
 
-        const intl = useIntl();
-        const classes = classNames(css.root, className);
-        const submitReady = (updated && pristine) || ready;
-        const submitInProgress = updateInProgress;
-        const submitDisabled = invalid || disabled || submitInProgress;
-
-        const handleAddPackage = () => {
-          const newPackage = {
-            id: `custom-${Date.now()}`,
-            title: '',
-            description: '',
-            method: '',
-            price: { amount: 0, currency: marketplaceCurrency },
-            isDefault: false,
-            isRequired: false,
-          };
-          form.mutators.push('packages', newPackage);
-        };
-
-        return (
-          <Form className={classes} onSubmit={handleSubmit}>
-            <ErrorMessage fetchErrors={fetchErrors} />
-
-            <div className={css.sectionContainer}>
-              <H4 as="h2" className={css.sectionTitle}>
-                <FormattedMessage id="ProfilePackagesForm.packagesTitle" />
-              </H4>
-              <p className={css.sectionDescription}>
-                <FormattedMessage id="ProfilePackagesForm.packagesDescription" />
-              </p>
-
-              <FieldArray name="packages">
-                {({ fields }) => (
-                  <div className={css.packagesContainer}>
-                    {fields.map((name, index) => (
-                      <PackageCard
-                        key={name}
-                        name={name}
-                        index={index}
-                        pkg={values.packages?.[index]}
-                        onRemove={idx => fields.remove(idx)}
-                        intl={intl}
-                        marketplaceCurrency={marketplaceCurrency}
-                      />
-                    ))}
-                    <button
-                      type="button"
-                      className={css.addPackageButton}
-                      onClick={handleAddPackage}
-                    >
-                      <span className={css.addPackageIcon}>+</span>
-                      <FormattedMessage id="ProfilePackagesForm.addPackage" />
-                    </button>
-                  </div>
-                )}
-              </FieldArray>
+          <div className={css.footer}>
+            <div className={css.footerContent}>
+              <div className={css.footerLeft}>
+                <button
+                  type="button"
+                  className={css.backButton}
+                  onClick={onBack}
+                  disabled={updateInProgress}
+                >
+                  {intl.formatMessage({ id: 'ProfilePackagesPanel.back' })}
+                </button>
+                <p className={css.progressText}>
+                  {intl.formatMessage({ id: 'ProfilePackagesPanel.progressSaved' })}
+                </p>
+              </div>
+              <PrimaryButton
+                type="submit"
+                className={css.continueButton}
+                disabled={updateInProgress}
+                inProgress={updateInProgress}
+              >
+                {submitButtonText || intl.formatMessage({ id: 'ProfilePackagesPanel.continue' })}
+              </PrimaryButton>
             </div>
-
-            <Button
-              className={css.submitButton}
-              type="submit"
-              inProgress={submitInProgress}
-              disabled={submitDisabled}
-              ready={submitReady}
-            >
-              {saveActionMsg}
-            </Button>
-          </Form>
-        );
-      }}
+          </div>
+        </Form>
+      )}
     />
   );
 };
 
-// Export getDefaultPackages function for use in Panel
-export { getDefaultPackages };
 export default ProfilePackagesForm;

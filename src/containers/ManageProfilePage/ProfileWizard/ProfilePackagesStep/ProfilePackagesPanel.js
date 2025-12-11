@@ -1,121 +1,108 @@
 import classNames from 'classnames';
-
-// Import util modules
 import { useIntl } from '../../../../util/reactIntl';
-
-// Import modules from this directory
-import ProfilePackagesForm, { getDefaultPackages } from './ProfilePackagesForm';
-import css from './ProfilePackagesPanel.module.css';
-import { types as sdkTypes } from '../../../../util/sdkLoader';
 import { useSelector } from 'react-redux';
 import { updateProfileInProgressSelector } from '../../ManageProfilePage.duck';
+import { types as sdkTypes } from '../../../../util/sdkLoader';
+
+import ProfilePackagesForm, { PACKAGE_TYPES } from './ProfilePackagesForm';
+import css from './ProfilePackagesPanel.module.css';
 
 const { Money } = sdkTypes;
 
 /**
- * Get initialValues for the form from the profile listing.
- *
- * @param {Object} profileListing - The profile listing object
- * @param {Object} intl - The intl object for translations
- * @returns {Object} initialValues object for the form
+ * Get initial values from profile listing
  */
-const getInitialValues = (profileListing, intl, marketplaceCurrency) => {
-  const { publicData } = profileListing?.attributes || {};
-  const existingPackages = publicData?.packages;
+const getInitialValues = (profileListing, marketplaceCurrency, listingFields) => {
+  const { packages } = profileListing?.attributes.publicData || {};
 
-  // If packages exist in listing, use them. Otherwise, use defaults.
-  if (existingPackages && existingPackages.length > 0) {
-    return {
-      packages: existingPackages.map(elm => ({
-        ...elm,
-        price: new Money(elm.price, marketplaceCurrency),
-      })),
-    };
-  }
+  // Get default values for dropdowns (first option)
+  const deliveryMethodField = listingFields?.find(field => field.key === 'delivery_method');
+  const turnaroundTimeField = listingFields?.find(field => field.key === 'turnaround_time');
+  const defaultDeliveryMethod = deliveryMethodField?.enumOptions?.[0]?.option || '';
+  const defaultTurnaroundTime = turnaroundTimeField?.enumOptions?.[1]?.option || '';
 
-  // Return default packages for new listings
-  return { packages: getDefaultPackages(intl) };
+  return {
+    packages: packages.map(pkg => ({
+      ...pkg,
+      price: pkg.price ? new Money(pkg.price, marketplaceCurrency) : null,
+      delivery_method: pkg.delivery_method || defaultDeliveryMethod,
+      turnaround_time: pkg.turnaround_time || defaultTurnaroundTime,
+    })),
+  };
 };
 
 /**
- * The ProfilePackagesPanel component.
- * This panel wraps the ProfilePackagesForm and handles the submit logic.
- *
- * @component
- * @param {Object} props
- * @param {string} [props.className] - Custom class that extends the default class for the root element
- * @param {string} [props.rootClassName] - Custom class that overrides the default class for the root element
- * @param {Object} props.profileListing - The profile listing object
- * @param {boolean} props.disabled - Whether the form is disabled
- * @param {boolean} props.ready - Whether the form is ready
- * @param {Function} props.onSubmit - The submit function
- * @param {string} props.submitButtonText - The submit button text
- * @param {boolean} props.panelUpdated - Whether the panel is updated
- * @param {boolean} props.updateInProgress - Whether the update is in progress
- * @param {Object} props.errors - The errors object
- * @param {Object} props.config - The marketplace config
- * @returns {JSX.Element}
+ * ProfilePackagesPanel component
+ * Step 3 in the profile wizard for customizing package details
  */
 const ProfilePackagesPanel = props => {
   const {
     className,
     rootClassName,
     profileListing,
-    disabled,
-    ready,
     onSubmit,
+    onBack,
     submitButtonText,
-    panelUpdated,
-    errors,
     config,
   } = props;
-  const updateProfileInProgress = useSelector(updateProfileInProgressSelector);
+
   const intl = useIntl();
+  const updateInProgress = useSelector(updateProfileInProgressSelector);
   const classes = classNames(rootClassName || css.root, className);
   const marketplaceCurrency = config?.currency || 'USD';
 
-  const initialValues = getInitialValues(profileListing, intl, marketplaceCurrency);
+  const listingFields = config?.listing?.listingFields;
+  const initialValues = getInitialValues(profileListing, marketplaceCurrency, listingFields);
+
+  const handleFormSubmit = values => {
+    const { packages } = values;
+
+    const whats_included = [];
+    const add_ons = [];
+    // Clean up packages data for submission
+    const cleanedPackages = packages.map(pkg => {
+      if (pkg.whats_included?.length > 0) {
+        whats_included.push(...pkg.whats_included);
+      }
+
+      if (pkg.add_ons?.length > 0) {
+        add_ons.push(...pkg.add_ons);
+      }
+
+      return {
+        ...pkg,
+        price: pkg.price?.amount,
+      };
+    });
+
+    const prices = cleanedPackages.map(pkg => pkg.price).filter(p => p > 0);
+    const minPrice = prices.length > 0 ? Math.min(...prices) : 0;
+
+    const updateValues = {
+      id: profileListing?.id?.uuid,
+      price: new Money(minPrice, marketplaceCurrency),
+      publicData: {
+        packages: cleanedPackages,
+        whats_included: Array.from(new Set(whats_included)),
+        add_ons: Array.from(new Set(add_ons)),
+      },
+    };
+
+    onSubmit(updateValues);
+  };
 
   return (
     <div className={classes}>
+      <p className={css.subtitle}>{intl.formatMessage({ id: 'ProfilePackagesPanel.subtitle' })}</p>
+
       <ProfilePackagesForm
-        className={css.form}
         initialValues={initialValues}
-        saveActionMsg={submitButtonText}
-        onSubmit={values => {
-          const { packages } = values;
-
-          // Clean up packages data for submission
-          const cleanedPackages = packages.map(pkg => ({
-            id: pkg.id,
-            title: pkg.title,
-            description: pkg.description,
-            method: pkg.method,
-            price: pkg.price.amount,
-            isDefault: pkg.isDefault || false,
-            isRequired: pkg.isRequired || false,
-          }));
-
-          const prices = cleanedPackages.map(pkg => pkg.price);
-          const minPrice = Math.min(...prices);
-
-          // Prepare values for submission
-          const updateValues = {
-            id: profileListing?.id?.uuid,
-            price: new Money(minPrice, marketplaceCurrency),
-            publicData: {
-              packages: cleanedPackages,
-            },
-          };
-
-          onSubmit(updateValues);
-        }}
-        disabled={disabled}
-        ready={ready}
-        updated={panelUpdated}
-        updateInProgress={updateProfileInProgress}
-        fetchErrors={errors}
+        onSubmit={handleFormSubmit}
+        onBack={onBack}
+        submitButtonText={submitButtonText}
+        updateInProgress={updateInProgress}
         marketplaceCurrency={marketplaceCurrency}
+        listingFields={listingFields}
       />
     </div>
   );

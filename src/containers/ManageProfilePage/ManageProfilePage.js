@@ -1,26 +1,18 @@
-import { IconSpinner, LayoutSingleColumn, Page } from '../../components';
 import { useIntl } from 'react-intl';
-import TopbarContainer from '../TopbarContainer/TopbarContainer';
-import FooterContainer from '../FooterContainer/FooterContainer';
-import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { useSelector } from 'react-redux';
-import {
-  profileListingIdSelector,
-  profileListingInProgressSelector,
-  profileListingSelector,
-} from './ManageProfilePage.duck';
-import ProfileWizard from './ProfileWizard/ProfileWizard';
+import { IconSpinner, LayoutSingleColumn, Page } from '../../components';
+import { isScrollingDisabled } from '../../ducks/ui.duck';
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
+import { profileListingInProgressSelector, profileListingSelector } from './ManageProfilePage.duck';
 import css from './ManageProfilePage.module.css';
+import ProfileWizard from './ProfileWizard/ProfileWizard';
 
 function ManageProfilePage(props) {
   const intl = useIntl();
   const scrollingDisabled = useSelector(isScrollingDisabled);
-  const profileListingId = useSelector(profileListingIdSelector);
   const profileListing = useSelector(profileListingSelector);
   const profileListingInProgress = useSelector(profileListingInProgressSelector);
 
-  // console.log('Profile Listing ID:', profileListingId);
-  // console.log('Profile Listing:', profileListing);
   return (
     <Page
       title={intl.formatMessage({ id: 'ManageProfilePage.title' })}

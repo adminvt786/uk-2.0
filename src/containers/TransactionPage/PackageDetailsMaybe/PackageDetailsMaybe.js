@@ -5,7 +5,6 @@ import { formatMoney } from '../../../util/currency';
 import { types as sdkTypes } from '../../../util/sdkLoader';
 
 import { Heading } from '../../../components';
-import { METHOD_OPTIONS } from '../../ManageProfilePage/ProfileWizard/ProfilePackagesStep/ProfilePackagesForm';
 
 import css from './PackageDetailsMaybe.module.css';
 
@@ -15,7 +14,7 @@ const { Money } = sdkTypes;
  * Get method label from METHOD_OPTIONS
  */
 const getMethodLabel = method => {
-  const option = METHOD_OPTIONS.find(opt => opt.key === method);
+  const option = [].find(opt => opt.key === method);
   return option ? option.label : method;
 };
 
