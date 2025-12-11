@@ -252,17 +252,21 @@ color: #666666;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-family: Inter, sans-serif;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: 0;
+  font-family: Inter;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 18px;
+  leading-trim: CAP_HEIGHT;
+  line-height: 100%;
+  letter-spacing: 0%;
+  
   color: #D9A441;
   text-decoration: none;
   padding: 18px 0;
   transition: opacity 0.2s ease;
   @media (max-width: 480px) {
     font-weight: 400;
+    font-size: 16px;
   }
 }
 

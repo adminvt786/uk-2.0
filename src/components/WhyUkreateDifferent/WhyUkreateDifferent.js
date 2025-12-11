@@ -1,9 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import Field, { hasDataInFields } from '../../containers/PageBuilder/Field';
 import SectionContainer from '../../containers/PageBuilder/SectionBuilder/SectionContainer';
-import css from './WeAcceptApplicants.module.css';
+import css from './WhyUkreateDifferent.module.css';
 
-const WeAcceptApplicants = props => {
+const WhyUkreateDifferent = props => {
   const {
     title,
     description,
@@ -60,7 +61,6 @@ const WeAcceptApplicants = props => {
       <div className={css.container}>
         {hasHeaderFields && (
           <header className={css.header}>
-            <div className={css.exclusiveTag}>EXCLUSIVE NETWORK</div>
             <Field data={title} className={css.title} options={fieldOptions} />
             <Field data={description} className={css.description} options={fieldOptions} />
           </header>
@@ -94,8 +94,8 @@ const WeAcceptApplicants = props => {
               <div className={css.mobileCarousel}>
                 <Swiper
                   modules={[PaginationModule]}
-                  spaceBetween={16}
-                  slidesPerView={1.3}
+                  spaceBetween={22}
+                  slidesPerView={1.1}
                   centeredSlides={true}
                   pagination={{
                     clickable: true,
@@ -132,4 +132,4 @@ const WeAcceptApplicants = props => {
   );
 };
 
-export default WeAcceptApplicants;
+export default WhyUkreateDifferent;

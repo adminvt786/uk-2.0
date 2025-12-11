@@ -206,6 +206,10 @@
   cursor: pointer;
   padding: 0;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  @media (max-width: 767px) {
+    width: 6px;
+    height: 6px;
+  }
 
 }
 
@@ -214,6 +218,10 @@
 
   width: 8px;
   height: 8px;
+    @media (max-width: 767px) {
+      width: 6px;
+      height: 6px;
+    }
 }
 .paidColumnsPaginationDots{
   gap: 4px !important;

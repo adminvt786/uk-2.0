@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Field, { hasDataInFields } from '../../containers/PageBuilder/Field';
 import SectionContainer from '../../containers/PageBuilder/SectionBuilder/SectionContainer';
-import css from './CreatorBenefitsSection.module.css';
+import css from './FeaturedTravelCreator.module.css';
 
-
-
-const CreatorBenefitsSection = props => {
+const FeaturedTravelCreator = props => {
   const {
     title,
     description,
     blocks = [],
     defaultClasses,
+    callToAction,
     appearance,
     options,
     sectionId,
@@ -74,16 +73,20 @@ const CreatorBenefitsSection = props => {
               return (
                 <div key={block.blockId || `benefit-${index}`} className={css.card}>
                   <div className={css.cardImageWrapper}>
-                    <Field
-                      data={block.media}
-                      className={css.cardImage}
-                      options={fieldOptions}
-                    />
-                   
+                    <Field data={block.media} className={css.cardImage} options={fieldOptions} />
                   </div>
                   <div className={css.cardContent}>
                     <Field data={block.title} className={css.cardTitle} options={fieldOptions} />
-                    <Field data={block.text} className={css.cardDescription} options={fieldOptions} />
+                    <Field
+                      data={block.text}
+                      className={css.cardDescription}
+                      options={fieldOptions}
+                    />
+                    <Field
+                      data={block.callToAction}
+                      className={css.ctaButton}
+                      options={fieldOptions}
+                    />
                   </div>
                 </div>
               );
@@ -98,14 +101,15 @@ const CreatorBenefitsSection = props => {
                 spaceBetween={16}
                 slidesPerView={1.3}
                 centeredSlides={true}
-                pagination={{
-                  clickable: true,
-                }}
+                pagination={false}
                 className={css.swiper}
               >
                 {blocks.map((block, index) => {
                   return (
-                    <SwiperSlide key={block.blockId || `benefit-${index}`} className={css.swiperSlide}>
+                    <SwiperSlide
+                      key={block.blockId || `benefit-${index}`}
+                      className={css.swiperSlide}
+                    >
                       <div className={css.card}>
                         <div className={css.cardImageWrapper}>
                           <Field
@@ -113,11 +117,23 @@ const CreatorBenefitsSection = props => {
                             className={css.cardImage}
                             options={fieldOptions}
                           />
-                          
                         </div>
                         <div className={css.cardContent}>
-                          <Field data={block.title} className={css.cardTitle} options={fieldOptions} />
-                          <Field data={block.text} className={css.cardDescription} options={fieldOptions} />
+                          <Field
+                            data={block.title}
+                            className={css.cardTitle}
+                            options={fieldOptions}
+                          />
+                          <Field
+                            data={block.text}
+                            className={css.cardDescription}
+                            options={fieldOptions}
+                          />
+                          <Field
+                            data={block.callToAction}
+                            className={css.ctaButton}
+                            options={fieldOptions}
+                          />
                         </div>
                       </div>
                     </SwiperSlide>
@@ -126,10 +142,11 @@ const CreatorBenefitsSection = props => {
               </Swiper>
             </div>
           )}
+          <Field data={callToAction} className={css.ctaButtonFooter} options={fieldOptions} />
         </>
       )}
     </SectionContainer>
   );
 };
 
-export default CreatorBenefitsSection;
+export default FeaturedTravelCreator;

@@ -8,6 +8,8 @@ import SectionContainer from '../SectionContainer';
 import css from './SectionCarousel.module.css';
 import CreatorBenefitsSection from '../../../../components/CreatorBenefitsSection/CreatorBenefitsSection';
 import WeAcceptApplicants from '../../../../components/WeAcceptApplicants/WeAcceptApplicants';
+import FeaturedTravelCreator from '../../../../components/FeaturedTravelCreator/FeaturedTravelCreator';
+import WhyUkreateDifferent from '../../../../components/WhyUkreateDifferent/WhyUkreateDifferent';
 const KEY_CODE_ARROW_LEFT = 37;
 const KEY_CODE_ARROW_RIGHT = 39;
 
@@ -90,8 +92,20 @@ const SectionCarousel = props => {
   // On desktop, calculate based on actual numColumns
   const totalSlides = Math.ceil(numberOfBlocks / numColumns);
   const mobileTotalSlides = numberOfBlocks; // One dot per block on mobile
-
   
+  if(sectionId === 'why_ukreate_different') {
+    return (
+      <WhyUkreateDifferent
+        title={title}
+        description={description}
+        blocks={blocks}
+        defaultClasses={defaultClasses}
+        appearance={appearance}
+        options={options}
+        sectionId={sectionId}
+      />
+    );
+  }
   if(sectionId === 'we_accept_applicants') {
     return (
       <WeAcceptApplicants
@@ -115,6 +129,20 @@ const SectionCarousel = props => {
         appearance={appearance}
         options={options}
         sectionId={sectionId}
+      />
+    );
+  }
+  if(sectionId === 'featured_travel_creator_section') {
+    return (
+      <FeaturedTravelCreator
+        title={title}
+        description={description}
+        blocks={blocks}
+        defaultClasses={defaultClasses}
+        appearance={appearance}
+        options={options}
+        sectionId={sectionId}
+        callToAction={callToAction}
       />
     );
   }
