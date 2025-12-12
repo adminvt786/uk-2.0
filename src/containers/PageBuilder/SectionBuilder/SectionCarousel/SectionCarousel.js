@@ -10,6 +10,7 @@ import CreatorBenefitsSection from '../../../../components/CreatorBenefitsSectio
 import WeAcceptApplicants from '../../../../components/WeAcceptApplicants/WeAcceptApplicants';
 import FeaturedTravelCreator from '../../../../components/FeaturedTravelCreator/FeaturedTravelCreator';
 import WhyUkreateDifferent from '../../../../components/WhyUkreateDifferent/WhyUkreateDifferent';
+import MeetOurAdvisors from '../../../../components/MeetOurAdvisors/MeetOurAdvisors';
 const KEY_CODE_ARROW_LEFT = 37;
 const KEY_CODE_ARROW_RIGHT = 39;
 
@@ -135,6 +136,20 @@ const SectionCarousel = props => {
   if(sectionId === 'featured_travel_creator_section') {
     return (
       <FeaturedTravelCreator
+        title={title}
+        description={description}
+        blocks={blocks}
+        defaultClasses={defaultClasses}
+        appearance={appearance}
+        options={options}
+        sectionId={sectionId}
+        callToAction={callToAction}
+      />
+    );
+  }
+  if(sectionId === 'meet_our_advisors') {
+    return (
+      <MeetOurAdvisors
         title={title}
         description={description}
         blocks={blocks}
