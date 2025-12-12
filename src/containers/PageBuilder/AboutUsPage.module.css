@@ -165,11 +165,208 @@
       margin-bottom: 0;
       max-width: 1020px;
     }
-    & em{
-        color: #D9A441;
-        font-style: normal;
+    & em {
+      color: #d9a441;
+      font-style: normal;
     }
   }
+  & header {
+    justify-content: center;
+    & h2 {
+      font-family: Arial;
+      font-weight: 400;
+      font-style: Regular;
+      font-size: 14px;
+      leading-trim: NONE;
+      line-height: 20px;
+      letter-spacing: 4.2px;
+      text-align: center;
+      text-transform: uppercase;
+      color: #d9a441;
+      padding: 0;
+      margin: 0 auto 24px;
+      @media (max-width: 767px) {
+        font-size: 12px;
+      }
+    }
+    & p {
+      font-family: Times New Roman;
+      font-weight: 400;
+      font-style: Regular;
+      font-size: 60px;
+      leading-trim: CAP_HEIGHT;
+      line-height: 60px;
+      letter-spacing: 0px;
+      text-align: center;
+      color: #fff;
+      max-width: 844px;
+      text-wrap: unset;
+      padding: 0;
+      margin: 0 16px;
+      @media (max-width: 1200px) {
+        font-size: 50px;
+        line-height: 60px;
+      }
+      @media (max-width: 1023px) {
+        font-size: 45px;
+        line-height: 55px;
+      }
+      @media (max-width: 767px) {
+        font-size: 40px;
+        line-height: 55px;
+      }
+      @media (max-width: 480px) {
+        font-size: 35px;
+        line-height: 45px;
+      }
+    }
+  }
+}
+:global(#democratizing_the_creator) {
+  background-color: #000000;
+  & > div {
+    padding: 120px 0;
+    & > div {
+      max-width: calc(1340px + 64px);
+      margin: 0 auto;
+      padding: 0 32px;
+      align-items: center;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 124px;
+      @media (max-width: 1300px) {
+        gap: 80px;
+      }
+      @media (max-width: 1023px) {
+        padding: 0 24px;
+        gap: 60px;
+      }
+      @media (max-width: 767px) {
+        padding: 0 20px;
+        gap: 45px;
+        grid-template-columns: 1fr;
+      }
+      & img {
+        border-radius: 0;
+      }
+    }
+  }
+  & h3 {
+    font-family: Arial;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 14px;
+    leading-trim: NONE;
+    line-height: 20px;
+    letter-spacing: 4.2px;
+    text-transform: uppercase;
+    color: #d9a441;
+    padding: 0;
+    margin: 0 0 24px;
+    @media (max-width: 767px) {
+      font-size: 12px;
+      line-height: 18px;
+    }
+  }
+  & h1 {
+    font-family: Times New Roman;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 60px;
+    leading-trim: CAP_HEIGHT;
+    line-height: 60px;
+    letter-spacing: 0px;
+    color: #fff;
+    text-wrap: unset;
+    padding: 0;
+    margin: 0 0 24px;
+    @media (max-width: 1200px) {
+      font-size: 50px;
+      line-height: 60px;
+    }
+    @media (max-width: 1023px) {
+      font-size: 45px;
+      line-height: 55px;
+    }
+    @media (max-width: 767px) {
+      font-size: 40px;
+      line-height: 50px;
+    }
+    @media (max-width: 480px) {
+      font-size: 35px;
+      line-height: 45px;
+    }
+  }
+  & p {
+    font-family: Arial;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 18px;
+    leading-trim: NONE;
+    line-height: 29.25px;
+    letter-spacing: 0px;
+    color: #ffffffcc;
+    padding: 0;
+    margin: 0 0 16px;
+    @media (max-width: 767px) {
+      font-size: 16px;
+      line-height: 24px;
+    }
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+:global(#our_commitments) {
+  background-color: #000000;
+  & > div {
+    padding: 0 0 120px;
+    & > div {
+      max-width: calc(896px + 64px);
+      margin: 0 auto;
+      padding-top: 24px;
+      @media (max-width: 767px) {
+        padding: 36px 20px 0;
+        gap: 20px;
+      }
+      & > div {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        border-top: 1px solid #FFFFFF1A;
+        padding: 33px;
+        background-color: #FFFFFF05;
+        @media (max-width: 767px) {
+          padding: 20px 33px;
+        }
+        & > div {
+          &:nth-child(1) {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+          }
+          &:nth-child(2) {
+            margin-top: 0;
+            & h3 {
+              font-family: Arial;
+              font-weight: 400;
+              font-style: Regular;
+              font-size: 16px;
+              leading-trim: NONE;
+              line-height: 26px;
+              letter-spacing: 0px;
+              color: #ffffffe5;
+              margin: 0;
+              padding: 0;
+              text-wrap: unset;
+              max-width: 290px;
+            }
+          }
+        }
+      }
+    }
+  }
+
   & header {
     justify-content: center;
     & h2 {
