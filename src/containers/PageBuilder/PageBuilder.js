@@ -13,6 +13,7 @@ import css from './PageBuilder.module.css';
 import "./LandingPage.module.css"
 import "./LandingPage2.module.css"
 import "./CreatorLandingPage.module.css"
+import "./AboutUsPage.module.css"
 
 const getMetadata = (meta, schemaType, fieldOptions) => {
   const { pageTitle, pageDescription, socialSharing } = meta;
