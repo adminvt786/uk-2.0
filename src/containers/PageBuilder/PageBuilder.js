@@ -14,6 +14,7 @@ import "./LandingPage.module.css"
 import "./LandingPage2.module.css"
 import "./CreatorLandingPage.module.css"
 import "./AboutUsPage.module.css"
+import "./PricingPage.module.css"
 
 const getMetadata = (meta, schemaType, fieldOptions) => {
   const { pageTitle, pageDescription, socialSharing } = meta;

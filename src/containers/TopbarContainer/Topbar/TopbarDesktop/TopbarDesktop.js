@@ -156,7 +156,8 @@ const TopbarDesktop = props => {
   const isLandingPage = currentPage === 'LandingPage' 
   || currentPage.includes('CMSPage:landing-page-2') 
   || currentPage.includes('CMSPage:creator-landing-page')
-  || currentPage.includes('CMSPage:about');
+  || currentPage.includes('CMSPage:about')
+  || currentPage.includes('CMSPage:pricing');
 
   // Handle scroll effect for landing page
   useEffect(() => {

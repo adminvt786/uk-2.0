@@ -251,7 +251,8 @@ const TopbarComponent = props => {
   const isLandingPage = resolvedCurrentPage === 'LandingPage' 
   || (resolvedCurrentPage && resolvedCurrentPage.includes('CMSPage:landing-page-2')) 
   || (resolvedCurrentPage && resolvedCurrentPage.includes('CMSPage:creator-landing-page'))
-  || (resolvedCurrentPage && resolvedCurrentPage.includes('CMSPage:about'));
+  || (resolvedCurrentPage && resolvedCurrentPage.includes('CMSPage:about'))
+  || (resolvedCurrentPage && resolvedCurrentPage.includes('CMSPage:pricing'));
 
   useEffect(() => {
     if (!isLandingPage) {
