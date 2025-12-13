@@ -530,7 +530,7 @@
       }
       & > div {
         gap: 32px;
-        @media (min-width: 768px) {
+        @media (min-width: 1024px) {
           justify-content: center;
         }
         @media (max-width: 767px) {
