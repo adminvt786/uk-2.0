@@ -10,6 +10,7 @@ import FeaturedCreators from '../../../../components/FeaturedCreators/FeaturedCr
 import SuccessStories from '../../../../components/SuccessStories/SuccessStories';
 import SuccessStoriesTwo from '../../../../components/SuccessStoriesTwo/SuccessStoriesTwo';
 import HotelSuccessStories from '../../../../components/HotelSuccessStories/HotelSuccessStories';
+import FaqSection from '../../../../components/FaqSection/FaqSection';
 
 /**
  * @typedef {Object} BlockConfig
@@ -72,6 +73,20 @@ const SectionArticle = props => {
   const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
   const hasBlocks = blocks?.length > 0;
 
+  if(sectionId === 'faq_section') {
+    return (
+      <FaqSection
+      title={title}
+      description={description}
+      blocks={blocks}
+      defaultClasses={defaultClasses}
+      appearance={appearance}
+      options={options}
+      sectionId={sectionId}
+      callToAction={callToAction}
+    />
+    );
+  }
   if(sectionId === 'hotel_success_stories') {
     return (
       <HotelSuccessStories/>

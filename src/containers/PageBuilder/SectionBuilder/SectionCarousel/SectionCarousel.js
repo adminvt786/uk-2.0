@@ -265,7 +265,10 @@ const SectionCarousel = props => {
     }
   };
 
-  const isLongDot = (sectionId === 'paid_columns_section' || sectionId === 'pre_columns_section');
+  const isLongDot = (sectionId === 'paid_columns_section'
+     || sectionId === 'pre_columns_section'
+     || sectionId === 'why_people_choose_ukreate'
+     || sectionId === 'loved_by_hotels_creators');
 
   return (
     <SectionContainer
