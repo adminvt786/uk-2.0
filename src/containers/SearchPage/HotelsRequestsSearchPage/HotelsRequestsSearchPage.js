@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import css from './HotelsRequestsSearchPage.module.css';
+import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { IconsCollection, PrimaryButton } from '../../../components';
-import { formatDate } from '../../ManageListingsPage/RequestListingCard/RequestListingCard';
+import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { formatMoney } from '../../../util/currency';
+import { handleNavigateToMakeOfferPage } from '../../ListingPage/ListingPage.shared';
+import { formatDate } from '../../ManageListingsPage/RequestListingCard/RequestListingCard';
+import css from './HotelsRequestsSearchPage.module.css';
 
 // Custom Dropdown Component
 const FilterDropdown = ({ label, placeholder, options, value, onChange, icon }) => {
@@ -49,7 +52,7 @@ const CompensationDisplay = ({ label, value }) => {
 };
 
 // Campaign Card Component
-const CampaignCard = ({ campaign, categories, intl }) => {
+const CampaignCard = ({ campaign, categories, intl, onApply }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const { title, description, publicData, price } = campaign.attributes || {};
   const {
@@ -108,7 +111,13 @@ const CampaignCard = ({ campaign, categories, intl }) => {
           </div>
         </div>
         <div className={css.cardFooter}>
-          <PrimaryButton rootClassName={css.applyButton}>Apply</PrimaryButton>
+          <PrimaryButton
+            type="button"
+            rootClassName={css.applyButton}
+            onClick={() => onApply(campaign.id)}
+          >
+            Apply
+          </PrimaryButton>
           <span className={css.categoryTag}>{category}</span>
         </div>
       </div>
@@ -117,6 +126,8 @@ const CampaignCard = ({ campaign, categories, intl }) => {
 };
 
 function HotelsRequestsSearchPage(props) {
+  const routes = useRouteConfiguration();
+  const history = useHistory();
   const [location, setLocation] = useState();
   const [category, setCategory] = useState();
   const [deliverableType, setDeliverableType] = useState();
@@ -136,7 +147,17 @@ function HotelsRequestsSearchPage(props) {
   const hotelTypeOptions = config.listing.listingFields.find(elm => elm.key === 'hotel_type')
     .enumOptions;
 
-  console.log('Campaigns:', config);
+  const handleApply = listingId => {
+    const getListing = id => campaigns.find(l => l.id.uuid === id.uuid);
+
+    handleNavigateToMakeOfferPage({
+      getListing,
+      params: { id: listingId.uuid },
+      history,
+      routes,
+    })();
+  };
+
   return (
     <div className={css.container}>
       <div className={css.filterContainer}>
@@ -184,6 +205,7 @@ function HotelsRequestsSearchPage(props) {
               campaign={campaign}
               categories={categories}
               intl={intl}
+              onApply={handleApply}
             />
           ))}
         </div>
