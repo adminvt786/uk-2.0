@@ -90,15 +90,23 @@ const CustomFieldText = props => {
   const validateMaybe = isRequired
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
+  const customPlaceHolder =
+    name === 'pub_hotel_name'
+      ? intl.formatMessage({ id: 'CustomExtendedDataField.placeholderTextHotelName' })
+      : '';
   const placeholder =
-    placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholderText' });
+    customPlaceHolder ||
+    placeholderMessage ||
+    intl.formatMessage({ id: 'CustomExtendedDataField.placeholderText' });
+
+  const isText = name === 'pub_hotel_name' ? true : false;
 
   return (
     <FieldTextInput
       className={css.customField}
       id={formId ? `${formId}.${name}` : name}
       name={name}
-      type="textarea"
+      type={isText ? 'text' : 'textarea'}
       label={label}
       placeholder={placeholder}
       {...validateMaybe}

@@ -1495,9 +1495,9 @@
   "CreateRequestForm.categoryLabel": "Category",
   "CreateRequestForm.categoryRequired": "You need to select a category",
   "CreateRequestForm.categoryPlaceholder": "Select category…",
-  "CreateRequestForm.title": "Hotel name",
-  "CreateRequestForm.titlePlaceholder": "Enter your hotel name",
-  "CreateRequestForm.titleRequired": "You need to add a hotel name",
+  "CreateRequestForm.title": "Campaign name",
+  "CreateRequestForm.titlePlaceholder": "Enter your campaign name",
+  "CreateRequestForm.titleRequired": "You need to add a campaign name",
   "CreateRequestForm.maxLength": "Maximum {maxLength} characters",
   "CreateRequestForm.description": "Describe your expectations from creator",
   "CreateRequestForm.descriptionPlaceholder": "Describe what you're looking from the creator…",
@@ -1565,5 +1565,6 @@
   "ProfilePackagesPanel.selectPlaceholder": "Select...",
   "ProfilePackagesPanel.back": "Back",
   "ProfilePackagesPanel.continue": "Continue",
-  "ProfilePackagesPanel.progressSaved": "Your progress is saved automatically"
+  "ProfilePackagesPanel.progressSaved": "Your progress is saved automatically",
+  "CustomExtendedDataField.placeholderTextHotelName": "Enter hotel name"
 }
