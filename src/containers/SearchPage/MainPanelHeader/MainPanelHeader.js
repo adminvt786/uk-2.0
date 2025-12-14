@@ -38,6 +38,14 @@ const MainPanelHeader = props => {
 
   return (
     <div className={classes}>
+      <h3 className={css.heading}>
+        <FormattedMessage id="MainPanelHeader.heading" />
+      </h3>
+      <h1 className={css.searchResultSummary}>
+        <span className={css.resultsFound}>
+          <FormattedMessage id="MainPanelHeader.subheading" />
+        </span>
+      </h1>
       <div className={css.searchOptions}>
         <h1 className={css.searchResultSummary}>
           <span className={css.resultsFound}>

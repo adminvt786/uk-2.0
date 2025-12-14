@@ -23,6 +23,8 @@ import {
   ResponsiveImage,
   ListingCardThumbnail,
   Map,
+  ReviewRating,
+  IconsCollection,
 } from '../../components';
 
 import css from './ListingCard.module.css';
@@ -93,7 +95,6 @@ const ListingCardImage = props => {
       className={css.aspectRatioWrapper}
       width={aspectWidth}
       height={aspectHeight}
-      {...setActivePropsMaybe}
     >
       <LazyImage
         rootClassName={css.rootForImage}
@@ -110,7 +111,6 @@ const ListingCardImage = props => {
       className={css.aspectRatioWrapper}
       width={aspectWidth}
       height={aspectHeight}
-      setActivePropsMaybe={setActivePropsMaybe}
     />
   );
 };
@@ -217,44 +217,39 @@ export const ListingCard = props => {
       }
     : null;
 
+  const locationDisplay = location?.address;
+
+  const rating = publicData?.rating || 5;
+
   return (
     <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>
-      <ListingCardImage
-        renderSizes={renderSizes}
-        title={title}
-        currentListing={currentListing}
-        config={config}
-        setActivePropsMaybe={setActivePropsMaybe}
-        aspectWidth={aspectWidth}
-        aspectHeight={aspectHeight}
-        variantPrefix={variantPrefix}
-        style={cardStyle}
-        showListingImage={showListingImage}
-      />
-      <div className={css.cardContent}>
-        <div className={css.info}>
-          <div className={css.mainInfo}>
-            {showListingImage && (
-              <div className={css.title}>
-                {richText(title, {
-                  longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
-                  longWordClass: css.longWord,
-                })}
-              </div>
-            )}
+      <div className={css.imageWrapper}>
+        <ListingCardImage
+          renderSizes={renderSizes}
+          title={title}
+          currentListing={currentListing}
+          config={config}
+          setActivePropsMaybe={setActivePropsMaybe}
+          aspectWidth={aspectWidth}
+          aspectHeight={aspectHeight}
+          variantPrefix={variantPrefix}
+          style={cardStyle}
+          showListingImage={showListingImage}
+        />
+        {/* <button
+          className={css.favoriteButton}
+          onClick={e => e.preventDefault()}
+          aria-label="Add to favorites"
+        >
+          <IconsCollection type="heart" className={css.heartIcon} />
+        </button> */}
+        <div className={css.cardContent}>
+          <div className={css.authorName}>{authorName}</div>
+          <div className={css.locationName}>{locationDisplay}</div>
+          <div className={css.ratingWrapper}>
+            <ReviewRating rating={rating} reviewStarClassName={css.ratingStar} />
           </div>
         </div>
-        <ListingCardMap
-          geolocation={geolocation}
-          publicData={publicData}
-          listingId={id}
-          mapsConfig={config.maps}
-        />
-        {formattedPrice && (
-          <div className={css.packagesPrice}>
-            <FormattedMessage id="ListingCard.packagesStartFrom" values={{ price: formattedPrice }} />
-          </div>
-        )}
       </div>
     </NamedLink>
   );

@@ -536,7 +536,7 @@ export class SearchPageComponent extends Component {
         schema={schema}
       >
         <TopbarContainer rootClassName={topbarClasses} currentSearchParams={validQueryParams} />
-        {isHotel ? (
+        {listingTypePathParam !== 'creators' ? (
           <HotelsRequestsSearchPage campaigns={listings} config={config} intl={intl} />
         ) : (
           <div className={css.container} role="main">
@@ -558,7 +558,7 @@ export class SearchPageComponent extends Component {
                 selectedFiltersCount={selectedFiltersCountForMobile}
                 noResultsInfo={noResultsInfo}
                 location={location}
-                isMapVariant
+                isMapVariant={false}
               >
                 {availableFilters.map(filterConfig => {
                   const key = `SearchFiltersMobile.${filterConfig.scope || 'built-in'}.${
@@ -677,7 +677,7 @@ export class SearchPageComponent extends Component {
                 </div>
               )}
             </div>
-            <ModalInMobile
+            {/* <ModalInMobile
               className={css.mapPanel}
               id="SearchPage_map"
               isModalOpenOnMobile={this.state.isSearchMapOpenOnMobile}
@@ -704,7 +704,7 @@ export class SearchPageComponent extends Component {
                   />
                 ) : null}
               </div>
-            </ModalInMobile>
+            </ModalInMobile> */}
           </div>
         )}
       </Page>

@@ -102,6 +102,12 @@ class SearchFiltersMobileComponent extends Component {
 
     return (
       <div className={classes}>
+        <h3>
+          <FormattedMessage id="MainPanelHeader.heading" />
+        </h3>
+        <h6>
+          <FormattedMessage id="MainPanelHeader.subheading" />
+        </h6>
         <div className={css.searchResultSummary}>
           {listingsAreLoaded && resultsCount > 0 ? resultsFound : null}
           {listingsAreLoaded && resultsCount === 0 ? noResults : null}
