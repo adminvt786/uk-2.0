@@ -21,6 +21,7 @@ import {
   initialValuesForListingFields,
   pickListingFieldsData,
 } from '../../../EditListingPage/EditListingWizard/EditListingDetailsPanel/EditListingDetailsPanel';
+import { useMemo } from 'react';
 
 /**
  * Get initialValues for the form from the profile listing.
@@ -34,8 +35,7 @@ const getInitialValues = (
   currentUserDisplayName,
   listingFields,
   listingCategories,
-  categoryKey,
-  images = []
+  categoryKey
 ) => {
   const { description, title, publicData, geolocation } = profileListing?.attributes || {};
   const {
@@ -55,7 +55,7 @@ const getInitialValues = (
     listingType,
     transactionProcessAlias,
     unitType,
-    images,
+    images: profileListing?.images || [],
     ...nestedCategories,
     ...initialValuesForListingFields(
       publicData,
@@ -124,17 +124,16 @@ const ProfileDetailsPanel = props => {
 
   // Combine listing images with uploaded images from Redux
   // This ensures newly uploaded images appear in the form
-  const listingImages = profileListing?.images || [];
-  const combinedImages = [...listingImages, ...mediaKitImages];
 
-  const initialValues = getInitialValues(
-    profileListing,
-    currentUserDisplayName,
-    listingFields,
-    listingCategories,
-    categoryKey,
-    combinedImages
-  );
+  const initialValues = useMemo(() => {
+    return getInitialValues(
+      profileListing,
+      currentUserDisplayName,
+      listingFields,
+      listingCategories,
+      categoryKey
+    );
+  }, [currentUserDisplayName, listingFields, listingCategories, categoryKey, profileListing]);
 
   const handleImageUpload = data => {
     dispatch(uploadImage(data));
@@ -154,6 +153,7 @@ const ProfileDetailsPanel = props => {
         className={css.form}
         initialValues={initialValues}
         saveActionMsg={submitButtonText}
+        keepDirtyOnReinitialize
         onSubmit={values => {
           const {
             title,
@@ -212,8 +212,7 @@ const ProfileDetailsPanel = props => {
           };
 
           // return;
-
-          if (profileImage?.imageId) {
+          if (profileImage?.imageId && formProfileImage) {
             updateValues.profileImageId = profileImage.imageId;
             updateValues.updateUser = true;
           }

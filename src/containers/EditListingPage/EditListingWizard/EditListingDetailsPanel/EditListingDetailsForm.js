@@ -143,7 +143,15 @@ const findCategoryConfig = (categories, categoryIdToFind) => {
  * The select field is used for choosing a category or subcategory.
  */
 const CategoryField = props => {
-  const { currentCategoryOptions, level, values, prefix, handleCategoryChange, intl } = props;
+  const {
+    currentCategoryOptions,
+    level,
+    values,
+    prefix,
+    handleCategoryChange,
+    intl,
+    className,
+  } = props;
 
   const currentCategoryKey = `${prefix}${level}`;
 
@@ -156,7 +164,7 @@ const CategoryField = props => {
           key={currentCategoryKey}
           id={currentCategoryKey}
           name={currentCategoryKey}
-          className={css.listingTypeSelect}
+          className={classNames(css.listingTypeSelect, className)}
           onChange={event => handleCategoryChange(event, level, currentCategoryOptions)}
           label={intl.formatMessage(
             { id: 'EditListingDetailsForm.categoryLabel' },
@@ -186,6 +194,7 @@ const CategoryField = props => {
 
       {categoryConfig?.subcategories?.length > 0 ? (
         <CategoryField
+          className={className}
           currentCategoryOptions={categoryConfig.subcategories}
           level={level + 1}
           values={values}
@@ -203,7 +212,15 @@ export const FieldSelectCategory = props => {
     checkIfInitialValuesExist();
   }, []);
 
-  const { prefix, listingCategories, formApi, intl, setAllCategoriesChosen, values } = props;
+  const {
+    prefix,
+    listingCategories,
+    formApi,
+    intl,
+    setAllCategoriesChosen,
+    values,
+    className,
+  } = props;
 
   // Counts the number of selected categories in the form values based on the given prefix.
   const countSelectedCategories = () => {
@@ -231,6 +248,7 @@ export const FieldSelectCategory = props => {
 
   return (
     <CategoryField
+      className={className}
       currentCategoryOptions={listingCategories}
       level={1}
       values={values}

@@ -7,6 +7,7 @@ import { updateProfileInProgressSelector } from '../../ManageProfilePage.duck';
 import { PrimaryButton } from '../../../../components';
 
 import css from './ProfileListingTypesPanel.module.css';
+import ProfileWizardFooter from '../ProfileWizardFooter/ProfileWizardFooter';
 
 // Package type options
 const PACKAGE_TYPES = [
@@ -176,32 +177,13 @@ const ProfileListingTypesPanel = props => {
           </span>
         </div>
 
-        <div className={css.footer}>
-          <div className={css.footerContent}>
-            <div className={css.footerLeft}>
-              <button
-                type="button"
-                className={css.backButton}
-                onClick={onBack}
-                disabled={updateInProgress}
-              >
-                {intl.formatMessage({ id: 'ProfileListingTypesPanel.back' })}
-              </button>
-              <p className={css.progressText}>
-                {intl.formatMessage({ id: 'ProfileListingTypesPanel.progressSaved' })}
-              </p>
-            </div>
-            <PrimaryButton
-              type="button"
-              className={css.continueButton}
-              disabled={updateInProgress}
-              inProgress={updateInProgress}
-              onClick={handleSubmit}
-            >
-              {submitButtonText || intl.formatMessage({ id: 'ProfileListingTypesPanel.continue' })}
-            </PrimaryButton>
-          </div>
-        </div>
+        <ProfileWizardFooter
+          onBack={onBack}
+          updateInProgress={updateInProgress}
+          handleSubmit={handleSubmit}
+          submitButtonText={submitButtonText}
+          intl={intl}
+        />
       </form>
     </div>
   );
