@@ -35,7 +35,7 @@ import {
   AddListingFields,
   FieldSelectCategory,
 } from '../../../EditListingPage/EditListingWizard/EditListingDetailsPanel/EditListingDetailsForm';
-import { element } from 'prop-types';
+import ProfileWizardFooter from '../ProfileWizardFooter/ProfileWizardFooter';
 
 const ACCEPT_IMAGES = 'image/*';
 const UPLOAD_CHANGE_DELAY = 2000; // Show spinner so that browser has time to load img srcset
@@ -316,6 +316,7 @@ const ProfileDetailsForm = props => {
           onRemoveMediaKitImage,
           mediaKitUploadInProgress,
           mediaKitUploadError,
+          errors,
         } = formRenderProps;
 
         const intl = useIntl();
@@ -409,6 +410,38 @@ const ProfileDetailsForm = props => {
         const submitDisabled =
           invalid || disabled || submitInProgress || uploadInProgress || mediaKitUploadInProgress;
 
+        const onImageUploadHandler = async file => {
+          if (file && onMediaKitImageUpload) {
+            const tempId = `${file.name}_${Date.now()}`;
+            const newImages = [
+              ...images,
+              {
+                id: tempId,
+                file,
+              },
+            ];
+            form.change('images', newImages);
+            const res = await onMediaKitImageUpload({ id: tempId, file });
+            if (!res.error) {
+              form.change(
+                'images',
+                newImages.map(img =>
+                  img.id === tempId
+                    ? {
+                        ...img,
+                        ...res.payload.uploadedImage,
+                        imageId: res.payload.uploadedImage.id,
+                      }
+                    : img
+                )
+              );
+            } else {
+              form.change('images', newImages.filter(img => img.id !== tempId));
+            }
+          }
+        };
+     
+
         return (
           <Form className={classes} onSubmit={handleSubmit}>
             <ErrorMessage fetchErrors={fetchErrors} />
@@ -493,7 +526,7 @@ const ProfileDetailsForm = props => {
             <FieldTextInput
               id={`${formId}displayName`}
               name="title"
-              className={css.displayName}
+              className={classNames(css.formField, css.displayName)}
               type="text"
               label={intl.formatMessage({ id: 'ProfileDetailsForm.displayNameLabel' })}
               placeholder={intl.formatMessage({
@@ -506,7 +539,7 @@ const ProfileDetailsForm = props => {
             <FieldTextInput
               id={`${formId}aboutMe`}
               name="description"
-              className={css.aboutMe}
+              className={classNames(css.formField, css.aboutMe)}
               type="textarea"
               label={intl.formatMessage({ id: 'ProfileDetailsForm.aboutMeLabel' })}
               placeholder={intl.formatMessage({
@@ -535,9 +568,8 @@ const ProfileDetailsForm = props => {
                       <FieldMediaKitImage
                         key={name}
                         name={name}
-                        onRemoveImage={imageId => {
+                        onRemoveImage={() => {
                           fields.remove(index);
-                          onRemoveMediaKitImage(imageId);
                         }}
                         intl={intl}
                         aspectWidth={1}
@@ -565,12 +597,7 @@ const ProfileDetailsForm = props => {
                   type="file"
                   disabled={mediaKitUploadInProgress}
                   formApi={form}
-                  onImageUploadHandler={file => {
-                    if (file && onMediaKitImageUpload) {
-                      const tempId = `${file.name}_${Date.now()}`;
-                      onMediaKitImageUpload({ id: tempId, file });
-                    }
-                  }}
+                  onImageUploadHandler={onImageUploadHandler}
                   aspectWidth={1}
                   aspectHeight={1}
                 />
@@ -587,7 +614,7 @@ const ProfileDetailsForm = props => {
             </div>
 
             <FieldLocationAutocompleteInput
-              rootClassName={css.input}
+              rootClassName={classNames(css.formField, css.input)}
               inputClassName={css.locationAutocompleteInput}
               iconClassName={css.locationAutocompleteInputIcon}
               predictionsClassName={css.predictionsRoot}
@@ -611,6 +638,7 @@ const ProfileDetailsForm = props => {
             {showCategories && (
               <FieldSelectCategory
                 values={values}
+                className={classNames(css.formField, css.categorySelect)}
                 prefix={categoryPrefix}
                 listingCategories={selectableCategories}
                 formApi={form}
@@ -620,23 +648,27 @@ const ProfileDetailsForm = props => {
               />
             )}
 
-            <AddListingFields
-              listingType={listingType}
-              listingFieldsConfig={filteredListingFieldsConfig}
-              selectedCategories={pickSelectedCategories(values)}
-              formId={formId}
+            <div className={css.formField}>
+              <AddListingFields
+                listingType={listingType}
+                listingFieldsConfig={filteredListingFieldsConfig}
+                selectedCategories={pickSelectedCategories(values)}
+                formId={formId}
+                intl={intl}
+              />
+            </div>
+
+            <div className={css.space} />
+
+            <ProfileWizardFooter
+              className={css.footer}
+              updateInProgress={updateInProgress}
+              handleSubmit={() => form.submit()}
+              ready={submitReady}
+              disabled={submitDisabled}
+              submitButtonText={saveActionMsg}
               intl={intl}
             />
-
-            <Button
-              className={css.submitButton}
-              type="submit"
-              inProgress={submitInProgress}
-              disabled={submitDisabled}
-              ready={submitReady}
-            >
-              {saveActionMsg}
-            </Button>
           </Form>
         );
       }}

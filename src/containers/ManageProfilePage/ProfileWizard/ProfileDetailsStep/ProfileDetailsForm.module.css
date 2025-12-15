@@ -144,6 +144,7 @@
   height: var(--ProfileDetailsForm_avatarSize);
   border-radius: calc(var(--ProfileDetailsForm_avatarSize) / 2);
   overflow: hidden;
+  position: absolute;
 
   @media (--viewportMedium) {
     width: var(--ProfileDetailsForm_avatarSizeDesktop);
@@ -465,4 +466,34 @@
   color: var(--colorGrey300);
   margin-top: 8px;
   margin-bottom: 0;
+}
+
+.space {
+  height: 100px;
+}
+
+.formField label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.formField input,
+.formField textarea {
+  background-color: #f3f3f5;
+}
+
+.formField select {
+  background-color: #f3f3f5;
+}
+
+.formField input[disabled] {
+  background-color: #f0f0f0;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.formField textarea {
+  min-height: 80px;
+  resize: vertical;
 }
