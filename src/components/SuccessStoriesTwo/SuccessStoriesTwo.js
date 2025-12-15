@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import css from './SuccessStoriesTwo.module.css';
+import Field from '../../containers/PageBuilder/Field';
+import { FormattedMessage } from 'react-intl';
 
-const SuccessStoriesTwo = () => {
+const SuccessStoriesTwo = props => {
+    const {
+        title,
+        description,
+        options,
+        sectionId,
+        callToAction,
+        blocks = [],
+    } = props;
+    const fieldComponents = options?.fieldComponents;
+    const fieldOptions = { fieldComponents };
     const [isMounted, setIsMounted] = useState(false);
     const [swiperModules, setSwiperModules] = useState(null);
 
@@ -68,8 +80,8 @@ const SuccessStoriesTwo = () => {
         <section className={css.successStoriesSection}>
             <div className={css.container}>
                 <header className={css.header}>
-                    <h2 className={css.title}>Success Stories</h2>
-                    <p className={css.subtitle}>Hear from elite creators thriving on Ukreate</p>
+                    <Field data={title} className={css.title} options={fieldOptions} />
+                    <Field data={description} className={css.subtitle} options={fieldOptions} />
                 </header>
 
                 {Swiper && SwiperSlide && PaginationModule && (
@@ -136,7 +148,7 @@ const SuccessStoriesTwo = () => {
                                                 </div>
                                                 <div className={css.followerCount}>
                                                     <div className={css.followerNumber}>{story.followers}</div>
-                                                    <div className={css.followerLabel}>Followers</div>
+                                                    <div className={css.followerLabel}><FormattedMessage id="SuccessStoriesTwo.followers" /></div>
                                                 </div>
                                             </div>
                                         </div>

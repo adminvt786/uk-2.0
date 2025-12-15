@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import css from './HotelSuccessStories.module.css';
+import Field from '../../containers/PageBuilder/Field';
 
-const HotelSuccessStories = () => {
+const HotelSuccessStories = props => {
+  const {
+    title,
+    description,
+    options,
+    sectionId,
+    callToAction,
+    blocks = [],
+  } = props;
+  const fieldComponents = options?.fieldComponents;
+  const fieldOptions = { fieldComponents };
   const [isMounted, setIsMounted] = useState(false);
   const [swiperModules, setSwiperModules] = useState(null);
 
@@ -157,10 +168,8 @@ const HotelSuccessStories = () => {
   return (
     <section className={css.root}>
       <div className={css.header}>
-        <h2 className={css.title}>Hotel Success Stories</h2>
-        <p className={css.subtitle}>
-          See how properties like yours are elevating their content and bookings.
-        </p>
+        <Field data={title} className={css.title} options={fieldOptions} />
+        <Field data={description} className={css.subtitle} options={fieldOptions} />
       </div>
 
       {Swiper && SwiperSlide && NavigationModule && PaginationModule && (
