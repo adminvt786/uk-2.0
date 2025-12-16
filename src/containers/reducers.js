@@ -24,6 +24,7 @@ import TransactionPage from './TransactionPage/TransactionPage.duck';
 import ManageProfilePage from './ManageProfilePage/ManageProfilePage.duck';
 import LandingPage from './LandingPage/LandingPage.duck';
 import CMSPage from './CMSPage/CMSPage.duck';
+import FavoriteListingsPage from './FavoriteListingsPage/FavoriteListingsPage.duck';
 
 export {
   CheckoutPage,
@@ -47,4 +48,5 @@ export {
   ManageProfilePage,
   LandingPage,
   CMSPage,
+  FavoriteListingsPage,
 };

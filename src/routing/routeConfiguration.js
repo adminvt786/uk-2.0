@@ -40,6 +40,7 @@ const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfSe
 const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionPage" */ '../containers/TransactionPage/TransactionPage'));
 const NoAccessPage = loadable(() => import(/* webpackChunkName: "NoAccessPage" */ '../containers/NoAccessPage/NoAccessPage'));
 const ManageProfilePage = loadable(() => import(/* webpackChunkName: "ManageProfilePage" */ '../containers/ManageProfilePage/ManageProfilePage'));
+const FavoriteListingsPage = loadable(() => import(/* webpackChunkName: "FavoriteListingsPage" */ '../containers/FavoriteListingsPage/FavoriteListingsPage'));
 
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
@@ -83,6 +84,14 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       name: 'LandingPage',
       component: LandingPage,
       loadData: pageDataLoadingAPI.LandingPage.loadData,
+    },
+    {
+      path: '/favorites',
+      name: 'FavoriteListingsPage',
+      auth: true, // user must be signed in to view this page
+      authPage: 'LoginPage',
+      component: FavoriteListingsPage,
+      loadData: pageDataLoadingAPI.FavoriteListingsPage.loadData,
     },
     {
       path: '/manage-profile',

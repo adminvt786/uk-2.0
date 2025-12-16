@@ -12,6 +12,7 @@ import { ensureCurrentUser } from '../../../../util/data';
 import {
   AvatarLarge,
   ExternalLink,
+  IconsCollection,
   InlineTextButton,
   NamedLink,
   NotificationBadge,
@@ -19,6 +20,7 @@ import {
 
 import css from './TopbarMobileMenu.module.css';
 import { isCreatorUserType } from '../../../../util/userHelpers';
+import { HEART } from '../../../../components/IconsCollection/IconsCollection';
 
 const CustomLinkComponent = ({ linkConfig, currentPage }) => {
   const { group, text, type, href, route } = linkConfig;
@@ -161,6 +163,18 @@ const TopbarMobileMenu = props => {
       </NamedLink>
     ) : null;
 
+  const favoriteLinkMaybe = isAuthenticated ? (
+    <NamedLink
+      className={classNames(css.navigationLink, currentPageClass('ManageListingsPage'))}
+      name="FavoriteListingsPage"
+    >
+      <span className={css.wishlistIcon}>
+        <IconsCollection type={HEART} />
+      </span>
+      <FormattedMessage id="TopbarDesktop.favorites" />
+    </NamedLink>
+  ) : null;
+
   return (
     <div className={css.root}>
       <AvatarLarge className={css.avatar} user={currentUser} />
@@ -173,6 +187,7 @@ const TopbarMobileMenu = props => {
         </InlineTextButton>
 
         <div className={css.accountLinksWrapper}>
+          {favoriteLinkMaybe}
           <NamedLink
             className={classNames(css.inbox, currentPageClass(`InboxPage:${inboxTab}`))}
             name="InboxPage"

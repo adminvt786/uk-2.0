@@ -3,11 +3,9 @@ import { fetchPageAssets } from '../../ducks/hostedAssets.duck';
 import { addMarketplaceEntities, getListingsById } from '../../ducks/marketplaceData.duck';
 import { storableError } from '../../util/errors';
 import { getImageVariantInfo } from '../EditListingPage/EditListingPage.duck';
+import { responseListingIds } from '../../util/data';
 
 const PER_PAGE = 8;
-
-// Helper to transform response to listing id array
-const responseListingIds = data => data.data.map(l => l.id);
 
 // Build default search params for listings
 const getDefaultParams = config => {
@@ -65,7 +63,7 @@ const initialState = {
 };
 
 const cmsPageSlice = createSlice({
-  name: 'landingPage',
+  name: 'CMSPage',
   initialState,
   reducers: {},
   extraReducers: builder => {

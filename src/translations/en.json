@@ -1569,5 +1569,11 @@
   "ProfilePackagesPanel.progressSaved": "Your progress is saved automatically",
   "CustomExtendedDataField.placeholderTextHotelName": "Enter hotel name",
   "MainPanelHeader.subheading": "Check out the featured creators! And yes our creators can change their location and bio on social media for your needs!",
-  "MainPanelHeader.heading": "Explore our creators"
+  "MainPanelHeader.heading": "Explore our creators",
+  "FavoriteListingsPage.loadingFavoriteListings": "Loading favorites...",
+  "FavoriteListingsPage.noResults": "You haven't added anything to favorites.",
+  "FavoriteListingsPage.queryError": "Query failed. Please try again.",
+  "FavoriteListingsPage.title": "View your favorite listings",
+  "FavoriteListingsPage.youHaveListings": "You have {count} favorite {count, plural, one {listing} other {listings}}",
+  "TopbarDesktop.favorites": "Favorites"
 }

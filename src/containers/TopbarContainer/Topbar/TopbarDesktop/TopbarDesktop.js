@@ -12,6 +12,7 @@ import {
   MenuContent,
   MenuItem,
   NamedLink,
+  IconsCollection,
 } from '../../../../components';
 
 import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
@@ -19,6 +20,7 @@ import CustomLinksMenu from './CustomLinksMenu/CustomLinksMenu';
 
 import css from './TopbarDesktop.module.css';
 import { isCreatorUserType } from '../../../../util/userHelpers';
+import { HEART } from '../../../../components/IconsCollection/IconsCollection';
 
 const SignupLink = () => {
   return (
@@ -47,6 +49,19 @@ const InboxLink = ({ notificationCount, inboxTab }) => {
       <span className={css.topbarLinkLabel}>
         <FormattedMessage id="TopbarDesktop.inbox" />
         {notificationDot}
+      </span>
+    </NamedLink>
+  );
+};
+
+const FavoriteLink = () => {
+  return (
+    <NamedLink className={css.topbarLink} name="FavoriteListingsPage">
+      <span className={css.topbarLinkLabel}>
+        <span className={css.wishlistIcon}>
+          <IconsCollection type={HEART} />
+        </span>
+        <FormattedMessage id="TopbarDesktop.favorites" />
       </span>
     </NamedLink>
   );
@@ -153,16 +168,15 @@ const TopbarDesktop = props => {
     setMounted(true);
   }, []);
 
-  const isLandingPage = currentPage === 'LandingPage' 
-  || currentPage.includes('CMSPage:landing-page-2') 
-  || currentPage.includes('CMSPage:creator-landing-page')
-  || currentPage.includes('CMSPage:about')
-  || currentPage.includes('CMSPage:pricing');
+  const isLandingPage =
+    currentPage === 'LandingPage' ||
+    currentPage.includes('CMSPage:landing-page-2') ||
+    currentPage.includes('CMSPage:creator-landing-page') ||
+    currentPage.includes('CMSPage:about') ||
+    currentPage.includes('CMSPage:pricing');
 
   // Handle scroll effect for landing page
   useEffect(() => {
-   
-    
     if (!isLandingPage) {
       setIsScrolled(true); // Always show white background on other pages
       return;
@@ -189,17 +203,17 @@ const TopbarDesktop = props => {
   const isAuthenticatedOrJustHydrated = isAuthenticated || !mounted;
 
   const giveSpaceForSearch = customLinks == null || customLinks?.length === 0;
-  const classes = classNames(
-    rootClassName || css.root,
-    className,
-    {
-      [css.scrolled]: isScrolled,
-      [css.transparent]: !isScrolled && isLandingPage,
-    }
-  );
+  const classes = classNames(rootClassName || css.root, className, {
+    [css.scrolled]: isScrolled,
+    [css.transparent]: !isScrolled && isLandingPage,
+  });
 
   const inboxLinkMaybe = authenticatedOnClientSide ? (
     <InboxLink notificationCount={notificationCount} inboxTab={inboxTab} />
+  ) : null;
+
+  const favoriteLinkMaybe = authenticatedOnClientSide ? (
+    <FavoriteLink notificationCount={notificationCount} inboxTab={inboxTab} />
   ) : null;
 
   const profileMenuMaybe = authenticatedOnClientSide ? (
@@ -232,15 +246,25 @@ const TopbarDesktop = props => {
   );
   const isSearchPage = currentPage === 'SearchPage';
 
-
   // Landing page "Get Started" button
   const getStartedButton = isAuthenticatedOrJustHydrated ? null : (
     <NamedLink name="SignupPage" className={css.getStartedButton}>
       <span className={css.getStartedText}>Get Started</span>
-      <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M0.625 5.625L13.9583 5.625M13.9583 5.625L8.95833 10.625M13.9583 5.625L8.95833 0.625" stroke="black" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-
+      <svg
+        width="15"
+        height="12"
+        viewBox="0 0 15 12"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M0.625 5.625L13.9583 5.625M13.9583 5.625L8.95833 10.625M13.9583 5.625L8.95833 0.625"
+          stroke="black"
+          stroke-width="1.25"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
     </NamedLink>
   );
 
@@ -256,27 +280,29 @@ const TopbarDesktop = props => {
         linkToExternalSite={config?.topbar?.logoLink}
         isScrolled={isScrolled}
       />
-      {isSearchPage ?
-      searchFormMaybe 
-      :
+      {isSearchPage ? (
+        searchFormMaybe
+      ) : (
         <CustomLinksMenu
-        isScrolled={isScrolled}
-            currentPage={currentPage}
-            customLinks={customLinks}
-            intl={intl}
-            hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
-            showCreateListingsLink={false && showCreateListingsLink && !isCreatorUserType(currentUser)}
-          />}
+          isScrolled={isScrolled}
+          currentPage={currentPage}
+          customLinks={customLinks}
+          intl={intl}
+          hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
+          showCreateListingsLink={
+            false && showCreateListingsLink && !isCreatorUserType(currentUser)
+          }
+        />
+      )}
 
-        <div className={css.topbarLinks}>
-        
-          {inboxLinkMaybe}
-          {profileMenuMaybe}
-          {loginLinkMaybe}
-          { getStartedButton}
-        </div>
+      <div className={css.topbarLinks}>
+        {favoriteLinkMaybe}
+        {inboxLinkMaybe}
+        {profileMenuMaybe}
+        {loginLinkMaybe}
+        {getStartedButton}
+      </div>
       {/* {signupLinkMaybe} */}
-
     </nav>
   );
 };

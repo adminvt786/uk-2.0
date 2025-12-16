@@ -241,13 +241,9 @@ export const ListingCard = props => {
           style={cardStyle}
           showListingImage={showListingImage}
         />
-        {/* <button
-          className={css.favoriteButton}
-          onClick={e => e.preventDefault()}
-          aria-label="Add to favorites"
-        >
-          <IconsCollection type="heart" className={css.heartIcon} />
-        </button> */}
+
+       {/* <FavoriteButton listingId={id} listingAuthor={author} isVisible={true} /> */}
+
         <div className={css.cardContent}>
           <div className={css.authorName}>{authorName}</div>
           <div className={css.locationName}>{locationDisplay}</div>
