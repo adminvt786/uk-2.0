@@ -4,8 +4,22 @@ import creator1 from '../../assets/FeaturedCreateor/FeaturedCreateor1.png';
 import creator2 from '../../assets/FeaturedCreateor/FeaturedCreateor2.png';
 import creator3 from '../../assets/FeaturedCreateor/FeaturedCreateor3.png';
 import creator4 from '../../assets/FeaturedCreateor/FeaturedCreateor4.png';
+import Field from '../../containers/PageBuilder/Field';
 
-const FeaturedCreators = () => {
+const FeaturedCreators = props => {
+    const {
+        title,
+        description,
+        options,
+        sectionId,
+        callToAction,
+        blocks = [],
+    } = props;
+
+    const fieldComponents = options?.fieldComponents;
+    const fieldOptions = { fieldComponents };
+
+
     const [isMounted, setIsMounted] = useState(false);
     const [swiperModules, setSwiperModules] = useState(null);
 
@@ -77,11 +91,19 @@ const FeaturedCreators = () => {
     return (
         <section className={css.featuredCreators}>
             <header className={css.header}>
-                <h2 className={css.sectionLabel}>OUR ELITE NETWORK</h2>
-                <h1 className={css.title}>Featured Creators</h1>
-                <p className={css.description}>
-                    Handpicked professionals trusted by the world's finest hotels and resorts
-                </p>
+            {blocks.length > 0 && (
+          <div className={css.faqCard}>
+            {blocks.map((block, index) => {
+              const blockId = block.blockId || `faq-${index}`;
+
+              return (
+                <Field key={blockId} data={block.title} className={css.sectionLabel} options={fieldOptions} />
+              );
+            })}
+          </div>
+        )}
+                <Field data={title} className={css.title} options={fieldOptions} />
+                <Field data={description} className={css.description} options={fieldOptions} />
             </header>
             
             {Swiper && SwiperSlide && NavigationModule && PaginationModule && (
@@ -137,12 +159,7 @@ const FeaturedCreators = () => {
             )}
 
             <div className={css.footerLink}>
-                <a href="#" className={css.viewAllLink}>
-                    View All Elite Creators
-                    <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0.625 5.625L13.9583 5.625M13.9583 5.625L8.95833 10.625M13.9583 5.625L8.95833 0.625" stroke="#D9A441" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                </a>
+                <Field data={callToAction} className={css.viewAllLink} options={fieldOptions} />
             </div>
         </section>
     );

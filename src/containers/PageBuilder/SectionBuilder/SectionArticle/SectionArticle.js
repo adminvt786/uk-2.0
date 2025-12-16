@@ -89,22 +89,51 @@ const SectionArticle = props => {
   }
   if(sectionId === 'hotel_success_stories') {
     return (
-      <HotelSuccessStories/>
+      <HotelSuccessStories
+      
+      title={title}
+      description={description}
+      callToAction={callToAction}
+      options={options}
+      sectionId={sectionId}
+      blocks={blocks}
+      />
     );
   }
   if(sectionId === 'success_stories_two') {
     return (
-      <SuccessStoriesTwo/>
+      <SuccessStoriesTwo
+      title={title}
+      description={description}
+      callToAction={callToAction}
+      options={options}
+      sectionId={sectionId}
+      blocks={blocks}
+      />
     );
   }
   if(sectionId === 'featured_creators_section') {
     return (
-      <FeaturedCreators/>
+      <FeaturedCreators
+      title={title}
+      description={description}
+      callToAction={callToAction}
+      options={options}
+      sectionId={sectionId}
+      blocks={blocks}
+      />
     );
   }
   if(sectionId === 'success_stories_section') {
     return (
-      <SuccessStories/>
+      <SuccessStories
+      title={title}
+      description={description}
+      callToAction={callToAction}
+      options={options}
+      sectionId={sectionId}
+      blocks={blocks}
+      />
     );
   }
 

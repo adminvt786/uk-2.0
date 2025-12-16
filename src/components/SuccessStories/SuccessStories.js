@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import css from './SuccessStories.module.css';
 import successStoriesImage from '../../assets/succssStories.png';
+import Field from '../../containers/PageBuilder/Field';
 
 // Icon components
 const OrganicReachIcon = () => (
@@ -86,9 +87,18 @@ const ArrowRightIcon = () => (
   </svg>
 );
 
-const SuccessStories = () => {
+const SuccessStories = props => {
+  const {
+    title,
+    description,
+    options,
+    sectionId,
+    callToAction,
+    blocks = [],
+  } = props;
   const [currentSlide, setCurrentSlide] = useState(0);
-
+  const fieldComponents = options?.fieldComponents;
+  const fieldOptions = { fieldComponents };
   // Sample data - you can expand this with more stories
   const stories = [
     {
@@ -162,9 +172,18 @@ const SuccessStories = () => {
   return (
     <section className={css.successStories}>
       <div className={css.topSection}>
-        <h6 className={css.subtitle}>CASE STUDIES</h6>
-        <h2 className={css.mainTitle}>Success Stories</h2>
-        <p className={css.description}>Real results from hotels partnering with Ukreate creators</p>
+        {blocks.length > 0 && (
+          <div className={css.faqCard}>
+            {blocks.map((block, index) => {
+              const blockId = block.blockId || `faq-${index}`;
+              return (
+                <Field key={blockId} data={block.title} className={css.subtitle} options={fieldOptions} />
+              );
+            })}
+          </div>
+        )}
+        <Field data={title} className={css.mainTitle} options={fieldOptions} />
+        <Field data={description} className={css.description} options={fieldOptions} />
       </div>
       <div className={css.container}>
         <div className={css.imageColumn}>
