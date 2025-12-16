@@ -240,7 +240,9 @@ const ProfileDetailsPanel = props => {
         onRemoveMediaKitImage={handleRemoveMediaKitImage}
         mediaKitUploadInProgress={mediaKitImageUploadInProgress}
         mediaKitUploadError={mediaKitImageUploadError}
-        listingFieldsConfig={listingFields}
+        listingFieldsConfig={listingFields.filter(
+          elm => !['whats_included', 'delivery_method', 'turnaround_time', 'add_ons'].includes(elm.key)
+        )}
         selectableCategories={listingCategories}
         categoryPrefix={categoryKey}
         pickSelectedCategories={values =>
