@@ -26,7 +26,12 @@ import TopbarMobileMenu from './TopbarMobileMenu/TopbarMobileMenu';
 import TopbarDesktop from './TopbarDesktop/TopbarDesktop';
 
 import css from './Topbar.module.css';
-import { getCurrentUserTypeRoles, showCreateListingLinkForUser } from '../../../util/userHelpers';
+import {
+  getCurrentUserTypeRoles,
+  isCreatorUserType,
+  isHotelUserType,
+  showCreateListingLinkForUser,
+} from '../../../util/userHelpers';
 
 const MAX_MOBILE_SCREEN_WIDTH = 1024;
 
@@ -156,6 +161,8 @@ const TopbarComponent = props => {
     config,
     routeConfiguration,
   } = props;
+  const isCreator = isCreatorUserType(currentUser);
+  const isHotel = isHotelUserType(currentUser);
 
   const handleSubmit = values => {
     const { currentSearchParams, history, location, config, routeConfiguration } = props;
@@ -234,7 +241,17 @@ const TopbarComponent = props => {
 
   // Custom links are sorted so that group="primary" are always at the beginning of the list.
   const sortedCustomLinks = sortCustomLinks(config.topbar?.customLinks);
-  const customLinks = getResolvedCustomLinks(sortedCustomLinks, routeConfiguration);
+  const customLinks = getResolvedCustomLinks(sortedCustomLinks, routeConfiguration)?.filter(link => {
+    if (isCreator && link.href.includes('hotels')) {
+      return false;
+    }
+
+    if (isHotel && link.href.includes('creators')) {
+      return false;
+    }
+
+    return true;
+  });
   const resolvedCurrentPage = currentPage || getResolvedCurrentPage(location, routeConfiguration);
 
   const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
@@ -248,11 +265,12 @@ const TopbarComponent = props => {
 
   // Handle scroll effect for landing page (mobile)
   const [isScrolled, setIsScrolled] = useState(false);
-  const isLandingPage = resolvedCurrentPage === 'LandingPage' 
-  || (resolvedCurrentPage && resolvedCurrentPage.includes('CMSPage:landing-page-2')) 
-  || (resolvedCurrentPage && resolvedCurrentPage.includes('CMSPage:creator-landing-page'))
-  || (resolvedCurrentPage && resolvedCurrentPage.includes('CMSPage:about'))
-  || (resolvedCurrentPage && resolvedCurrentPage.includes('CMSPage:pricing'));
+  const isLandingPage =
+    resolvedCurrentPage === 'LandingPage' ||
+    (resolvedCurrentPage && resolvedCurrentPage.includes('CMSPage:landing-page-2')) ||
+    (resolvedCurrentPage && resolvedCurrentPage.includes('CMSPage:creator-landing-page')) ||
+    (resolvedCurrentPage && resolvedCurrentPage.includes('CMSPage:about')) ||
+    (resolvedCurrentPage && resolvedCurrentPage.includes('CMSPage:pricing'));
 
   useEffect(() => {
     if (!isLandingPage) {
@@ -352,22 +370,20 @@ const TopbarComponent = props => {
         onLogout={handleLogout}
         currentPage={resolvedCurrentPage}
       />
-      <nav className={classNames(
-        mobileRootClassName || css.container, 
-        mobileClassName,
-        {
+      <nav
+        className={classNames(mobileRootClassName || css.container, mobileClassName, {
           [css.scrolled]: isScrolled,
           [css.transparent]: !isScrolled && isLandingPage,
-        }
-      )}>
-               {isSearchPage ? mobileSearchButtonMaybe : null}
+        })}
+      >
+        {isSearchPage ? mobileSearchButtonMaybe : null}
         <LinkedLogo
           layout={'mobile'}
           alt={intl.formatMessage({ id: 'Topbar.logoIcon' })}
           linkToExternalSite={config?.topbar?.logoLink}
           isScrolled={isScrolled}
         />
-         <Button
+        <Button
           id={MOBILE_MENU_BUTTON_ID}
           rootClassName={css.menu}
           onClick={() => redirectToURLWithModalState(history, location, 'mobilemenu')}
@@ -379,7 +395,6 @@ const TopbarComponent = props => {
           />
           {notificationDot}
         </Button>
-
       </nav>
       <div className={css.desktop}>
         <TopbarDesktop
