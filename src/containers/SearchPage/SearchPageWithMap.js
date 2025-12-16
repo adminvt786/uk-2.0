@@ -767,6 +767,8 @@ const EnhancedSearchPage = props => {
         params={{ missingAccessRight: NO_ACCESS_PAGE_VIEW_LISTINGS }}
       />
     );
+  } else if (!props.params?.listingType) {
+    return <NamedRedirect name="LandingPage" />;
   }
 
   return (
