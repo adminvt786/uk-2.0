@@ -23,6 +23,7 @@ import StripePayoutPage from './StripePayoutPage/StripePayoutPage.duck';
 import TransactionPage from './TransactionPage/TransactionPage.duck';
 import ManageProfilePage from './ManageProfilePage/ManageProfilePage.duck';
 import LandingPage from './LandingPage/LandingPage.duck';
+import CMSPage from './CMSPage/CMSPage.duck';
 
 export {
   CheckoutPage,
@@ -45,4 +46,5 @@ export {
   TransactionPage,
   ManageProfilePage,
   LandingPage,
+  CMSPage,
 };

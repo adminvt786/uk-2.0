@@ -2,8 +2,17 @@ import React, { useState, useEffect } from 'react';
 import Field, { hasDataInFields } from '../../containers/PageBuilder/Field';
 import SectionContainer from '../../containers/PageBuilder/SectionBuilder/SectionContainer';
 import css from './FeaturedTravelCreator.module.css';
+import {
+  customInProgressSelector,
+  customListingsSelector,
+} from '../../containers/CMSPage/CMSPage.duck';
+import { useSelector } from 'react-redux';
+import ListingCard from '../ListingCard/ListingCard';
+import IconSpinner from '../IconSpinner/IconSpinner';
 
 const FeaturedTravelCreator = props => {
+  const listings = useSelector(customListingsSelector);
+  const inProgress = useSelector(customInProgressSelector);
   const {
     title,
     description,
@@ -65,14 +74,31 @@ const FeaturedTravelCreator = props => {
         </header>
       )}
 
+      {inProgress && (
+        <div className={css.loadingContainer}>
+          <IconSpinner />
+        </div>
+      )}
+
       {blocks.length > 0 && (
         <>
           {/* Desktop Grid */}
           <div className={css.desktopGrid}>
-            {blocks.map((block, index) => {
+            {listings.map((l, index) => {
               return (
-                <div key={block.blockId || `benefit-${index}`} className={css.card}>
-                  <div className={css.cardImageWrapper}>
+                <div key={l.id.uuid} className={css.card}>
+                  <ListingCard
+                    className={css.listingCard}
+                    listing={l}
+                    renderSizes={[
+                      '(max-width: 549px) 100vw',
+                      '(max-width: 767px) 50vw',
+                      `(max-width: 1439px) 26vw`,
+                      `(max-width: 1920px) 18vw`,
+                      `14vw`,
+                    ].join(', ')}
+                  />
+                  {/* <div className={css.cardImageWrapper}>
                     <Field data={block.media} className={css.cardImage} options={fieldOptions} />
                   </div>
                   <div className={css.cardContent}>
@@ -87,7 +113,7 @@ const FeaturedTravelCreator = props => {
                       className={css.ctaButton}
                       options={fieldOptions}
                     />
-                  </div>
+                  </div> */}
                 </div>
               );
             })}
@@ -104,14 +130,22 @@ const FeaturedTravelCreator = props => {
                 pagination={false}
                 className={css.swiper}
               >
-                {blocks.map((block, index) => {
+                {listings.map(l => {
                   return (
-                    <SwiperSlide
-                      key={block.blockId || `benefit-${index}`}
-                      className={css.swiperSlide}
-                    >
+                    <SwiperSlide key={l.id.uuid} className={css.swiperSlide}>
                       <div className={css.card}>
-                        <div className={css.cardImageWrapper}>
+                        <ListingCard
+                          className={css.listingCard}
+                          listing={l}
+                          renderSizes={[
+                            '(max-width: 549px) 100vw',
+                            '(max-width: 767px) 50vw',
+                            `(max-width: 1439px) 26vw`,
+                            `(max-width: 1920px) 18vw`,
+                            `14vw`,
+                          ].join(', ')}
+                        />
+                        {/* <div className={css.cardImageWrapper}>
                           <Field
                             data={block.media}
                             className={css.cardImage}
@@ -134,7 +168,7 @@ const FeaturedTravelCreator = props => {
                             className={css.ctaButton}
                             options={fieldOptions}
                           />
-                        </div>
+                        </div> */}
                       </div>
                     </SwiperSlide>
                   );

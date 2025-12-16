@@ -288,8 +288,8 @@
     background-color: #e5e7eb;
     text-decoration: none;
   }
-  &::after{
-    content: "";
+  &::after {
+    content: '';
     height: 16px;
     width: 16px;
     display: block;
@@ -351,4 +351,12 @@
       margin: 0;
     }
   }
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50%;
+  width: 100%;
 }

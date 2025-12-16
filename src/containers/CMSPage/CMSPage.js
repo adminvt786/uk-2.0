@@ -1,19 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import loadable from '@loadable/component';
 
 import { bool, object } from 'prop-types';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
+import { useConfiguration } from '../../context/configurationContext';
+import { searchFeaturedListings } from './CMSPage.duck';
 const PageBuilder = loadable(() =>
   import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
 );
 
 export const CMSPageComponent = props => {
+  const config = useConfiguration();
+  const dispatch = useDispatch();
   const { params, pageAssetsData, inProgress, error } = props;
   const pageId = params.pageId || props.pageId;
+
+  useEffect(() => {
+    if (pageId === 'hotels') {
+      dispatch(searchFeaturedListings(config));
+    }
+  }, [config, pageId]);
 
   if (!inProgress && error?.status === 404) {
     return <NotFoundPage staticContext={props.staticContext} />;
