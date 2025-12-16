@@ -160,6 +160,7 @@ const PackageFormCard = ({ pkg, name, intl, marketplaceCurrency, listingFields }
           type="text"
           label={intl.formatMessage({ id: 'ProfilePackagesPanel.titleLabel' })}
           placeholder={intl.formatMessage({ id: 'ProfilePackagesPanel.titlePlaceholder' })}
+          disabled
         />
 
         <FieldTextInput

@@ -10,7 +10,7 @@ import css from './ProfileListingTypesPanel.module.css';
 import ProfileWizardFooter from '../ProfileWizardFooter/ProfileWizardFooter';
 
 // Package type options
-const PACKAGE_TYPES = [
+export const PACKAGE_TYPES = [
   {
     id: 'content-creation',
     emoji: '📸',

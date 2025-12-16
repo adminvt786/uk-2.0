@@ -12,7 +12,7 @@ const { Money } = sdkTypes;
 /**
  * Get initial values from profile listing
  */
-const getInitialValues = (profileListing, marketplaceCurrency, listingFields) => {
+const getInitialValues = (profileListing, marketplaceCurrency, listingFields, intl) => {
   const { packages } = profileListing?.attributes.publicData || {};
 
   // Get default values for dropdowns (first option)
@@ -22,12 +22,17 @@ const getInitialValues = (profileListing, marketplaceCurrency, listingFields) =>
   const defaultTurnaroundTime = turnaroundTimeField?.enumOptions?.[1]?.option || '';
 
   return {
-    packages: packages.map(pkg => ({
-      ...pkg,
-      price: pkg.price ? new Money(pkg.price, marketplaceCurrency) : null,
-      delivery_method: pkg.delivery_method || defaultDeliveryMethod,
-      turnaround_time: pkg.turnaround_time || defaultTurnaroundTime,
-    })),
+    packages: packages.map(pkg => {
+      const t = PACKAGE_TYPES?.[pkg.id]?.titleKey;
+      const title = intl.formatMessage({ id: t });
+      return {
+        ...pkg,
+        title: pkg.title || title,
+        price: pkg.price ? new Money(pkg.price, marketplaceCurrency) : null,
+        delivery_method: pkg.delivery_method || defaultDeliveryMethod,
+        turnaround_time: pkg.turnaround_time || defaultTurnaroundTime,
+      };
+    }),
   };
 };
 
@@ -52,7 +57,7 @@ const ProfilePackagesPanel = props => {
   const marketplaceCurrency = config?.currency || 'USD';
 
   const listingFields = config?.listing?.listingFields;
-  const initialValues = getInitialValues(profileListing, marketplaceCurrency, listingFields);
+  const initialValues = getInitialValues(profileListing, marketplaceCurrency, listingFields, intl);
 
   const handleFormSubmit = values => {
     const { packages } = values;
