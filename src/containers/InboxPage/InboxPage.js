@@ -1,65 +1,64 @@
-import React, { useState } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
-import { compose } from 'redux';
-import { connect, useDispatch } from 'react-redux';
 import classNames from 'classnames';
+import React, { useState } from 'react';
+import { connect, useDispatch } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
+import { compose } from 'redux';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
-import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
-import { parse } from '../../util/urlHelpers';
-import { getCurrentUserTypeRoles, isHotelUserType } from '../../util/userHelpers';
-import {
-  propTypes,
-  DATE_TYPE_DATE,
-  DATE_TYPE_DATETIME,
-  LINE_ITEM_NIGHT,
-  LINE_ITEM_HOUR,
-  LISTING_UNIT_TYPES,
-  STOCK_MULTIPLE_ITEMS,
-  AVAILABILITY_MULTIPLE_SEATS,
-  LINE_ITEM_FIXED,
-} from '../../util/types';
-import { subtractTime } from '../../util/dates';
-import { createResourceLocatorString } from '../../util/routes';
 import {
   TX_TRANSITION_ACTOR_CUSTOMER,
   TX_TRANSITION_ACTOR_PROVIDER,
-  resolveLatestProcessName,
   getProcess,
   isBookingProcess,
-  isPurchaseProcess,
   isNegotiationProcess,
-  NEGOTIATION_PROCESS_NAME,
-  PURCHASE_PROCESS_NAME,
+  isPurchaseProcess,
+  resolveLatestProcessName,
 } from '../../transactions/transaction';
-
-import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
-import { isScrollingDisabled } from '../../ducks/ui.duck';
+import { subtractTime } from '../../util/dates';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
+import { createResourceLocatorString } from '../../util/routes';
 import {
-  H2,
+  AVAILABILITY_MULTIPLE_SEATS,
+  DATE_TYPE_DATE,
+  DATE_TYPE_DATETIME,
+  LINE_ITEM_FIXED,
+  LINE_ITEM_HOUR,
+  LINE_ITEM_NIGHT,
+  LISTING_UNIT_TYPES,
+  STOCK_MULTIPLE_ITEMS,
+  propTypes,
+} from '../../util/types';
+import { parse } from '../../util/urlHelpers';
+import { getCurrentUserTypeRoles, isHotelUserType } from '../../util/userHelpers';
+
+import {
   Avatar,
+  H2,
+  IconSpinner,
+  LayoutSideNavigation,
   NamedLink,
   NotificationBadge,
   Page,
   PaginationLinks,
   TabNav,
-  IconSpinner,
   TimeRange,
   UserDisplayName,
-  LayoutSideNavigation,
 } from '../../components';
+import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { isScrollingDisabled } from '../../ducks/ui.duck';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import InboxSearchForm from './InboxSearchForm/InboxSearchForm';
 
-import { stateDataShape, getStateData } from './InboxPage.stateData';
-import css from './InboxPage.module.css';
-import InboxStatusFilter from './InboxStatusFilter/InboxStatusFilter';
+import { getHotelQueryParams, getStandardQueryParams } from './helper';
 import { loadDataThunk } from './InboxPage.duck';
+import css from './InboxPage.module.css';
+import { getStateData } from './InboxPage.stateData';
+import InboxStatusFilter from './InboxStatusFilter/InboxStatusFilter';
 
 // Check if the transaction line-items use booking-related units
 const getUnitLineItem = lineItems => {
@@ -386,15 +385,8 @@ export const InboxPageComponent = props => {
 
   const handleStatusChange = status => {
     setSelectedStatus(status);
-    let queryParams = {};
 
-    if (status === 'all') {
-      delete queryParams.processNames;
-    } else if (status === 'applications') {
-      queryParams.processNames = NEGOTIATION_PROCESS_NAME;
-    } else if (status === 'creatorOutreach') {
-      queryParams.processNames = PURCHASE_PROCESS_NAME;
-    }
+    const queryParams = isHotel ? getHotelQueryParams(status) : getStandardQueryParams(status);
 
     dispatch(loadDataThunk({ params, search, customParams: queryParams }));
   };
@@ -425,9 +417,11 @@ export const InboxPageComponent = props => {
         }
         footer={<FooterContainer />}
       >
-        {isHotel && (
-          <InboxStatusFilter onStatusChange={handleStatusChange} selectedStatus={selectedStatus} />
-        )}
+        <InboxStatusFilter
+          onStatusChange={handleStatusChange}
+          selectedStatus={selectedStatus}
+          isHotel={isHotel}
+        />
 
         <InboxSearchForm
           onSubmit={() => {}}

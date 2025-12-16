@@ -1578,5 +1578,9 @@
   "TopbarDesktop.favorites": "Favorites",
   "InboxPage.statusFilter.all": "All",
   "InboxPage.statusFilter.applications": "Campaign Applications",
-  "InboxPage.statusFilter.creatorOutreach": "Creator Outreach"
+  "InboxPage.statusFilter.creatorOutreach": "Creator Outreach",
+  "InboxPage.statusFilter.inquiries": "Inquiries",
+  "InboxPage.statusFilter.unfulfilled": "Unfulfilled",
+  "InboxPage.statusFilter.fulfilled": "Fulfilled",
+  "InboxPage.statusFilter.paymentExpired": "Payment Expired"
 }
