@@ -28,6 +28,7 @@ import {
 } from '../../components';
 
 import css from './ListingCard.module.css';
+import { AUDIENCE } from '../IconsCollection/IconsCollection';
 
 const MIN_LENGTH_FOR_LONG_WORDS = 10;
 
@@ -197,7 +198,7 @@ export const ListingCard = props => {
   // Get formatted price for "Packages start from" display
   const { formattedPrice } = priceData(price, config.currency, intl);
 
-  const { listingType, cardStyle, location } = publicData || {};
+  const { listingType, cardStyle, location, size_total_following } = publicData || {};
   const geolocation = currentListing.attributes.geolocation;
   const validListingTypes = config.listing.listingTypes;
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
@@ -220,6 +221,10 @@ export const ListingCard = props => {
   const locationDisplay = location?.address;
 
   const rating = publicData?.rating || 5;
+
+  const followingLabel = config.listing.listingFields
+    .find(elm => elm.key === 'size_total_following')
+    .enumOptions.find(elm => elm.option === size_total_following).label;
 
   return (
     <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>
@@ -246,8 +251,18 @@ export const ListingCard = props => {
         <div className={css.cardContent}>
           <div className={css.authorName}>{authorName}</div>
           <div className={css.locationName}>{locationDisplay}</div>
+          <div className={css.priceWrapper}>
+            {intl.formatMessage(
+              { id: 'ListingCard.packagesStartFrom' },
+              { price: <span className={css.price}>{formattedPrice}</span> }
+            )}
+          </div>
           <div className={css.ratingWrapper}>
             <ReviewRating rating={rating} reviewStarClassName={css.ratingStar} />
+            <div className={css.metaItem}>
+              <IconsCollection type={AUDIENCE} />
+              <span>{followingLabel}</span>
+            </div>
           </div>
         </div>
       </div>

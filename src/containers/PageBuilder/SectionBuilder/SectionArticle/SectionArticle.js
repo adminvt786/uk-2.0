@@ -73,66 +73,65 @@ const SectionArticle = props => {
   const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
   const hasBlocks = blocks?.length > 0;
 
-  if(sectionId === 'faq_section') {
+  if (sectionId === 'faq_section') {
     return (
       <FaqSection
-      title={title}
-      description={description}
-      blocks={blocks}
-      defaultClasses={defaultClasses}
-      appearance={appearance}
-      options={options}
-      sectionId={sectionId}
-      callToAction={callToAction}
-    />
+        title={title}
+        description={description}
+        blocks={blocks}
+        defaultClasses={defaultClasses}
+        appearance={appearance}
+        options={options}
+        sectionId={sectionId}
+        callToAction={callToAction}
+      />
     );
   }
-  if(sectionId === 'hotel_success_stories') {
+  if (sectionId === 'hotel_success_stories') {
     return (
       <HotelSuccessStories
-      
-      title={title}
-      description={description}
-      callToAction={callToAction}
-      options={options}
-      sectionId={sectionId}
-      blocks={blocks}
+        title={title}
+        description={description}
+        callToAction={callToAction}
+        options={options}
+        sectionId={sectionId}
+        blocks={blocks}
       />
     );
   }
-  if(sectionId === 'success_stories_two') {
+  if (sectionId === 'success_stories_two') {
     return (
       <SuccessStoriesTwo
-      title={title}
-      description={description}
-      callToAction={callToAction}
-      options={options}
-      sectionId={sectionId}
-      blocks={blocks}
+        title={title}
+        description={description}
+        callToAction={callToAction}
+        options={options}
+        sectionId={sectionId}
+        blocks={blocks}
       />
     );
   }
-  if(sectionId === 'featured_creators_section') {
+  if (sectionId === 'featured_creators_section') {
     return (
       <FeaturedCreators
-      title={title}
-      description={description}
-      callToAction={callToAction}
-      options={options}
-      sectionId={sectionId}
-      blocks={blocks}
+        title={title}
+        description={description}
+        callToAction={callToAction}
+        options={options}
+        sectionId={sectionId}
+        blocks={blocks}
       />
     );
   }
-  if(sectionId === 'success_stories_section') {
+  if (sectionId === 'success_stories_section') {
     return (
       <SuccessStories
-      title={title}
-      description={description}
-      callToAction={callToAction}
-      options={options}
-      sectionId={sectionId}
-      blocks={blocks}
+        title={title}
+        description={description}
+        callToAction={callToAction}
+        options={options}
+        sectionId={sectionId}
+        blocks={blocks}
       />
     );
   }

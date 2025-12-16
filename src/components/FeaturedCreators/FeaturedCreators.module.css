@@ -6,7 +6,6 @@
     padding: 80px 0 60px 0;
   }
   @media (max-width: 767px) {
-   
   }
 }
 
@@ -37,7 +36,7 @@
   line-height: 20px;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  color: #D9A441;
+  color: #d9a441;
   margin: 0 0 28px 0;
   padding: 0;
   @media (max-width: 767px) {
@@ -122,8 +121,6 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-
-
 .imageWrapper {
   width: 100%;
   aspect-ratio: 3 / 4;
@@ -161,7 +158,6 @@
   margin: 0;
   padding: 0;
   @media (max-width: 767px) {
-
   }
 }
 
@@ -184,7 +180,7 @@
   leading-trim: CAP_HEIGHT;
   line-height: 32px;
   letter-spacing: 0%;
-color: #666666;
+  color: #666666;
   @media (max-width: 767px) {
     gap: 6px;
   }
@@ -200,22 +196,21 @@ color: #666666;
 }
 
 .metaItem svg path {
-
 }
 
 .tag {
-    font-family: Inter;
-    font-weight: 400;
-    font-style: Regular;
-    font-size: 12px;
-    leading-trim: CAP_HEIGHT;
-    line-height: 100%;
-    letter-spacing: 0%;
-    text-transform: uppercase;
-    
-  color: #D9A441;
-  background-color: #FFF9F2;
-  border: 0.5px solid #D9A44180;
+  font-family: Inter;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 12px;
+  leading-trim: CAP_HEIGHT;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: uppercase;
+
+  color: #d9a441;
+  background-color: #fff9f2;
+  border: 0.5px solid #d9a44180;
   border-radius: 0px;
   padding: 5px;
   margin-top: 4px;
@@ -259,8 +254,8 @@ color: #666666;
   leading-trim: CAP_HEIGHT;
   line-height: 100%;
   letter-spacing: 0%;
-  
-  color: #D9A441;
+
+  color: #d9a441;
   text-decoration: none;
   padding: 18px 0;
   transition: opacity 0.2s ease;
@@ -268,8 +263,8 @@ color: #666666;
     font-weight: 400;
     font-size: 16px;
   }
-  &::after{
-    content: "";
+  &::after {
+    content: '';
     width: 14px;
     height: 14px;
     display: block;
@@ -291,7 +286,7 @@ color: #666666;
 /* Swiper Navigation Styles */
 .swiperWrapper :global(.swiper-button-next),
 .swiperWrapper :global(.swiper-button-prev) {
-  color: #D9A441;
+  color: #d9a441;
   width: 44px;
   height: 44px;
   @media (max-width: 767px) {
@@ -312,7 +307,7 @@ color: #666666;
 
 /* Swiper Pagination Styles */
 .swiperWrapper :global(.swiper-pagination-bullet) {
-  background-color: #D9A441;
+  background-color: #d9a441;
   opacity: 0.3;
   width: 8px;
   height: 8px;
@@ -320,5 +315,13 @@ color: #666666;
 
 .swiperWrapper :global(.swiper-pagination-bullet-active) {
   opacity: 1;
-  background-color: #D9A441;
+  background-color: #d9a441;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50%;
+  width: 100%;
 }
