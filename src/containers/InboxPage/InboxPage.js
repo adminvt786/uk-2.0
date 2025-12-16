@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
@@ -9,7 +9,7 @@ import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
 import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
 import { parse } from '../../util/urlHelpers';
-import { getCurrentUserTypeRoles } from '../../util/userHelpers';
+import { getCurrentUserTypeRoles, isHotelUserType } from '../../util/userHelpers';
 import {
   propTypes,
   DATE_TYPE_DATE,
@@ -31,6 +31,8 @@ import {
   isBookingProcess,
   isPurchaseProcess,
   isNegotiationProcess,
+  NEGOTIATION_PROCESS_NAME,
+  PURCHASE_PROCESS_NAME,
 } from '../../transactions/transaction';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -56,6 +58,8 @@ import InboxSearchForm from './InboxSearchForm/InboxSearchForm';
 
 import { stateDataShape, getStateData } from './InboxPage.stateData';
 import css from './InboxPage.module.css';
+import InboxStatusFilter from './InboxStatusFilter/InboxStatusFilter';
+import { loadDataThunk } from './InboxPage.duck';
 
 // Check if the transaction line-items use booking-related units
 const getUnitLineItem = lineItems => {
@@ -256,6 +260,8 @@ export const InboxPageComponent = props => {
   const history = useHistory();
   const intl = useIntl();
   const location = useLocation();
+  const dispatch = useDispatch();
+  const [selectedStatus, setSelectedStatus] = useState('all');
   const {
     currentUser,
     fetchInProgress,
@@ -267,6 +273,7 @@ export const InboxPageComponent = props => {
     scrollingDisabled,
     transactions,
   } = props;
+  const isHotel = isHotelUserType(currentUser);
   const { tab } = params;
   const validTab = tab === 'orders' || tab === 'sales';
   if (!validTab) {
@@ -377,10 +384,26 @@ export const InboxPageComponent = props => {
 
   const tabs = [...ordersTabMaybe, ...salesTabMaybe];
 
+  const handleStatusChange = status => {
+    setSelectedStatus(status);
+    let queryParams = {};
+
+    if (status === 'all') {
+      delete queryParams.processNames;
+    } else if (status === 'applications') {
+      queryParams.processNames = NEGOTIATION_PROCESS_NAME;
+    } else if (status === 'creatorOutreach') {
+      queryParams.processNames = PURCHASE_PROCESS_NAME;
+    }
+
+    dispatch(loadDataThunk({ params, search, customParams: queryParams }));
+  };
+
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <LayoutSideNavigation
         sideNavClassName={css.navigation}
+        mainColumnClassName={css.main}
         topbar={
           <TopbarContainer
             mobileRootClassName={css.mobileTopbar}
@@ -402,6 +425,10 @@ export const InboxPageComponent = props => {
         }
         footer={<FooterContainer />}
       >
+        {isHotel && (
+          <InboxStatusFilter onStatusChange={handleStatusChange} selectedStatus={selectedStatus} />
+        )}
+
         <InboxSearchForm
           onSubmit={() => {}}
           onSelect={handleSortSelect(tab, routeConfiguration, history)}

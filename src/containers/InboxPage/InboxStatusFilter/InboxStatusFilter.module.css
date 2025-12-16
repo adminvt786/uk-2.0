@@ -1,0 +1,100 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox - hide by default */
+  -ms-overflow-style: none; /* IE and Edge - hide by default */
+  margin-bottom: 24px;
+
+  /* Hide scrollbar by default */
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  /* Show scrollbar on hover */
+  &:hover {
+    scrollbar-width: thin; /* Firefox - show on hover */
+
+    &::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--colorGrey300);
+      border-radius: 1px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: var(--colorGrey100);
+      border-radius: 1px;
+    }
+  }
+}
+
+.tabsContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  /* padding: 0 24px; */
+  @media (--viewportMedium) {
+    padding: 0 0px;
+  }
+}
+
+.tab {
+  /* Button styling */
+  word-break: keep-all;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Pill shape */
+  border-radius: 15px;
+  padding: 5px 16px;
+
+  /* Typography */
+  font-weight: var(--fontWeightMedium);
+  font-size: 14px;
+  line-height: 20px;
+
+  /* Default state (unselected) */
+  background-color: var(--colorWhite);
+  border: 1px solid var(--colorGrey300);
+  color: var(--colorGrey700);
+
+  /* Interactive states */
+  cursor: pointer;
+  transition: all var(--transitionStyleButton);
+
+  /* Remove default button styles */
+  outline: none;
+  text-decoration: none;
+
+  /* Prevent text selection */
+  user-select: none;
+
+  /* Active state */
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  @media (--viewportMedium) {
+    padding: 5px 20px;
+    font-size: 15px;
+    line-height: 22px;
+  }
+}
+
+.selectedTab {
+  background-color: var(--marketplaceColor);
+  border-color: var(--marketplaceColor);
+  color: var(--colorWhite);
+}

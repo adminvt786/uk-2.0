@@ -49,7 +49,10 @@ export default inboxPageSlice.reducer;
 
 // ================ Load data ================ //
 
-const loadDataPayloadCreator = ({ params, search }, { dispatch, rejectWithValue, extra: sdk }) => {
+const loadDataPayloadCreator = (
+  { params, search, customParams = {} },
+  { dispatch, rejectWithValue, extra: sdk }
+) => {
   const { tab } = params;
 
   const onlyFilterValues = {
@@ -91,6 +94,7 @@ const loadDataPayloadCreator = ({ params, search }, { dispatch, rejectWithValue,
     page,
     perPage: INBOX_PAGE_SIZE,
     ...getValidInboxSort(sort),
+    ...customParams,
   };
 
   return sdk.transactions

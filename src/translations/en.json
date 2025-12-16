@@ -1575,5 +1575,8 @@
   "FavoriteListingsPage.queryError": "Query failed. Please try again.",
   "FavoriteListingsPage.title": "View your favorite listings",
   "FavoriteListingsPage.youHaveListings": "You have {count} favorite {count, plural, one {listing} other {listings}}",
-  "TopbarDesktop.favorites": "Favorites"
+  "TopbarDesktop.favorites": "Favorites",
+  "InboxPage.statusFilter.all": "All",
+  "InboxPage.statusFilter.applications": "Campaign Applications",
+  "InboxPage.statusFilter.creatorOutreach": "Creator Outreach"
 }

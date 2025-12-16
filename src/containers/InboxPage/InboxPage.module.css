@@ -1,5 +1,9 @@
 @import '../../styles/customMediaQueries.css';
 
+.main {
+  max-width: 100vw;
+}
+
 .mobileTopbar {
   /* Size */
   width: 100%;
