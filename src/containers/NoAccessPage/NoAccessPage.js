@@ -31,6 +31,7 @@ import FooterContainer from '../FooterContainer/FooterContainer';
 import IconDoor from './IconDoor';
 
 import css from './NoAccessPage.module.css';
+import { isHotelUserType } from '../../util/userHelpers';
 
 /**
  * CTAButtonMaybe component renders a call-to-action (CTA) button if it is enabled.
@@ -93,6 +94,7 @@ export const NoAccessPageComponent = props => {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
+  const isHotel = isHotelUserType(props.currentUser);
 
   const marketplaceName = config.marketplaceName;
   const { scrollingDisabled, currentUser, params: pathParams } = props;
@@ -135,9 +137,9 @@ export const NoAccessPageComponent = props => {
       }
     : isViewingRightsPage
     ? {
-        schemaTitle: 'NoAccessPage.viewListings.schemaTitle',
-        heading: 'NoAccessPage.viewListings.heading',
-        content: 'NoAccessPage.viewListings.content',
+        schemaTitle: `NoAccessPage.viewListings.${isHotel ? 'hotel' : 'creator'}.schemaTitle`,
+        heading: `NoAccessPage.viewListings.${isHotel ? 'hotel' : 'creator'}.heading`,
+        content: `NoAccessPage.viewListings.${isHotel ? 'hotel' : 'creator'}.content`,
         ctaData: permissionToViewCTA,
       }
     : {};

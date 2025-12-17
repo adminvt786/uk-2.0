@@ -1582,5 +1582,12 @@
   "InboxPage.statusFilter.inquiries": "Inquiries",
   "InboxPage.statusFilter.unfulfilled": "Unfulfilled",
   "InboxPage.statusFilter.fulfilled": "Fulfilled",
-  "InboxPage.statusFilter.paymentExpired": "Payment Expired"
+  "InboxPage.statusFilter.paymentExpired": "Payment Expired",
+  "NoAccessPage.viewListings.hotel.schemaTitle": "Upgrade Required to view Creator Profiles",
+  "NoAccessPage.viewListings.hotel.heading": "Upgrade Required to view Creator Profiles",
+  "NoAccessPage.viewListings.hotel.content": "This content is only available to hotel partners with a Premium Subscription",
+  "NoAccessPage.viewListings.creator.schemaTitle": "Upgrade Required to view Hotel Campaigns",
+  "NoAccessPage.viewListings.creator.heading": "Upgrade Required to view Hotel Campaigns",
+  "NoAccessPage.viewListings.creator.content": "This content is only available to creators with a Premium Subscription"
+
 }
