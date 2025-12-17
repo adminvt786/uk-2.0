@@ -273,25 +273,32 @@ export class SearchPageComponent extends Component {
     return updatedURLParams => {
       const updater = prevState => {
         const { address, bounds, keywords } = urlQueryParams;
+        const {
+          address: updatedAddress,
+          bounds: updatedBounds,
+          ...restUpdatedURLParams
+        } = updatedURLParams;
         const mergedQueryParams = { ...urlQueryParams, ...prevState.currentQueryParams };
 
         // Address and bounds are handled outside of MainPanel.
         // I.e. TopbarSearchForm && search by moving the map.
         // We should always trust urlQueryParams with those.
         // The same applies to keywords, if the main search type is keyword search.
+        // But with listing type 'hotels', address and bounds are handled inside the FilterForm.
         const keywordsMaybe = isMainSearchTypeKeywords(config) ? { keywords } : {};
 
-        const datesAndSeatsMaybe = getDatesAndSeatsMaybe(mergedQueryParams, updatedURLParams);
-
+        const datesAndSeatsMaybe = getDatesAndSeatsMaybe(mergedQueryParams, restUpdatedURLParams);
+        const addressMaybe = typeof updatedAddress !== 'undefined' ? updatedAddress : address;
+        const boundsMaybe = typeof updatedBounds !== 'undefined' ? updatedBounds : bounds;
         return {
           currentQueryParams: omitLimitedListingFieldParams(
             {
               ...mergedQueryParams,
-              ...updatedURLParams,
+              ...restUpdatedURLParams,
               ...keywordsMaybe,
               ...datesAndSeatsMaybe,
-              address,
-              bounds,
+              address: addressMaybe,
+              bounds: boundsMaybe,
             },
             filterConfigs
           ),
@@ -396,7 +403,7 @@ export class SearchPageComponent extends Component {
       searchParams,
       filterConfigs,
       sortConfig,
-      isOriginInUse(config)
+      listingTypePathParam !== 'creators' || isOriginInUse(config)
     );
 
     const validQueryParams = urlQueryParams;
@@ -525,7 +532,6 @@ export class SearchPageComponent extends Component {
       : css.topbar;
 
     const isHotel = isHotelUserType(currentUser);
-
     // N.B. openMobileMap button is sticky.
     // For some reason, stickyness doesn't work on Safari, if the element is <button>
     return (
@@ -537,7 +543,16 @@ export class SearchPageComponent extends Component {
       >
         <TopbarContainer rootClassName={topbarClasses} currentSearchParams={validQueryParams} />
         {listingTypePathParam !== 'creators' ? (
-          <HotelsRequestsSearchPage campaigns={listings} config={config} intl={intl} />
+          <HotelsRequestsSearchPage
+            campaigns={listings}
+            config={config}
+            intl={intl}
+            onManageDisableScrolling={onManageDisableScrolling}
+            pagination={pagination}
+            queryInProgress={searchInProgress}
+            validQueryParams={validQueryParams}
+            getHandleChangedValueFn={this.getHandleChangedValueFn}
+          />
         ) : (
           <div className={css.container} role="main">
             <div className={css.searchResultContainer}>

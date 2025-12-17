@@ -986,3 +986,19 @@ export const getEndOfWeek = (date, timeZone, firstDayOfWeek) => {
   const m = timeZone ? moment(date).tz(timeZone) : moment(date);
   return getEndOfWeekAsMoment(m, timeZone, firstDayOfWeek).toDate();
 };
+
+export const isSameMonthYear = (date1, date2) => {
+  return (
+    moment(new Date(date1 * 1000)).isSame(moment(new Date(date2 * 1000)), 'month') &&
+    moment(new Date(date1 * 1000)).isSame(moment(new Date(date2 * 1000)), 'year')
+  );
+};
+
+//if Feb 1 2025 and Feb 2 2025 same month and year show Feb 1-2, 2025
+export const formatDateShort = (date1, date2) => {
+  return (
+    moment(new Date(date1 * 1000)).format('MMM D') +
+    ' - ' +
+    moment(new Date(date2 * 1000)).format('D, YYYY')
+  );
+};

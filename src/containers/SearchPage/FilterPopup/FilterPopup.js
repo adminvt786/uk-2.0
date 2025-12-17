@@ -133,6 +133,7 @@ class FilterPopup extends Component {
       keepDirtyOnReinitialize = false,
       contentPlacementOffset = 0,
       ariaLabel,
+      outsideClickHandlerClassName,
     } = this.props;
 
     const classes = classNames(rootClassName || css.root, className);
@@ -142,7 +143,7 @@ class FilterPopup extends Component {
     const formId = `${id}.form`;
 
     return (
-      <OutsideClickHandler onOutsideClick={this.handleBlur}>
+      <OutsideClickHandler onOutsideClick={this.handleBlur} className={outsideClickHandlerClassName}>
         <div
           className={classes}
           onKeyDown={this.handleKeyDown}

@@ -23,6 +23,7 @@ import {
   FieldLocationAutocompleteInput,
   FieldSingleDatePicker,
   FieldCurrencyInput,
+  H4,
 } from '../../../components';
 
 // Import reusable components from EditListingDetailsForm
@@ -35,8 +36,16 @@ import {
 import css from './CreateRequestForm.module.css';
 import { identity } from '../../EditListingPage/EditListingWizard/EditListingDeliveryPanel/EditListingDeliveryForm';
 import appSettings from '../../../config/settings';
+import { FieldArray } from 'react-final-form-arrays';
+import {
+  FieldAddMediaKitImage,
+  FieldMediaKitImage,
+  MediaKitUploadError,
+} from '../../ManageProfilePage/ProfileWizard/ProfileDetailsStep/ProfileDetailsForm';
+import { isUploadImageOverLimitError } from '../../../util/errors';
 
 const TITLE_MAX_LENGTH = 60;
+const ACCEPT_IMAGES = 'image/*';
 
 // Show various error messages
 const ErrorMessage = props => {
@@ -73,218 +82,337 @@ const ErrorMessage = props => {
  * @param {Function} props.onSubmit - The submit function
  * @returns {JSX.Element}
  */
-const CreateRequestForm = props => (
-  <FinalForm
-    {...props}
-    mutators={{ ...arrayMutators }}
-    render={formRenderProps => {
-      const {
-        className,
-        disabled,
-        ready,
-        formId = 'CreateRequestForm',
-        form: formApi,
-        handleSubmit,
-        invalid,
-        pristine,
-        marketplaceCurrency,
-        selectableCategories,
-        pickSelectedCategories,
-        categoryPrefix,
-        saveActionMsg,
-        updated,
-        updateInProgress,
-        fetchErrors,
-        listingFieldsConfig = [],
-        values,
-        state
-      } = formRenderProps;
 
-      const intl = useIntl();
-      const { listingType, transactionProcessAlias, unitType } = values;
-      const [allCategoriesChosen, setAllCategoriesChosen] = useState(false);
+const CreateRequestForm = props => {
+  const [imageUploadRequested, setImageUploadRequested] = useState(false);
+  const [imageUploadError, setImageUploadError] = useState(null);
+  const onImageUploadHandler = async ({ file, id }) => {
+    try {
+      const { onImageUpload, listingImageConfig } = props;
+      if (file) {
+        setImageUploadRequested(true);
+        setImageUploadError(null);
 
-      const titleRequiredMessage = intl.formatMessage({
-        id: 'CreateRequestForm.titleRequired',
-      });
-      const maxLengthMessage = intl.formatMessage(
-        { id: 'CreateRequestForm.maxLength' },
-        { maxLength: TITLE_MAX_LENGTH }
-      );
+        const response = await onImageUpload({ id, file }, listingImageConfig);
+        if (!response.error) {
+          setImageUploadError(response.error);
+        } else {
+          setImageUploadError(null);
+        }
+        setImageUploadRequested(false);
+        return response;
+      }
+    } catch (error) {
+      setImageUploadError(error);
+      setImageUploadRequested(false);
+      return error;
+    }
+  };
 
-      // Verify if the selected listing type's transaction process supports the chosen currency.
-      const isCompatibleCurrency = isValidCurrencyForTransactionProcess(
-        transactionProcessAlias,
-        marketplaceCurrency
-      );
+  return (
+    <FinalForm
+      {...props}
+      mutators={{ ...arrayMutators }}
+      render={formRenderProps => {
+        const {
+          className,
+          disabled,
+          ready,
+          formId = 'CreateRequestForm',
+          form: formApi,
+          handleSubmit,
+          invalid,
+          pristine,
+          marketplaceCurrency,
+          selectableCategories,
+          pickSelectedCategories,
+          categoryPrefix,
+          saveActionMsg,
+          updated,
+          updateInProgress,
+          fetchErrors,
+          listingFieldsConfig = [],
+          values,
+        } = formRenderProps;
 
-      const maxLength60Message = maxLength(maxLengthMessage, TITLE_MAX_LENGTH);
+        const intl = useIntl();
+        const { listingType, transactionProcessAlias, unitType } = values;
+        const [allCategoriesChosen, setAllCategoriesChosen] = useState(false);
 
-      const hasCategories = selectableCategories && selectableCategories.length > 0;
-      const showCategories = listingType && hasCategories;
+        const titleRequiredMessage = intl.formatMessage({
+          id: 'CreateRequestForm.titleRequired',
+        });
+        const maxLengthMessage = intl.formatMessage(
+          { id: 'CreateRequestForm.maxLength' },
+          { maxLength: TITLE_MAX_LENGTH }
+        );
 
-      const showTitle = hasCategories ? allCategoriesChosen : listingType;
-      const showDescription = hasCategories ? allCategoriesChosen : listingType;
-      const showListingFields = hasCategories ? allCategoriesChosen : listingType;
+        // Verify if the selected listing type's transaction process supports the chosen currency.
+        const isCompatibleCurrency = isValidCurrencyForTransactionProcess(
+          transactionProcessAlias,
+          marketplaceCurrency
+        );
 
-      const classes = classNames(css.root, className);
-      const submitReady = (updated && pristine) || ready;
-      const submitInProgress = updateInProgress;
-      const hasMandatoryListingTypeData = listingType && transactionProcessAlias && unitType;
-      const submitDisabled =
-        invalid ||
-        disabled ||
-        submitInProgress ||
-        !hasMandatoryListingTypeData ||
-        !isCompatibleCurrency;
+        const maxLength60Message = maxLength(maxLengthMessage, TITLE_MAX_LENGTH);
 
-      const addressRequiredMessage = intl.formatMessage({
-        id: 'CreateRequestForm.addressRequired',
-      });
-      const addressNotRecognizedMessage = intl.formatMessage({
-        id: 'CreateRequestForm.addressNotRecognized',
-      });
+        const hasCategories = selectableCategories && selectableCategories.length > 0;
+        const showCategories = listingType && hasCategories;
 
-      const showPriceField = ['paid', 'both'].includes(values?.pub_collaboration_exchange_type);
+        const showTitle = hasCategories ? allCategoriesChosen : listingType;
+        const showDescription = hasCategories ? allCategoriesChosen : listingType;
+        const showListingFields = hasCategories ? allCategoriesChosen : listingType;
 
-      const priceRequired = required(intl.formatMessage({ id: 'CreateRequestForm.priceRequired' }));
-      const minPriceRequired = moneySubUnitAmountAtLeast(
-        intl.formatMessage({ id: 'CreateRequestForm.priceTooLow' }, { minPrice: 100 }),
-        100
-      );
+        const classes = classNames(css.root, className);
+        const submitReady = (updated && pristine) || ready;
+        const submitInProgress = updateInProgress;
+        const hasMandatoryListingTypeData = listingType && transactionProcessAlias && unitType;
+        const submitDisabled =
+          invalid ||
+          disabled ||
+          submitInProgress ||
+          !hasMandatoryListingTypeData ||
+          !isCompatibleCurrency ||
+          imageUploadRequested;
 
-      return (
-        <Form className={classes} onSubmit={handleSubmit}>
-          <ErrorMessage fetchErrors={fetchErrors} />
+        const addressRequiredMessage = intl.formatMessage({
+          id: 'CreateRequestForm.addressRequired',
+        });
+        const addressNotRecognizedMessage = intl.formatMessage({
+          id: 'CreateRequestForm.addressNotRecognized',
+        });
 
-          {showCategories && isCompatibleCurrency && (
-            <FieldSelectCategory
-              values={values}
-              prefix={categoryPrefix}
-              listingCategories={selectableCategories}
-              formApi={formApi}
-              intl={intl}
-              allCategoriesChosen={allCategoriesChosen}
-              setAllCategoriesChosen={setAllCategoriesChosen}
-            />
-          )}
+        const showPriceField = ['paid', 'both'].includes(values?.pub_collaboration_exchange_type);
 
-          {showTitle && isCompatibleCurrency && (
-            <FieldTextInput
-              id={`${formId}title`}
-              name="title"
-              className={css.title}
-              type="text"
-              label={intl.formatMessage({ id: 'CreateRequestForm.title' })}
-              placeholder={intl.formatMessage({ id: 'CreateRequestForm.titlePlaceholder' })}
-              maxLength={TITLE_MAX_LENGTH}
-              validate={composeValidators(required(titleRequiredMessage), maxLength60Message)}
-              autoFocus
-            />
-          )}
+        const priceRequired = required(
+          intl.formatMessage({ id: 'CreateRequestForm.priceRequired' })
+        );
+        const minPriceRequired = moneySubUnitAmountAtLeast(
+          intl.formatMessage({ id: 'CreateRequestForm.priceTooLow' }, { minPrice: 100 }),
+          100
+        );
 
-          {showDescription && (
-            <FieldTextInput
-              id={`${formId}description`}
-              name="description"
-              className={css.description}
-              type="textarea"
-              label={intl.formatMessage({ id: 'CreateRequestForm.description' })}
-              placeholder={intl.formatMessage({ id: 'CreateRequestForm.descriptionPlaceholder' })}
-              validate={required(
-                intl.formatMessage({ id: 'CreateRequestForm.descriptionRequired' })
-              )}
-            />
-          )}
+        const onImageUpload = async file => {
+          if (file) {
+            const tempId = `${file.name}_${Date.now()}`;
+            const oldImages = values.images || [];
+            const newImages = [
+              ...oldImages,
+              {
+                id: tempId,
+                file,
+              },
+            ];
+            formApi.change('images', newImages);
+            const res = await onImageUploadHandler({ id: tempId, file });
+            if (!res.error) {
+              formApi.change(
+                'images',
+                newImages.map(img =>
+                  img.id === tempId
+                    ? {
+                        ...img,
+                        ...res.data,
+                      }
+                    : img
+                )
+              );
+            } else {
+              formApi.change('images', newImages.filter(img => img.id !== tempId));
+            }
+          }
+        };
 
-          {showListingFields && (
-            <FieldLocationAutocompleteInput
-              rootClassName={css.input}
-              inputClassName={css.locationAutocompleteInput}
-              iconClassName={css.locationAutocompleteInputIcon}
-              predictionsClassName={css.predictionsRoot}
-              validClassName={css.validLocation}
-              name="location"
-              id={`${formId}.location`}
-              label={intl.formatMessage({ id: 'CreateRequestForm.address' })}
-              placeholder={intl.formatMessage({
-                id: 'CreateRequestForm.addressPlaceholder',
-              })}
-              useDefaultPredictions={false}
-              format={identity}
-              valueFromForm={values.location}
-              validate={composeValidators(
-                autocompleteSearchRequired(addressRequiredMessage),
-                autocompletePlaceSelected(addressNotRecognizedMessage)
-              )}
-              key={'locationValidation'}
-            />
-          )}
+        return (
+          <Form className={classes} onSubmit={handleSubmit}>
+            <ErrorMessage fetchErrors={fetchErrors} />
 
-          {showListingFields && (
-            <AddListingFields
-              listingType={listingType}
-              listingFieldsConfig={listingFieldsConfig}
-              selectedCategories={pickSelectedCategories(values)}
-              formId={formId}
-              intl={intl}
-            />
-          )}
+            {showCategories && isCompatibleCurrency && (
+              <FieldSelectCategory
+                values={values}
+                prefix={categoryPrefix}
+                listingCategories={selectableCategories}
+                formApi={formApi}
+                intl={intl}
+                allCategoriesChosen={allCategoriesChosen}
+                setAllCategoriesChosen={setAllCategoriesChosen}
+              />
+            )}
 
-          {showPriceField && (
-            <FieldCurrencyInput
-              id="price"
-              name="price"
-              className={css.priceField}
-              label={intl.formatMessage({ id: 'CreateRequestForm.priceLabel' })}
-              placeholder={intl.formatMessage({ id: 'CreateRequestForm.pricePlaceholder' })}
-              currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
-              validate={composeValidators(priceRequired, minPriceRequired)}
-            />
-          )}
+            {showTitle && isCompatibleCurrency && (
+              <FieldTextInput
+                id={`${formId}title`}
+                name="title"
+                className={css.title}
+                type="text"
+                label={intl.formatMessage({ id: 'CreateRequestForm.title' })}
+                placeholder={intl.formatMessage({ id: 'CreateRequestForm.titlePlaceholder' })}
+                maxLength={TITLE_MAX_LENGTH}
+                validate={composeValidators(required(titleRequiredMessage), maxLength60Message)}
+                autoFocus
+              />
+            )}
 
-          {showListingFields && (
-            <div className={css.dateFields}>
-              <FieldSingleDatePicker
-                name="startDate"
-                id={`${formId}.startDate`}
-                className={css.dateField}
-                label={intl.formatMessage({ id: 'CreateRequestForm.startDateLabel' })}
-                placeholderText={intl.formatMessage({
-                  id: 'CreateRequestForm.startDatePlaceholder',
-                })}
+            {showDescription && (
+              <FieldTextInput
+                id={`${formId}description`}
+                name="description"
+                className={css.description}
+                type="textarea"
+                label={intl.formatMessage({ id: 'CreateRequestForm.description' })}
+                placeholder={intl.formatMessage({ id: 'CreateRequestForm.descriptionPlaceholder' })}
                 validate={required(
-                  intl.formatMessage({ id: 'CreateRequestForm.startDateRequired' })
+                  intl.formatMessage({ id: 'CreateRequestForm.descriptionRequired' })
                 )}
-                useMobileMargins
               />
-              <FieldSingleDatePicker
-                name="endDate"
-                id={`${formId}.endDate`}
-                className={css.dateField}
-                label={intl.formatMessage({ id: 'CreateRequestForm.endDateLabel' })}
-                placeholderText={intl.formatMessage({
-                  id: 'CreateRequestForm.endDatePlaceholder',
-                })}
-                validate={required(intl.formatMessage({ id: 'CreateRequestForm.endDateRequired' }))}
-                useMobileMargins
-              />
-            </div>
-          )}
+            )}
 
-          <Button
-            className={css.submitButton}
-            type="submit"
-            inProgress={submitInProgress}
-            disabled={submitDisabled}
-            ready={submitReady}
-          >
-            {saveActionMsg}
-          </Button>
-        </Form>
-      );
-    }}
-  />
-);
+            {showListingFields && (
+              <FieldLocationAutocompleteInput
+                rootClassName={css.input}
+                inputClassName={css.locationAutocompleteInput}
+                iconClassName={css.locationAutocompleteInputIcon}
+                predictionsClassName={css.predictionsRoot}
+                validClassName={css.validLocation}
+                name="location"
+                id={`${formId}.location`}
+                label={intl.formatMessage({ id: 'CreateRequestForm.address' })}
+                placeholder={intl.formatMessage({
+                  id: 'CreateRequestForm.addressPlaceholder',
+                })}
+                useDefaultPredictions={false}
+                format={identity}
+                valueFromForm={values.location}
+                validate={composeValidators(
+                  autocompleteSearchRequired(addressRequiredMessage),
+                  autocompletePlaceSelected(addressNotRecognizedMessage)
+                )}
+                key={'locationValidation'}
+              />
+            )}
+
+            {showListingFields && (
+              <AddListingFields
+                listingType={listingType}
+                listingFieldsConfig={listingFieldsConfig}
+                selectedCategories={pickSelectedCategories(values)}
+                formId={formId}
+                intl={intl}
+              />
+            )}
+
+            {showPriceField && (
+              <FieldCurrencyInput
+                id="price"
+                name="price"
+                className={css.priceField}
+                label={intl.formatMessage({ id: 'CreateRequestForm.priceLabel' })}
+                placeholder={intl.formatMessage({ id: 'CreateRequestForm.pricePlaceholder' })}
+                currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
+                validate={composeValidators(priceRequired, minPriceRequired)}
+              />
+            )}
+
+            {showListingFields && (
+              <div className={css.dateFields}>
+                <FieldSingleDatePicker
+                  name="startDate"
+                  id={`${formId}.startDate`}
+                  className={css.dateField}
+                  label={intl.formatMessage({ id: 'CreateRequestForm.startDateLabel' })}
+                  placeholderText={intl.formatMessage({
+                    id: 'CreateRequestForm.startDatePlaceholder',
+                  })}
+                  validate={required(
+                    intl.formatMessage({ id: 'CreateRequestForm.startDateRequired' })
+                  )}
+                  useMobileMargins
+                />
+                <FieldSingleDatePicker
+                  name="endDate"
+                  id={`${formId}.endDate`}
+                  className={css.dateField}
+                  label={intl.formatMessage({ id: 'CreateRequestForm.endDateLabel' })}
+                  placeholderText={intl.formatMessage({
+                    id: 'CreateRequestForm.endDatePlaceholder',
+                  })}
+                  validate={required(
+                    intl.formatMessage({ id: 'CreateRequestForm.endDateRequired' })
+                  )}
+                  useMobileMargins
+                />
+              </div>
+            )}
+
+            <div className={css.sectionContainer}>
+              <H4 as="h2" className={css.sectionTitle}>
+                Photos
+              </H4>
+
+              <div className={css.addImagesFieldArray}>
+                <FieldArray name="images">
+                  {({ fields }) =>
+                    fields.map((name, index) => (
+                      <FieldMediaKitImage
+                        key={name}
+                        name={name}
+                        onRemoveImage={() => {
+                          fields.remove(index);
+                        }}
+                        intl={intl}
+                        aspectWidth={1}
+                        aspectHeight={1}
+                        variantPrefix="listing"
+                      />
+                    ))
+                  }
+                </FieldArray>
+
+                <FieldAddMediaKitImage
+                  id="addImage"
+                  name="addImage"
+                  accept={ACCEPT_IMAGES}
+                  label={
+                    <span className={css.chooseAddImageText}>
+                      <span className={css.chooseAddImage}>
+                        <FormattedMessage id="ProfileDetailsForm.addMediaKitImage" />
+                      </span>
+                      <span className={css.imageTypes}>
+                        <FormattedMessage id="ProfileDetailsForm.mediaKitImageTypes" />
+                      </span>
+                    </span>
+                  }
+                  type="file"
+                  disabled={imageUploadRequested}
+                  formApi={formApi}
+                  onImageUploadHandler={onImageUpload}
+                  aspectWidth={1}
+                  aspectHeight={1}
+                />
+              </div>
+
+              <MediaKitUploadError
+                uploadOverLimit={isUploadImageOverLimitError(imageUploadError)}
+                uploadError={imageUploadError}
+              />
+
+              <p className={css.mediaKitTip}>
+                <FormattedMessage id="ProfileDetailsForm.mediaKitTip" />
+              </p>
+            </div>
+            <Button
+              className={css.submitButton}
+              type="submit"
+              inProgress={submitInProgress}
+              disabled={submitDisabled}
+              ready={submitReady}
+            >
+              {saveActionMsg}
+            </Button>
+          </Form>
+        );
+      }}
+    />
+  );
+};
 
 export default CreateRequestForm;

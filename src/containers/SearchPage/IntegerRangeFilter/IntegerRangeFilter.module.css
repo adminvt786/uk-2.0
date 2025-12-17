@@ -41,7 +41,7 @@
 
 .inputsWrapper {
   display: flex;
-
+  width: 100%;
   @media (--viewportMedium) {
     padding-bottom: 5px;
   }

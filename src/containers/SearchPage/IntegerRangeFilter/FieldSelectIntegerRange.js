@@ -76,6 +76,9 @@ const RangeInput = props => {
     initialValues,
     intl,
     getLabelForRangeInput,
+    className,
+    label,
+    labelClassName,
   } = props;
   const { value: values = {}, onChange, name } = input;
 
@@ -196,12 +199,12 @@ const RangeInput = props => {
   const validHandles = getValidHandles(values, fieldValues, defaultMinValue, defaultMaxValue);
 
   return (
-    <div className={classes}>
+    <div className={classNames(className, classes)}>
       <div className={classNames(css.contentWrapper, { [css.contentWrapperSidebar]: isInSideBar })}>
         <div className={css.inputsWrapper}>
           {!isInSideBar ? (
-            <span className={css.labelPopup}>
-              {intl.formatMessage({ id: 'IntegerRangeFilter.rangeInputsLabel' })}
+            <span className={classNames(css.labelPopup, labelClassName)}>
+              {label ? label : intl.formatMessage({ id: 'IntegerRangeFilter.rangeInputsLabel' })}
             </span>
           ) : null}
           <input

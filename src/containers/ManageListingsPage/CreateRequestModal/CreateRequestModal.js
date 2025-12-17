@@ -63,6 +63,7 @@ const getInitialValues = (requestListing, listingFields, listingCategories, cate
   const nestedCategories = pickCategoryFields(publicData, categoryKey, 1, listingCategories);
 
   return {
+    images: requestListing?.images || [],
     title,
     price,
     description: description ?? '',
@@ -102,6 +103,7 @@ const CreateRequestModal = props => {
     error,
     inProgress,
     editListingId,
+    onImageUpload,
   } = props;
   const requestListing = useSelector(state => requestListingSelector(state, editListingId));
   const classes = classNames(rootClassName || css.root, className);
@@ -126,6 +128,7 @@ const CreateRequestModal = props => {
       startDate,
       endDate,
       price,
+      images,
       ...rest
     } = values;
 
@@ -146,13 +149,22 @@ const CreateRequestModal = props => {
     const address = location?.selectedPlace?.address || null;
     const origin = location?.selectedPlace?.origin || null;
     const locationDataMaybe = address ? { location: { address } } : {};
-
+    const finalImages = images
+    ? images.map(elm => {
+        if (elm.id.uuid) {
+          return elm.id;
+        }
+        return elm.imageId;
+      })
+    : [];
+    console.log({finalImages})
     // Prepare values for submission
     const updateValues = {
       price: price ? price : new Money(0, config?.currency),
       geolocation: origin,
       title: title.trim(),
       description: description?.trim() || '',
+      images: finalImages,
       publicData: {
         listingType,
         transactionProcessAlias,
@@ -164,7 +176,8 @@ const CreateRequestModal = props => {
         endDate: moment(endDate.date).unix(),
       },
     };
-
+    console.log(updateValues);
+ 
     setInitialValues({
       title,
       description,
@@ -175,6 +188,7 @@ const CreateRequestModal = props => {
       startDate,
       endDate,
       price,
+      images,
       ...rest,
     });
 
@@ -235,6 +249,8 @@ const CreateRequestModal = props => {
         updated={false}
         updateInProgress={inProgress}
         fetchErrors={{ createRequestError: error }}
+        onImageUpload={onImageUpload}
+        listingImageConfig={config?.layout?.listingImage}
       />
     </Modal>
   );
