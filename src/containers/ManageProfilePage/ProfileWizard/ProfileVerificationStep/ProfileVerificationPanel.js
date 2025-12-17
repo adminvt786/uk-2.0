@@ -77,7 +77,10 @@ const ProfileVerificationPanel = props => {
           />
         </p>
 
-        <Button className={css.payButton} onClick={() => {}}>
+        <Button
+          className={css.payButton}
+          onClick={() => history.push('/p/pricing#choose_your_plan')}
+        >
           <FormattedMessage id="ProfileVerificationPanel.payForVerification" />
         </Button>
       </div>
