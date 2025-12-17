@@ -23,13 +23,13 @@
   transition: all 0.2s ease-in-out;
   padding: 4px;
   & path {
-    stroke: #f9c9cb;
+    stroke: var(--marketplaceColor);
     stroke-width: 70px;
   }
 }
 
 .bookmarked {
-  fill: #f9c9cb !important;
+  fill: var(--marketplaceColor) !important;
   fill-opacity: 1 !important;
 }
 

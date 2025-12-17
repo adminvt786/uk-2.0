@@ -8,8 +8,17 @@ import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
 import css from './FavoriteListingsPage.module.css';
+import { useConfiguration } from '../../context/configurationContext';
+import { handleNavigateToMakeOfferPage } from '../ListingPage/ListingPage.shared';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { useHistory } from 'react-router-dom';
+import { CampaignCard } from '../SearchPage/HotelsRequestsSearchPage/HotelsRequestsSearchPage';
+import { isHotelUserType } from '../../util/userHelpers';
 
 export const FavoriteListingsPageComponent = props => {
+  const config = useConfiguration();
+  const history = useHistory();
+  const routes = useRouteConfiguration();
   const {
     listings,
     pagination,
@@ -18,10 +27,16 @@ export const FavoriteListingsPageComponent = props => {
     queryParams,
     scrollingDisabled,
     intl,
+    isHotel,
   } = props;
 
   const hasPaginationInfo = !!pagination && pagination.totalItems != null;
   const listingsAreLoaded = !queryInProgress && hasPaginationInfo;
+  const categories = config?.categoryConfiguration?.categories || [];
+
+  const deliverableTypeOptions = config.listing.listingFields.find(
+    elm => elm.key === 'deliverable_type'
+  ).enumOptions;
 
   const loadingResults = (
     <div className={css.messagePanel}>
@@ -79,6 +94,17 @@ export const FavoriteListingsPageComponent = props => {
     `${panelWidth / 3}vw`,
   ].join(', ');
 
+  const handleApply = listingId => {
+    const getListing = id => listings.find(l => l.id.uuid === id.uuid);
+
+    handleNavigateToMakeOfferPage({
+      getListing,
+      params: { id: listingId.uuid },
+      history,
+      routes,
+    })();
+  };
+
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <LayoutSingleColumn
@@ -89,15 +115,18 @@ export const FavoriteListingsPageComponent = props => {
         {queryFavoritesError ? queryError : null}
         <div className={css.listingPanel}>
           {heading}
-          <div className={css.listingCards}>
+          <div className={!isHotel ? css.campaignCards : css.listingCards}>
             {listings.map(l =>
               l.attributes.publicData.listingType === 'hotels' ? (
-                <SearchRequestCard
-                  className={css.requestCard}
+                <CampaignCard
+                  onClick={() => {}}
                   key={l.id.uuid}
-                  listing={l}
-                  // config={config}
-                  // onApply={handleApply}
+                  campaign={l}
+                  categories={categories}
+                  intl={intl}
+                  deliverableTypeOptions={deliverableTypeOptions}
+                  onApply={handleApply}
+                  showMenu={false}
                 />
               ) : (
                 <ListingCard
@@ -124,6 +153,8 @@ const mapStateToProps = state => {
     queryFavoritesError,
     queryParams,
   } = state.FavoriteListingsPage;
+  const currentUser = state.user.currentUser;
+  const isHotel = isHotelUserType(currentUser);
   const listings = getListingsById(state, currentPageResultIds);
   return {
     currentPageResultIds,
@@ -133,6 +164,7 @@ const mapStateToProps = state => {
     queryFavoritesError,
     queryParams,
     scrollingDisabled: isScrollingDisabled(state),
+    isHotel,
   };
 };
 

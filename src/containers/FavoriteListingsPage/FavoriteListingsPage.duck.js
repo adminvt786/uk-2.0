@@ -51,7 +51,7 @@ export const loadData = (params, search, config) => dispatch => {
       queryParams: {
         ...queryParams,
         page,
-        include: ['images'],
+        include: ['author', 'images', 'author.profileImage'],
         'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
         ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
         ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),

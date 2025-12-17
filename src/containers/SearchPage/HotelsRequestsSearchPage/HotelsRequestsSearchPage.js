@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
+  FavoriteButton,
   IconsCollection,
   InlineTextButton,
   Menu,
@@ -72,6 +73,11 @@ export const CampaignCard = ({
         />
       </div>
       <div className={css.cardContent}>
+        <FavoriteButton
+          listingId={campaign.id}
+          listingAuthor={campaign.author}
+          isVisible={campaign.type !== 'ownListing'}
+        />
         <h3 className={css.cardTitle}>{title}</h3>
         <p className={css.cardSubtitle}>{hotel_name}</p>
         <div className={css.cardDetails}>
@@ -171,18 +177,10 @@ function HotelsRequestsSearchPage(props) {
   } = props;
   const routes = useRouteConfiguration();
   const history = useHistory();
-  const [location, setLocation] = useState();
-  const [category, setCategory] = useState();
-  const [deliverableType, setDeliverableType] = useState();
-  const [hotelType, setHotelType] = useState();
-  const categories = config?.categoryConfiguration?.categories || [];
   const [selectedCampaignsId, setSelectedCampaignsId] = useState(null);
 
-  // Static options for dropdowns
-  const locationOptions = [
-    { label: 'Any location', option: 'any' },
-    { label: 'Manchester', option: 'manchester' },
-  ];
+  const categories = config?.categoryConfiguration?.categories || [];
+
   const deliverableTypeOptions = config.listing.listingFields.find(
     elm => elm.key === 'deliverable_type'
   ).enumOptions;
@@ -256,6 +254,7 @@ function HotelsRequestsSearchPage(props) {
           intl={intl}
           listingFieldsConfig={config.listing.listingFields}
           categories={categories}
+          onApply={handleApply}
         />
       )}
     </div>

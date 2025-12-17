@@ -249,7 +249,10 @@ export const ManageListingsPageComponent = props => {
           {selectedCampaign && (
             <CampaignDetailsModal
               onManageDisableScrolling={onManageDisableScrolling}
-              onClose={() => setSelectedCampaignId(null)}
+              onClose={() => {
+                setEditListingId(null);
+                setSelectedCampaignId(null);
+              }}
               campaign={selectedCampaign}
               intl={intl}
               listingFieldsConfig={config.listing.listingFields}

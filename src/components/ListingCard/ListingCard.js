@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import React from 'react';
 import {
   AspectRatioWrapper,
+  FavoriteButton,
   IconsCollection,
   ListingCardThumbnail,
   NamedLink,
@@ -17,6 +18,8 @@ import { lazyLoadWithDimensions } from '../../util/uiHelpers';
 import { createSlug } from '../../util/urlHelpers';
 import { AUDIENCE } from '../IconsCollection/IconsCollection';
 import css from './ListingCard.module.css';
+import { useSelector } from 'react-redux';
+import { currentUserTypeSelector } from '../../ducks/user.duck';
 
 const priceData = (price, currency, intl) => {
   if (price && price.currency === currency) {
@@ -117,6 +120,7 @@ const ListingCardImage = props => {
 export const ListingCard = props => {
   const config = useConfiguration();
   const intl = props.intl || useIntl();
+  const currentUserType = useSelector(currentUserTypeSelector);
 
   const { className, rootClassName, listing, renderSizes, setActiveListing, hidePrice } = props;
 
@@ -160,6 +164,9 @@ export const ListingCard = props => {
     .find(elm => elm.key === 'size_total_following')
     .enumOptions.find(elm => elm.option === size_total_following).label;
 
+  const isVisible =
+    (currentUserType === 'creator' && listingType === 'hotels') ||
+    (currentUserType === 'travelbrand' && listingType === 'creators');
   return (
     <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>
       <div className={css.imageWrapper}>
@@ -176,7 +183,11 @@ export const ListingCard = props => {
           showListingImage={showListingImage}
         />
 
-        {/* <FavoriteButton listingId={id} listingAuthor={author} isVisible={true} /> */}
+        <FavoriteButton
+          listingId={currentListing.id}
+          listingAuthor={author}
+          isVisible={isVisible}
+        />
 
         <div className={css.cardContent}>
           <div className={css.authorName}>{authorName}</div>

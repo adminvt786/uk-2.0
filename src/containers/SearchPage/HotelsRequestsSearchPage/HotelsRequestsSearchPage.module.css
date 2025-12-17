@@ -288,7 +288,7 @@
 }
 
 .badgePopular {
-  background-color: #1e3a8a;
+  background-color: var(--marketplaceColor);
   color: white;
 }
 
@@ -325,7 +325,7 @@
 }
 
 .cardTitle {
-  color: #1e3a8a;
+  color: var(--marketplaceColor);
   font-weight: 400;
   cursor: pointer;
   font-size: 16px;

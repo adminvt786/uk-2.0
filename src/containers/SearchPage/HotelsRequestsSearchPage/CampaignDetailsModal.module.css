@@ -151,15 +151,12 @@
 }
 
 .title {
-  color: #1e3a8a;
+  color: var(--marketplaceColor);
   font-weight: 400;
   cursor: pointer;
   font-size: 16px;
   line-height: 24px;
   margin: 0;
-  &:hover {
-    color: #d4a574;
-  }
 }
 
 .hotelName {
@@ -205,7 +202,7 @@
 
 .featureValue {
   text-align: center;
-  color: #1e3a8a;
+  color: var(--marketplaceColor);
   font-size: 16px;
 }
 
@@ -227,7 +224,7 @@
 .descriptionLabel {
   font-size: 18px;
   font-weight: var(--fontWeightMedium);
-  color: #1e3a8a;
+  color: var(--marketplaceColor);
   margin: 0 0 8px 0;
 }
 
@@ -240,7 +237,7 @@
 
 .deliverableIcon {
   fill: none;
-  color: #1e3a8a;
+  color: var(--marketplaceColor);
 }
 
 .deliverablesList {
@@ -257,13 +254,13 @@
   align-items: center;
   justify-content: center;
   padding: 6px 12px;
-  border: 1px solid #1e3a8a;
+  border: 1px solid var(--marketplaceColor);
   border-radius: 14px;
 }
 
 .deliverableValue {
   font-size: 12px;
-  color: #1e3a8a;
+  color: var(--marketplaceColor);
   font-weight: 400;
   line-height: 16px;
   margin: 0;
@@ -271,7 +268,7 @@
 
 .deliverablesLabel {
   font-size: 16px;
-  color: #1e3a8a;
+  color: var(--marketplaceColor);
   font-weight: 400;
 }
 
@@ -291,26 +288,22 @@
 
 .applyButton {
   composes: buttonPrimaryInline from global;
-  background-color: #0b2f52;
   height: 48px;
   flex: 1;
   border-radius: 8px;
-  &:hover {
-    background-color: #0f4275;
-  }
 }
 
 .saveButton {
   composes: buttonPrimaryInline from global;
   background-color: var(--colorWhite);
-  color: #1e3a8a;
+  color: var(--marketplaceColor);
   border-radius: 8px;
   height: 48px;
   border: 1px solid #e5e5e5;
   flex: 1;
   &:hover {
     background-color: #f5f5f5;
-    color: #1e3a8a;
+    color: var(--marketplaceColor);
   }
 }
 
@@ -319,8 +312,8 @@
 }
 
 .heartIcon path {
-  color: #1e3a8a;
-  stroke: #1e3a8a;
+  color: var(--marketplaceColor);
+  stroke: var(--marketplaceColor);
 }
 
 .closeButton {

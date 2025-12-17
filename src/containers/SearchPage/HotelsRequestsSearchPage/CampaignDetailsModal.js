@@ -159,6 +159,7 @@ const CampaignDetailsModal = props => {
     categories,
     onManageDisableScrolling,
     showButtons = true,
+    onApply,
   } = props;
   const { images } = campaign;
   const { title, publicData, price, description } = campaign.attributes || {};
@@ -264,7 +265,9 @@ const CampaignDetailsModal = props => {
         {showButtons ? <div className={css.divider} /> : null}
         {showButtons ? (
           <div className={css.buttons}>
-            <Button rootClassName={css.applyButton}>Apply Now</Button>
+            <Button rootClassName={css.applyButton} onClick={() => onApply(campaign.id)}>
+              Apply Now
+            </Button>
             <Button rootClassName={css.saveButton}>
               <IconsCollection type="heart" className={css.heartIcon} />
               Save for Later

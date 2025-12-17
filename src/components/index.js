@@ -146,3 +146,4 @@ export { default as MaintenanceMode } from './MaintenanceMode/MaintenanceMode';
 export { default as ModalMissingInformation } from './ModalMissingInformation/ModalMissingInformation';
 
 export { default as IconsCollection } from './IconsCollection/IconsCollection';
+export {default as FavoriteButton } from './FavoriteButton/FavoriteButton';
