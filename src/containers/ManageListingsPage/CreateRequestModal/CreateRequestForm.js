@@ -181,7 +181,7 @@ const CreateRequestForm = props => {
           id: 'CreateRequestForm.addressNotRecognized',
         });
 
-        const showPriceField = ['paid', 'both'].includes(values?.pub_collaboration_exchange_type);
+        const showPriceField = ['paid', 'both'].includes(values?.pub_shoutout);
 
         const priceRequired = required(
           intl.formatMessage({ id: 'CreateRequestForm.priceRequired' })
@@ -343,62 +343,64 @@ const CreateRequestForm = props => {
               </div>
             )}
 
-            <div className={css.sectionContainer}>
-              <H4 as="h2" className={css.sectionTitle}>
-                Photos
-              </H4>
+            {showListingFields && (
+              <div className={css.sectionContainer}>
+                <H4 as="h2" className={css.sectionTitle}>
+                  Photos
+                </H4>
 
-              <div className={css.addImagesFieldArray}>
-                <FieldArray name="images">
-                  {({ fields }) =>
-                    fields.map((name, index) => (
-                      <FieldMediaKitImage
-                        key={name}
-                        name={name}
-                        onRemoveImage={() => {
-                          fields.remove(index);
-                        }}
-                        intl={intl}
-                        aspectWidth={1}
-                        aspectHeight={1}
-                        variantPrefix="listing"
-                      />
-                    ))
-                  }
-                </FieldArray>
+                <div className={css.addImagesFieldArray}>
+                  <FieldArray name="images">
+                    {({ fields }) =>
+                      fields.map((name, index) => (
+                        <FieldMediaKitImage
+                          key={name}
+                          name={name}
+                          onRemoveImage={() => {
+                            fields.remove(index);
+                          }}
+                          intl={intl}
+                          aspectWidth={1}
+                          aspectHeight={1}
+                          variantPrefix="listing"
+                        />
+                      ))
+                    }
+                  </FieldArray>
 
-                <FieldAddMediaKitImage
-                  id="addImage"
-                  name="addImage"
-                  accept={ACCEPT_IMAGES}
-                  label={
-                    <span className={css.chooseAddImageText}>
-                      <span className={css.chooseAddImage}>
-                        <FormattedMessage id="ProfileDetailsForm.addMediaKitImage" />
+                  <FieldAddMediaKitImage
+                    id="addImage"
+                    name="addImage"
+                    accept={ACCEPT_IMAGES}
+                    label={
+                      <span className={css.chooseAddImageText}>
+                        <span className={css.chooseAddImage}>
+                          <FormattedMessage id="ProfileDetailsForm.addMediaKitImage" />
+                        </span>
+                        <span className={css.imageTypes}>
+                          <FormattedMessage id="ProfileDetailsForm.mediaKitImageTypes" />
+                        </span>
                       </span>
-                      <span className={css.imageTypes}>
-                        <FormattedMessage id="ProfileDetailsForm.mediaKitImageTypes" />
-                      </span>
-                    </span>
-                  }
-                  type="file"
-                  disabled={imageUploadRequested}
-                  formApi={formApi}
-                  onImageUploadHandler={onImageUpload}
-                  aspectWidth={1}
-                  aspectHeight={1}
+                    }
+                    type="file"
+                    disabled={imageUploadRequested}
+                    formApi={formApi}
+                    onImageUploadHandler={onImageUpload}
+                    aspectWidth={1}
+                    aspectHeight={1}
+                  />
+                </div>
+
+                <MediaKitUploadError
+                  uploadOverLimit={isUploadImageOverLimitError(imageUploadError)}
+                  uploadError={imageUploadError}
                 />
+
+                <p className={css.mediaKitTip}>
+                  <FormattedMessage id="ProfileDetailsForm.mediaKitTip" />
+                </p>
               </div>
-
-              <MediaKitUploadError
-                uploadOverLimit={isUploadImageOverLimitError(imageUploadError)}
-                uploadError={imageUploadError}
-              />
-
-              <p className={css.mediaKitTip}>
-                <FormattedMessage id="ProfileDetailsForm.mediaKitTip" />
-              </p>
-            </div>
+            )}
             <Button
               className={css.submitButton}
               type="submit"

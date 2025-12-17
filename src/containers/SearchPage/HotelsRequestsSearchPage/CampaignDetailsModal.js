@@ -172,11 +172,17 @@ const CampaignDetailsModal = props => {
     creatror_requirements,
     deliverable_type,
     categoryLevel1,
+    travel_compensated,
+    shoutout,
   } = publicData || {};
   const hotelTypeOptions =
     listingFieldsConfig.find(field => field.key === 'hotel_type')?.enumOptions || [];
   const deliverableTypeOptions =
     listingFieldsConfig.find(field => field.key === 'deliverable_type')?.enumOptions || [];
+  const travelCompensated = listingFieldsConfig.find(field => field.key === 'travel_compensated');
+  const travelCompensatedOptions = travelCompensated.enumOptions || [];
+  const shoutoutConfig = listingFieldsConfig.find(field => field.key === 'shoutout');
+  const shoutoutOptions = shoutoutConfig.enumOptions || [];
   const categoriesOptions = categories.map(category => ({
     label: category.name,
     option: category.id,
@@ -261,6 +267,16 @@ const CampaignDetailsModal = props => {
         <div className={css.description}>
           <h4 className={css.descriptionLabel}>Campaign Vibe</h4>
           <p className={css.descriptionValue}>{getLabel(categoriesOptions, categoryLevel1)}</p>
+        </div>
+        <div className={css.description}>
+          <h4 className={css.descriptionLabel}>{travelCompensated.showConfig.label}</h4>
+          <p className={css.descriptionValue}>
+            {getLabel(travelCompensatedOptions, travel_compensated)}
+          </p>
+        </div>
+        <div className={css.description}>
+          <h4 className={css.descriptionLabel}>{shoutoutConfig.showConfig.label}</h4>
+          <p className={css.descriptionValue}>{getLabel(shoutoutOptions, shoutout)}</p>
         </div>
         {showButtons ? <div className={css.divider} /> : null}
         {showButtons ? (
