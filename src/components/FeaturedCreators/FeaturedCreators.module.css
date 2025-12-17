@@ -293,7 +293,9 @@
     display: none;
   }
 }
-
+.swiperWrapper :global(.swiper-button-prev) {
+  transform: rotate(180deg);
+}
 .swiperWrapper :global(.swiper-button-next::after),
 .swiperWrapper :global(.swiper-button-prev::after) {
   font-size: 20px;
