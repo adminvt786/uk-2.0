@@ -25,6 +25,7 @@ const { authenticateGoogle, authenticateGoogleCallback } = require('./api/auth/g
 const middleware = require('./middleware');
 const { getMuxUploadUrl, getMuxAsset, getMuxUploadUrlWatermark } = require('./api/mux');
 const clientSideFeaturedCreators = require('./api/client-side-featured-creators');
+const stripeRouter = require('./api/stripe');
 
 const router = express.Router();
 
@@ -93,5 +94,8 @@ router.get('/mux/get-asset', middleware.auth, getMuxAsset);
 
 // Client-side featured creators
 router.get('/client-side-featured-creators', clientSideFeaturedCreators);
+
+//stripe
+router.use('/stripe', stripeRouter);
 
 module.exports = router;
