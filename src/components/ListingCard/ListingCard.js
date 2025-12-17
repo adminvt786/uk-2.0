@@ -1,36 +1,22 @@
-import React from 'react';
 import classNames from 'classnames';
-
-import { useConfiguration } from '../../context/configurationContext';
-
-import { FormattedMessage, useIntl } from '../../util/reactIntl';
-import {
-  displayPrice,
-  isPriceVariationsEnabled,
-  requireListingImage,
-} from '../../util/configHelpers';
-import { lazyLoadWithDimensions } from '../../util/uiHelpers';
-import { formatMoney } from '../../util/currency';
-import { ensureListing, ensureUser } from '../../util/data';
-import { richText } from '../../util/richText';
-import { createSlug } from '../../util/urlHelpers';
-import { isBookingProcessAlias } from '../../transactions/transaction';
-import { obfuscatedCoordinates } from '../../util/maps';
-
+import React from 'react';
 import {
   AspectRatioWrapper,
+  IconsCollection,
+  ListingCardThumbnail,
   NamedLink,
   ResponsiveImage,
-  ListingCardThumbnail,
-  Map,
   ReviewRating,
-  IconsCollection,
 } from '../../components';
-
-import css from './ListingCard.module.css';
+import { useConfiguration } from '../../context/configurationContext';
+import { requireListingImage } from '../../util/configHelpers';
+import { formatMoney } from '../../util/currency';
+import { ensureListing, ensureUser } from '../../util/data';
+import { useIntl } from '../../util/reactIntl';
+import { lazyLoadWithDimensions } from '../../util/uiHelpers';
+import { createSlug } from '../../util/urlHelpers';
 import { AUDIENCE } from '../IconsCollection/IconsCollection';
-
-const MIN_LENGTH_FOR_LONG_WORDS = 10;
+import css from './ListingCard.module.css';
 
 const priceData = (price, currency, intl) => {
   if (price && price.currency === currency) {
@@ -75,7 +61,6 @@ const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRend
 const ListingCardImage = props => {
   const {
     currentListing,
-    setActivePropsMaybe,
     title,
     renderSizes,
     aspectWidth,
@@ -117,49 +102,6 @@ const ListingCardImage = props => {
 };
 
 /**
- * ListingCardMap
- * Component responsible for rendering a small map preview below the listing card image.
- * Shows obfuscated location if fuzzy maps are enabled.
- * @component
- * @param {Object} props
- * @param {Object} props.geolocation the listing's geolocation {lat, lng}
- * @param {Object} props.publicData the listing's publicData
- * @param {string} props.listingId the listing's id for cache key
- * @param {Object} props.mapsConfig maps configuration
- * @returns {JSX.Element|null} small map preview or null if no geolocation
- */
-const ListingCardMap = props => {
-  const { geolocation, publicData, listingId, mapsConfig } = props;
-
-  if (!geolocation) {
-    return null;
-  }
-
-  const address = publicData?.location?.address || '';
-  const cacheKey = listingId ? `${listingId}_${geolocation.lat}_${geolocation.lng}` : null;
-
-  const mapProps = mapsConfig?.fuzzy?.enabled
-    ? { obfuscatedCenter: obfuscatedCoordinates(geolocation, mapsConfig.fuzzy.offset, cacheKey) }
-    : { address, center: geolocation };
-
-  // Truncate address for display
-  const displayAddress = address
-    ? address.length > 30
-      ? `Around ${address.substring(0, 27)}...`
-      : `Around ${address}`
-    : '';
-
-  return (
-    <>
-      <div className={css.mapWrapper}>
-        <Map {...mapProps} useStaticMap={true} mapsConfig={mapsConfig} />
-      </div>
-      {displayAddress && <div className={css.locationText}>{displayAddress}</div>}
-    </>
-  );
-};
-
-/**
  * ListingCard
  *
  * @component
@@ -176,14 +118,7 @@ export const ListingCard = props => {
   const config = useConfiguration();
   const intl = props.intl || useIntl();
 
-  const {
-    className,
-    rootClassName,
-    listing,
-    renderSizes,
-    setActiveListing,
-    showAuthorInfo = true,
-  } = props;
+  const { className, rootClassName, listing, renderSizes, setActiveListing, hidePrice } = props;
 
   const classes = classNames(rootClassName || css.root, className);
 
@@ -199,7 +134,6 @@ export const ListingCard = props => {
   const { formattedPrice } = priceData(price, config.currency, intl);
 
   const { listingType, cardStyle, location, size_total_following } = publicData || {};
-  const geolocation = currentListing.attributes.geolocation;
   const validListingTypes = config.listing.listingTypes;
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const showListingImage = requireListingImage(foundListingTypeConfig);
@@ -242,17 +176,19 @@ export const ListingCard = props => {
           showListingImage={showListingImage}
         />
 
-       {/* <FavoriteButton listingId={id} listingAuthor={author} isVisible={true} /> */}
+        {/* <FavoriteButton listingId={id} listingAuthor={author} isVisible={true} /> */}
 
         <div className={css.cardContent}>
           <div className={css.authorName}>{authorName}</div>
           <div className={css.locationName}>{locationDisplay}</div>
-          <div className={css.priceWrapper}>
-            {intl.formatMessage(
-              { id: 'ListingCard.packagesStartFrom' },
-              { price: <span className={css.price}>{formattedPrice}</span> }
-            )}
-          </div>
+          {!hidePrice && (
+            <div className={css.priceWrapper}>
+              {intl.formatMessage(
+                { id: 'ListingCard.packagesStartFrom' },
+                { price: <span className={css.price}>{formattedPrice}</span> }
+              )}
+            </div>
+          )}
           <div className={css.ratingWrapper}>
             <ReviewRating rating={rating} reviewStarClassName={css.ratingStar} />
             <div className={css.metaItem}>

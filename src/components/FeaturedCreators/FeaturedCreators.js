@@ -3,14 +3,14 @@ import css from './FeaturedCreators.module.css';
 import Field from '../../containers/PageBuilder/Field';
 import {
   customInProgressSelector,
-  customListingsSelector,
+  featuredListingsSelector,
 } from '../../containers/LandingPage/LandingPage.duck';
 import IconSpinner from '../IconSpinner/IconSpinner';
 import { useSelector } from 'react-redux';
 import ListingCard from '../ListingCard/ListingCard';
 
 const FeaturedCreators = props => {
-  const listings = useSelector(customListingsSelector);
+  const listings = useSelector(featuredListingsSelector);
   const inProgress = useSelector(customInProgressSelector);
 
   const { title, description, options, sectionId, callToAction, blocks = [] } = props;
@@ -119,6 +119,7 @@ const FeaturedCreators = props => {
                       `(max-width: 1920px) 18vw`,
                       `14vw`,
                     ].join(', ')}
+                    hidePrice
                   />
                 </SwiperSlide>
               ))}

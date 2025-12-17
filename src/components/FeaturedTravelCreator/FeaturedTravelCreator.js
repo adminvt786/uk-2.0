@@ -4,14 +4,14 @@ import SectionContainer from '../../containers/PageBuilder/SectionBuilder/Sectio
 import css from './FeaturedTravelCreator.module.css';
 import {
   customInProgressSelector,
-  customListingsSelector,
+  featuredListingsSelector,
 } from '../../containers/CMSPage/CMSPage.duck';
 import { useSelector } from 'react-redux';
 import ListingCard from '../ListingCard/ListingCard';
 import IconSpinner from '../IconSpinner/IconSpinner';
 
 const FeaturedTravelCreator = props => {
-  const listings = useSelector(customListingsSelector);
+  const listings = useSelector(featuredListingsSelector);
   const inProgress = useSelector(customInProgressSelector);
   const {
     title,
@@ -97,6 +97,7 @@ const FeaturedTravelCreator = props => {
                       `(max-width: 1920px) 18vw`,
                       `14vw`,
                     ].join(', ')}
+                    hidePrice
                   />
                   {/* <div className={css.cardImageWrapper}>
                     <Field data={block.media} className={css.cardImage} options={fieldOptions} />
@@ -144,6 +145,7 @@ const FeaturedTravelCreator = props => {
                             `(max-width: 1920px) 18vw`,
                             `14vw`,
                           ].join(', ')}
+                          hidePrice
                         />
                         {/* <div className={css.cardImageWrapper}>
                           <Field

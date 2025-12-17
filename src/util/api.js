@@ -173,3 +173,7 @@ export const getMuxUploadUrlWatermark = (queryParams = {}) => {
 export const getMuxAsset = (queryParams = {}) => {
   return get('/api/mux/get-asset?' + new URLSearchParams(queryParams).toString());
 };
+
+export const getClientSideFeaturedCreators = () => {
+  return get('/api/client-side-featured-creators');
+};

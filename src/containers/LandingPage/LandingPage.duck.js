@@ -1,29 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { fetchPageAssets } from '../../ducks/hostedAssets.duck';
+import { getClientSideFeaturedCreators } from '../../util/api';
 import { storableError } from '../../util/errors';
-import { getImageVariantInfo } from '../EditListingPage/EditListingPage.duck';
-import { addMarketplaceEntities, getListingsById } from '../../ducks/marketplaceData.duck';
 export const ASSET_NAME = 'landing-page';
-
-const PER_PAGE = 10;
-
-// Helper to transform response to listing id array
-const responseListingIds = data => data.data.map(l => l.id);
-
-// Build default search params for listings
-const getDefaultParams = config => {
-  const imageVariantInfo = getImageVariantInfo(config.layout.listingImage);
-
-  return {
-    include: ['author', 'images', 'author.profileImage'],
-    'fields.listing': ['title', 'description', 'price', 'deleted', 'state', 'publicData'],
-    'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
-    'fields.image': imageVariantInfo.fieldsImage,
-    ...imageVariantInfo.imageVariants,
-    'limit.images': 1,
-    perPage: PER_PAGE,
-  };
-};
 
 // ================ Async thunks ================ //
 
@@ -31,17 +10,8 @@ export const searchFeaturedListings = createAsyncThunk(
   'landingPage/searchFeaturedListings',
   async (config, { dispatch, rejectWithValue, extra: sdk }) => {
     try {
-      const response = await sdk.listings.query({
-        ...getDefaultParams(config),
-        pub_listingType: 'creators',
-        meta_featured: true,
-        sort: 'meta_ranking',
-      });
-      const listingFields = config?.listing?.listingFields;
-      const sanitizeConfig = { listingFields };
-
-      dispatch(addMarketplaceEntities(response, sanitizeConfig));
-      return responseListingIds(response.data);
+      const response = await getClientSideFeaturedCreators();
+      return response.data;
     } catch (e) {
       return rejectWithValue(storableError(e));
     }
@@ -58,7 +28,7 @@ export const loadData = (params, search) => dispatch => {
 // ================ Slice ================ //
 
 const initialState = {
-  featuredListingIds: [],
+  featuredListings: [],
   featuredListingsInProgress: false,
   featuredListingsError: null,
 };
@@ -76,7 +46,7 @@ const landingPageSlice = createSlice({
       })
       .addCase(searchFeaturedListings.fulfilled, (state, action) => {
         state.featuredListingsInProgress = false;
-        state.featuredListingIds = action.payload;
+        state.featuredListings = action.payload;
       })
       .addCase(searchFeaturedListings.rejected, (state, action) => {
         state.featuredListingsInProgress = false;
@@ -87,7 +57,6 @@ const landingPageSlice = createSlice({
 
 export default landingPageSlice.reducer;
 
-export const customListingsSelector = state =>
-  getListingsById(state, state.LandingPage['featuredListingIds']) || [];
+export const featuredListingsSelector = state => state.LandingPage.featuredListings;
 export const customInProgressSelector = state =>
   state.LandingPage['featuredListingsInProgress'] || false;

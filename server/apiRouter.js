@@ -24,6 +24,7 @@ const { authenticateGoogle, authenticateGoogleCallback } = require('./api/auth/g
 
 const middleware = require('./middleware');
 const { getMuxUploadUrl, getMuxAsset, getMuxUploadUrlWatermark } = require('./api/mux');
+const clientSideFeaturedCreators = require('./api/client-side-featured-creators');
 
 const router = express.Router();
 
@@ -89,5 +90,8 @@ router.get('/auth/google/callback', authenticateGoogleCallback);
 router.get('/mux/upload-url', middleware.auth, getMuxUploadUrl);
 router.get('/mux/upload-url-watermark', middleware.auth, getMuxUploadUrlWatermark);
 router.get('/mux/get-asset', middleware.auth, getMuxAsset);
+
+// Client-side featured creators
+router.get('/client-side-featured-creators', clientSideFeaturedCreators);
 
 module.exports = router;

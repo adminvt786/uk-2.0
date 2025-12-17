@@ -4,6 +4,7 @@ import { addMarketplaceEntities, getListingsById } from '../../ducks/marketplace
 import { storableError } from '../../util/errors';
 import { getImageVariantInfo } from '../EditListingPage/EditListingPage.duck';
 import { responseListingIds } from '../../util/data';
+import { getClientSideFeaturedCreators } from '../../util/api';
 
 const PER_PAGE = 8;
 
@@ -28,17 +29,8 @@ export const searchFeaturedListings = createAsyncThunk(
   'cmsPage/searchFeaturedListings',
   async (config, { dispatch, rejectWithValue, extra: sdk }) => {
     try {
-      const response = await sdk.listings.query({
-        ...getDefaultParams(config),
-        pub_listingType: 'creators',
-        meta_featured: true,
-        sort: 'meta_ranking',
-      });
-      const listingFields = config?.listing?.listingFields;
-      const sanitizeConfig = { listingFields };
-
-      dispatch(addMarketplaceEntities(response, sanitizeConfig));
-      return responseListingIds(response.data);
+      const response = await getClientSideFeaturedCreators();
+      return response.data;
     } catch (e) {
       return rejectWithValue(storableError(e));
     }
@@ -57,7 +49,7 @@ export const loadData = (params, search) => dispatch => {
 // ================ Slice ================ //
 
 const initialState = {
-  featuredListingIds: [],
+  featuredListings: [],
   featuredListingsInProgress: false,
   featuredListingsError: null,
 };
@@ -75,7 +67,7 @@ const cmsPageSlice = createSlice({
       })
       .addCase(searchFeaturedListings.fulfilled, (state, action) => {
         state.featuredListingsInProgress = false;
-        state.featuredListingIds = action.payload;
+        state.featuredListings = action.payload;
       })
       .addCase(searchFeaturedListings.rejected, (state, action) => {
         state.featuredListingsInProgress = false;
@@ -86,7 +78,6 @@ const cmsPageSlice = createSlice({
 
 export default cmsPageSlice.reducer;
 
-export const customListingsSelector = state =>
-  getListingsById(state, state.CMSPage['featuredListingIds']) || [];
+export const featuredListingsSelector = state => state.CMSPage.featuredListings;
 export const customInProgressSelector = state =>
   state.CMSPage['featuredListingsInProgress'] || false;
