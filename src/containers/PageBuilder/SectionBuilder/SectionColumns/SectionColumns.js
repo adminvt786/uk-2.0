@@ -6,6 +6,9 @@ import BlockBuilder from '../../BlockBuilder';
 
 import SectionContainer from '../SectionContainer';
 import css from './SectionColumns.module.css';
+import { useSelector } from 'react-redux';
+import { currentUserEmailSelector, currentUserIdSelector } from '../../../../ducks/user.duck';
+import { cloneDeep } from 'lodash';
 
 // The number of columns (numColumns) affects styling and responsive images
 const COLUMN_CONFIG = [
@@ -62,6 +65,8 @@ const getResponsiveImageSizes = numColumns => {
  * @returns {JSX.Element} Section for article content
  */
 const SectionColumns = props => {
+  const email = useSelector(currentUserEmailSelector);
+  const userId = useSelector(currentUserIdSelector);
   const {
     sectionId,
     className,
@@ -84,6 +89,27 @@ const SectionColumns = props => {
 
   const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
   const hasBlocks = blocks?.length > 0;
+
+  //deep clone blocks using lodash
+  const clonedBlocks = cloneDeep(blocks).map(elm => {
+    if (
+      userId &&
+      elm.text.content &&
+      elm.text.content.includes('{userId}') &&
+      elm.text.content.includes('{userEmail}')
+    ) {
+      const newContent = elm.text.content.replace('{userId}', userId).replace('{userEmail}', email);
+      return {
+        ...elm,
+        text: {
+          ...elm.text,
+          content: newContent,
+        },
+      };
+    }
+
+    return elm;
+  });
 
   return (
     <SectionContainer
@@ -108,7 +134,7 @@ const SectionColumns = props => {
         >
           <BlockBuilder
             ctaButtonClass={defaultClasses.ctaButton}
-            blocks={blocks}
+            blocks={clonedBlocks}
             sectionId={sectionId}
             responsiveImageSizes={getResponsiveImageSizes(numColumns)}
             options={options}

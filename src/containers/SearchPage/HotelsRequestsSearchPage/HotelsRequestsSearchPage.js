@@ -103,7 +103,7 @@ const CampaignCard = ({ campaign, categories, intl, onApply }) => {
           <IconsCollection type="deliverable" className={css.detailIcon} />
           <span className={css.deliverablesLabel}>Deliverables:</span>
           <div className={css.deliverableTags}>
-            {deliverable_type.map((item, index) => (
+            {deliverable_type?.map((item, index) => (
               <span key={index} className={css.deliverableTag}>
                 {item}
               </span>
