@@ -396,7 +396,15 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
       page,
       perPage: RESULT_PAGE_SIZE,
       include: ['author', 'images', 'author.profileImage'],
-      'fields.listing': ['title', 'description', 'geolocation', 'price', 'deleted', 'state', 'publicData'],
+      'fields.listing': [
+        'title',
+        'description',
+        'geolocation',
+        'price',
+        'deleted',
+        'state',
+        'publicData',
+      ],
       'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
       'fields.image': [
         'variants.scaled-small',

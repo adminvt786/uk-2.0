@@ -181,6 +181,7 @@ export const validFilterParams = (params, filterConfigs, dropNonFilterParams = t
   const listingFieldFiltersConfig = listingFieldsConfig.filter(
     config => config.filterConfig?.indexForSearch
   );
+
   const listingFieldParamNames = listingFieldFiltersConfig.map(f =>
     constructQueryParamName(f.key, f.scope)
   );
@@ -205,7 +206,6 @@ export const validFilterParams = (params, filterConfigs, dropNonFilterParams = t
   // search params without category-restricted params
   const unlimitedSearchParams = omitLimitedListingFieldParams(params, filterConfigs);
   const paramEntries = Object.entries(unlimitedSearchParams);
-
   const listingFieldsAndBuiltInFilterParamNames = paramEntries.reduce((validParams, entry) => {
     const [paramName, paramValue] = entry;
     const isIndependentParam = filterParamNames.includes(paramName);
@@ -216,6 +216,7 @@ export const validFilterParams = (params, filterConfigs, dropNonFilterParams = t
           categorySearchConfig?.key,
           categorySearchConfig?.isNestedEnum
         );
+
     return isIndependentParam
       ? {
           ...validParams,
@@ -339,6 +340,7 @@ export const cleanSearchFromConflictingParams = (searchParams, filterConfigs, so
 export const pickSearchParamsOnly = (params, filterConfigs, sortConfig, isOriginInUse) => {
   const { address, origin, bounds, ...rest } = params || {};
   const boundsMaybe = bounds ? { bounds } : {};
+  const addressMaybe = address ? { address } : {};
   const originMaybe = isOriginInUse && origin ? { origin } : {};
   const filterParams = validFilterParams(rest, filterConfigs);
   const sort = rest[sortConfig.queryParamName];
@@ -346,6 +348,7 @@ export const pickSearchParamsOnly = (params, filterConfigs, sortConfig, isOrigin
 
   return {
     ...boundsMaybe,
+    ...addressMaybe,
     ...originMaybe,
     ...filterParams,
     ...sortMaybe,

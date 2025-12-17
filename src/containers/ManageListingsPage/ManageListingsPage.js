@@ -39,6 +39,9 @@ import {
   openListing,
 } from './ManageListingsPage.duck';
 import css from './ManageListingsPage.module.css';
+import { CampaignCard } from '../SearchPage/HotelsRequestsSearchPage/HotelsRequestsSearchPage';
+import CampaignDetailsModal from '../SearchPage/HotelsRequestsSearchPage/CampaignDetailsModal';
+import { requestImageUpload } from '../EditListingPage/EditListingPage.duck';
 
 const Heading = props => {
   const { listingsAreLoaded, pagination, onOpenCreateRequestModal } = props;
@@ -116,7 +119,7 @@ export const ManageListingsPageComponent = props => {
   const routeConfiguration = useRouteConfiguration();
   const config = useConfiguration();
   const intl = useIntl();
-
+  const [selectedCampaignId, setSelectedCampaignId] = useState(null);
   const {
     currentUser,
     closingListing,
@@ -139,6 +142,7 @@ export const ManageListingsPageComponent = props => {
     createListingError,
     updateRequestInProgress,
     updateRequestError,
+    onImageUpload,
   } = props;
 
   useEffect(() => {
@@ -191,7 +195,11 @@ export const ManageListingsPageComponent = props => {
   );
 
   const showManageListingsLink = showCreateListingLinkForUser(config, currentUser);
-
+  const deliverableTypeOptions = config.listing.listingFields.find(
+    elm => elm.key === 'deliverable_type'
+  ).enumOptions;
+  const categories = config.categoryConfiguration.categories;
+  const selectedCampaign = listings.find(l => l.id.uuid === selectedCampaignId);
   return (
     <Page
       title={intl.formatMessage({ id: 'ManageListingsPage.title' })}
@@ -221,22 +229,34 @@ export const ManageListingsPageComponent = props => {
 
           <div className={css.listingCards}>
             {listings.map(l => (
-              <RequestListingCard
+              <CampaignCard
                 key={l.id.uuid}
-                listing={l}
-                config={config}
-                isMenuOpen={!!listingMenuOpen && listingMenuOpen.id.uuid === l.id.uuid}
-                actionsInProgressListingId={openingListing || closingListing || discardingDraft}
-                onToggleMenu={onToggleMenu}
-                onOpenListing={handleOpenListing}
-                onCloseListing={onCloseListing}
-                onEditListing={listingId => {
-                  setEditListingId(listingId);
+                campaign={l}
+                intl={intl}
+                categories={config.categoryConfiguration.categories}
+                deliverableTypeOptions={deliverableTypeOptions}
+                onClick={() => {
+                  setSelectedCampaignId(l.id.uuid);
+                }}
+                onEdit={() => {
+                  setEditListingId(l.id);
                   setCreateRequestModalOpen(true);
                 }}
               />
             ))}
           </div>
+
+          {selectedCampaign && (
+            <CampaignDetailsModal
+              onManageDisableScrolling={onManageDisableScrolling}
+              onClose={() => setSelectedCampaignId(null)}
+              campaign={selectedCampaign}
+              intl={intl}
+              listingFieldsConfig={config.listing.listingFields}
+              categories={categories}
+              showButtons={false}
+            />
+          )}
 
           {onManageDisableScrolling && createRequestModalOpen ? (
             <CreateRequestModal
@@ -248,6 +268,7 @@ export const ManageListingsPageComponent = props => {
               inProgress={createListingInProgress || updateRequestInProgress}
               error={createListingError || updateRequestError}
               editListingId={editListingId}
+              onImageUpload={onImageUpload}
             />
           ) : null}
 
@@ -310,6 +331,8 @@ const mapDispatchToProps = dispatch => ({
   onDiscardDraft: listingId => dispatch(discardDraft(listingId)),
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
+  onImageUpload: (data, listingImageConfig) =>
+    dispatch(requestImageUpload(data, listingImageConfig)),
 });
 
 const ManageListingsPage = compose(

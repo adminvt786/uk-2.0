@@ -1,60 +1,52 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { IconsCollection, PrimaryButton } from '../../../components';
+import {
+  IconsCollection,
+  InlineTextButton,
+  Menu,
+  MenuContent,
+  MenuItem,
+  MenuLabel,
+  Modal,
+  PaginationLinks,
+  PrimaryButton,
+  ResponsiveImage,
+} from '../../../components';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { formatMoney } from '../../../util/currency';
 import { handleNavigateToMakeOfferPage } from '../../ListingPage/ListingPage.shared';
-import { formatDate } from '../../ManageListingsPage/RequestListingCard/RequestListingCard';
+import {
+  formatDate,
+  ThreeDotsIcon,
+} from '../../ManageListingsPage/RequestListingCard/RequestListingCard';
 import css from './HotelsRequestsSearchPage.module.css';
+import { createResourceLocatorString } from '../../../util/routes';
+import CampaignDetailsModal from './CampaignDetailsModal';
+import FilterForm from './FilterForm';
+import { FormattedMessage } from 'react-intl';
+import moment from 'moment';
+import { formatDateShort, isSameMonthYear } from '../../../util/dates';
 
-// Custom Dropdown Component
-const FilterDropdown = ({ label, placeholder, options, value, onChange, icon }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleSelect = option => {
-    onChange(option);
-    setIsOpen(false);
-  };
-
+const getDeliverableTypeLabel = (deliverableTypeOptions, deliverableType) => {
   return (
-    <div className={css.filterItem}>
-      <label className={css.filterLabel}>
-        {icon && <IconsCollection type={icon} className={css.labelIcon} />}
-        {label}
-      </label>
-      <div className={css.dropdownWrapper}>
-        <button className={css.dropdownButton} onClick={() => setIsOpen(!isOpen)} type="button">
-          <span className={css.dropdownText}>{value?.label || placeholder}</span>
-          <span className={css.chevron}>{isOpen ? '▲' : '▼'}</span>
-        </button>
-        {isOpen && (
-          <div className={css.dropdownMenu}>
-            {options?.map((elm, index) => (
-              <div key={elm.option} className={css.dropdownItem} onClick={() => handleSelect(elm)}>
-                {elm.label}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-// Compensation Display Component
-const CompensationDisplay = ({ label, value }) => {
-  return (
-    <div className={css.filterItem}>
-      <label className={css.filterLabel}>$ {label}</label>
-      <div className={css.compensationValue}>{value}</div>
-    </div>
+    deliverableTypeOptions.find(elm => elm.option === deliverableType)?.label || deliverableType
   );
 };
 
 // Campaign Card Component
-const CampaignCard = ({ campaign, categories, intl, onApply }) => {
+export const CampaignCard = ({
+  campaign,
+  categories,
+  intl,
+  onApply,
+  deliverableTypeOptions,
+  onClick,
+  onEdit,
+  showMenu = true,
+}) => {
   const [isFavorite, setIsFavorite] = useState(false);
-  const { title, description, publicData, price } = campaign.attributes || {};
+  const { title, description, publicData, price, state } = campaign.attributes || {};
+  const [isCampaignOpen, setIsCampaignOpen] = useState(false);
   const {
     categoryLevel1,
     location,
@@ -63,20 +55,20 @@ const CampaignCard = ({ campaign, categories, intl, onApply }) => {
     collaboration_exchange_type,
     creatror_requirements,
     travel_compensated,
-    deliverable_type,
+    deliverable_type = [],
     hotel_name,
   } = publicData;
   const category = categories.find(elm => elm.id === categoryLevel1)?.name || '';
-
+  const isClosed = collaboration_exchange_type === 'closed';
+  const isPublished = state === 'published';
   return (
-    <div className={css.campaignCard}>
+    <div className={css.campaignCard} onClick={onClick}>
       <div className={css.cardImage}>
-        <img
-          src={
-            campaign.image ||
-            'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&h=300&fit=crop'
-          }
+        <ResponsiveImage
+          image={campaign.images[0]}
           alt={title}
+          variants={['listing-card', 'listing-card-2x']}
+          sizes="(max-width: 767px) 100vw, 80vw"
         />
       </div>
       <div className={css.cardContent}>
@@ -91,7 +83,9 @@ const CampaignCard = ({ campaign, categories, intl, onApply }) => {
             <IconsCollection type="calendar" className={css.detailIcon} />
             <span>
               {' '}
-              {formatDate(startDate, intl)} - {formatDate(endDate, intl)}
+              {isSameMonthYear(startDate, endDate)
+                ? formatDateShort(startDate, endDate)
+                : `${formatDate(startDate, intl)} - ${formatDate(endDate, intl)}`}
             </span>
           </div>
           <div className={css.detailItem}>
@@ -105,19 +99,58 @@ const CampaignCard = ({ campaign, categories, intl, onApply }) => {
           <div className={css.deliverableTags}>
             {deliverable_type.map((item, index) => (
               <span key={index} className={css.deliverableTag}>
-                {item}
+                {getDeliverableTypeLabel(deliverableTypeOptions, item)}
               </span>
             ))}
           </div>
         </div>
         <div className={css.cardFooter}>
-          <PrimaryButton
-            type="button"
-            rootClassName={css.applyButton}
-            onClick={() => onApply(campaign.id)}
-          >
-            Apply
-          </PrimaryButton>
+          <div className={css.cardFooterContent}>
+            {onApply && (
+              <PrimaryButton
+                type="button"
+                rootClassName={css.applyButton}
+                onClick={() => onApply(campaign.id)}
+              >
+                Apply
+              </PrimaryButton>
+            )}
+            {showMenu && (
+              <div className={css.menuWrapper}>
+                <Menu
+                  className={css.menu}
+                  contentPosition="right"
+                  useArrow={false}
+                  onToggleActive={isOpen => {
+                    const campaignOpen = isOpen ? campaign : null;
+                    setIsCampaignOpen(campaignOpen);
+                  }}
+                  isOpen={isCampaignOpen}
+                >
+                  <MenuLabel className={css.menuLabel} isOpenClassName={css.menuLabelOpen}>
+                    <div className={css.threeDotsWrapper}>
+                      <ThreeDotsIcon className={css.threeDotsIcon} />
+                    </div>
+                  </MenuLabel>
+                  <MenuContent rootClassName={css.menuContent}>
+                    {/* Edit option is always available */}
+                    <MenuItem key="edit-campaign">
+                      <InlineTextButton
+                        rootClassName={css.menuItem}
+                        onClick={e => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          onEdit();
+                        }}
+                      >
+                        <FormattedMessage id="RequestListingCard.editListing" />
+                      </InlineTextButton>
+                    </MenuItem>
+                  </MenuContent>
+                </Menu>
+              </div>
+            )}
+          </div>
           <span className={css.categoryTag}>{category}</span>
         </div>
       </div>
@@ -126,15 +159,24 @@ const CampaignCard = ({ campaign, categories, intl, onApply }) => {
 };
 
 function HotelsRequestsSearchPage(props) {
+  const {
+    campaigns,
+    config,
+    intl,
+    onManageDisableScrolling,
+    pagination,
+    queryInProgress,
+    validQueryParams,
+    getHandleChangedValueFn,
+  } = props;
   const routes = useRouteConfiguration();
   const history = useHistory();
   const [location, setLocation] = useState();
   const [category, setCategory] = useState();
   const [deliverableType, setDeliverableType] = useState();
   const [hotelType, setHotelType] = useState();
-
-  const { campaigns, config, intl } = props;
   const categories = config?.categoryConfiguration?.categories || [];
+  const [selectedCampaignsId, setSelectedCampaignsId] = useState(null);
 
   // Static options for dropdowns
   const locationOptions = [
@@ -158,58 +200,64 @@ function HotelsRequestsSearchPage(props) {
     })();
   };
 
+  const selectedCampaign = campaigns.find(campaign => campaign.id.uuid === selectedCampaignsId);
+
+  const hasPaginationInfo = !!pagination && pagination.totalItems != null;
+  const listingsAreLoaded = !queryInProgress && hasPaginationInfo;
+
+  const paginationLinks =
+    listingsAreLoaded && pagination && pagination.totalPages > 1 ? (
+      <PaginationLinks
+        className={css.pagination}
+        pageName="SearchPageWithListingType"
+        pageSearchParams={{ page }}
+        pagePathParams={{ listingType: 'hotels' }}
+        pagination={pagination}
+      />
+    ) : null;
+
   return (
     <div className={css.container}>
-      <div className={css.filterContainer}>
-        <FilterDropdown
-          label="Location"
-          placeholder="Any location"
-          icon="location"
-          options={locationOptions}
-          value={location}
-          onChange={setLocation}
-        />
-        <FilterDropdown
-          label="Category"
-          placeholder="All categories"
-          options={categories.map(cat => ({ option: cat.id, label: cat.name }))}
-          value={category}
-          onChange={setCategory}
-          icon="category"
-        />
-        <FilterDropdown
-          label="Deliverable Type"
-          placeholder="All types"
-          options={deliverableTypeOptions}
-          value={deliverableType}
-          onChange={setDeliverableType}
-          icon="deliverable"
-        />
-        <FilterDropdown
-          label="Hotel Type"
-          placeholder="All types"
-          options={hotelTypeOptions}
-          value={hotelType}
-          onChange={setHotelType}
-          icon="hotel"
-        />
-        <CompensationDisplay label="Compensation" value="$0 - $10000" />
-      </div>
+      <FilterForm
+        categories={categories}
+        deliverableTypeOptions={deliverableTypeOptions}
+        hotelTypeOptions={hotelTypeOptions}
+        getHandleChangedValueFn={getHandleChangedValueFn}
+        validQueryParams={validQueryParams}
+        intl={intl}
+        appConfig={config}
+      />
 
       <div className={css.campaignsSection}>
         <h2 className={css.campaignsTitle}>{campaigns.length} Campaigns Available</h2>
         <div className={css.campaignsList}>
           {campaigns.map(campaign => (
             <CampaignCard
-              key={campaign.id}
+              onClick={() => {
+                setSelectedCampaignsId(campaign.id.uuid);
+              }}
+              key={campaign.id.uuid}
               campaign={campaign}
               categories={categories}
               intl={intl}
+              deliverableTypeOptions={deliverableTypeOptions}
               onApply={handleApply}
+              showMenu={false}
             />
           ))}
         </div>
+        {paginationLinks}
       </div>
+      {selectedCampaign && (
+        <CampaignDetailsModal
+          onManageDisableScrolling={onManageDisableScrolling}
+          onClose={() => setSelectedCampaignsId(null)}
+          campaign={selectedCampaign}
+          intl={intl}
+          listingFieldsConfig={config.listing.listingFields}
+          categories={categories}
+        />
+      )}
     </div>
   );
 }

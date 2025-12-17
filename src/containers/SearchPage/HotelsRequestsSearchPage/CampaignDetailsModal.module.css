@@ -1,0 +1,342 @@
+@import '../../../styles/customMediaQueries.css';
+
+/* Global styles for react-image-gallery library classes */
+:global(.image-gallery-content),
+:global(.image-gallery-slide-wrapper),
+:global(.image-gallery-swipe),
+:global(.image-gallery-slides),
+:global(.image-gallery-slide) {
+  width: 100%;
+  height: 100%;
+}
+
+:global(.image-gallery-slide-wrapper) {
+  background-color: var(--colorBlack);
+}
+
+.root {
+  position: relative;
+  width: 100%;
+  height: 340px;
+  padding: 0;
+  background-color: var(--colorBlack);
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.modalContainer {
+  width: 100%;
+}
+
+.contentWrapper {
+  width: 100%;
+  height: 100%;
+  padding: 32px;
+}
+
+.noImage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  color: var(--colorGrey500);
+  font-size: 16px;
+}
+
+.itemCentering {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.item {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.arrowHead {
+  fill: #000;
+  stroke: #000;
+}
+
+.navLeft,
+.navRight {
+  position: absolute;
+  width: 40px;
+  height: 100%;
+  border: 0;
+  padding: 0;
+  z-index: 1;
+  background: transparent;
+
+  /* center content */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    cursor: pointer;
+
+    & .navArrowWrapper {
+      background-color: rgba(255, 255, 255, 1);
+    }
+    & .arrowHead {
+      fill: var(--colorGrey300);
+      stroke: var(--colorGrey300);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.navLeft {
+  left: 0;
+  justify-content: flex-start;
+  padding-left: 8px;
+
+  & .navArrowWrapper {
+    padding-right: 2px;
+  }
+}
+
+.navRight {
+  right: 0;
+  justify-content: flex-end;
+  padding-right: 8px;
+
+  & .navArrowWrapper {
+    padding-left: 2px;
+  }
+}
+
+.navArrowWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.imageWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+}
+
+.imageIndex {
+  /* Fonts */
+  composes: h4 from global;
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 14px;
+
+  /* Position and dimensions */
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  margin: 0;
+  z-index: 2;
+
+  /* Colors */
+  color: var(--colorWhite);
+}
+
+.title {
+  color: #1e3a8a;
+  font-weight: 400;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 24px;
+  margin: 0;
+  &:hover {
+    color: #d4a574;
+  }
+}
+
+.hotelName {
+  color: #717182;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 24px;
+  margin: 0 0 16px 0;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.featureBox {
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.featureIcon {
+  fill: none;
+  width: 16px;
+  height: 16px;
+}
+
+.featureLabel {
+  font-size: 14px;
+  color: #717182;
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
+}
+
+.featureValue {
+  text-align: center;
+  color: #1e3a8a;
+  font-size: 16px;
+}
+
+.modalContainer {
+  padding: 0 !important;
+  border-bottom: none !important;
+  border-radius: 12px !important;
+  max-height: 80vh !important;
+  overflow-y: auto !important;
+  @media (--viewportMedium) {
+    padding: 0 !important;
+  }
+}
+
+.description {
+  margin-bottom: 16px;
+}
+
+.descriptionLabel {
+  font-size: 18px;
+  font-weight: var(--fontWeightMedium);
+  color: #1e3a8a;
+  margin: 0 0 8px 0;
+}
+
+.descriptionValue {
+  font-size: 16px;
+  color: #717182;
+  font-weight: 400;
+  margin: 0;
+}
+
+.deliverableIcon {
+  fill: none;
+  color: #1e3a8a;
+}
+
+.deliverablesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.deliverableBox {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border: 1px solid #1e3a8a;
+  border-radius: 14px;
+}
+
+.deliverableValue {
+  font-size: 12px;
+  color: #1e3a8a;
+  font-weight: 400;
+  line-height: 16px;
+  margin: 0;
+}
+
+.deliverablesLabel {
+  font-size: 16px;
+  color: #1e3a8a;
+  font-weight: 400;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 20px 0;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.applyButton {
+  composes: buttonPrimaryInline from global;
+  background-color: #0b2f52;
+  height: 48px;
+  flex: 1;
+  border-radius: 8px;
+  &:hover {
+    background-color: #0f4275;
+  }
+}
+
+.saveButton {
+  composes: buttonPrimaryInline from global;
+  background-color: var(--colorWhite);
+  color: #1e3a8a;
+  border-radius: 8px;
+  height: 48px;
+  border: 1px solid #e5e5e5;
+  flex: 1;
+  &:hover {
+    background-color: #f5f5f5;
+    color: #1e3a8a;
+  }
+}
+
+.heartIcon {
+  margin-right: 8px;
+}
+
+.heartIcon path {
+  color: #1e3a8a;
+  stroke: #1e3a8a;
+}
+
+.closeButton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: #fff;
+  padding: 12px;
+  border-radius: 50%;
+  &:hover {
+    background-color: #f5f5f5 !important;
+    color: #000 !important;
+  }
+}
+
+.closeButton svg {
+  fill: #717182;
+  margin-left: 0;
+}

@@ -160,17 +160,20 @@ export class ModalComponent extends Component {
       scrollLayerClassName,
       closeButtonMessage,
       containerClassName,
+      containerClassNameMerge,
       contentClassName,
       lightCloseButton,
       intl,
       isClosedClassName = css.isClosed,
       isOpen,
       usePortal,
+      closeButtonClassName,
+      hideCloseButtonMessage = false,
     } = this.props;
 
     const closeModalMessage = intl.formatMessage({ id: 'Modal.closeModal' });
     const closeMessage = closeButtonMessage || intl.formatMessage({ id: 'Modal.close' });
-    const closeButtonClasses = classNames(css.close, {
+    const closeButtonClasses = classNames(css.close, closeButtonClassName, {
       [css.closeLight]: lightCloseButton,
     });
     const closeBtn = isOpen ? (
@@ -181,7 +184,7 @@ export class ModalComponent extends Component {
           title={closeModalMessage}
           aria-expanded={isOpen}
         >
-          <span className={css.closeText}>{closeMessage}</span>
+          {!hideCloseButtonMessage && <span className={css.closeText}>{closeMessage}</span>}
           <IconClose rootClassName={css.closeIcon} ariaLabel={closeMessage} />
         </Button>
       </nav>
@@ -195,7 +198,8 @@ export class ModalComponent extends Component {
     const modalClass = isOpen ? isOpenClass : isClosedClassName;
     const classes = classNames(modalClass, className);
     const scrollLayerClasses = scrollLayerClassName || css.scrollLayer;
-    const containerClasses = containerClassName || css.container;
+    const containerClasses =
+      containerClassName || classNames(css.container, containerClassNameMerge);
     const portalRoot = this.state.portalRoot;
 
     // If you want to use Portal https://reactjs.org/docs/portals.html

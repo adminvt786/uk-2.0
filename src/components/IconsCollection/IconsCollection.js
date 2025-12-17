@@ -15,6 +15,9 @@ export const AUDIENCE = 'audience';
 export const HEART = 'heart';
 export const HEART_ICON = 'heartIcon';
 export const HEART_OUTLINE = 'heartOutline';
+export const VIDEO_ICON = 'video';
+export const PHOTO_ICON = 'photo';
+export const BAG_ICON = 'bag';
 /**
  * Icon collection for filters and UI elements.
  *
@@ -22,7 +25,7 @@ export const HEART_OUTLINE = 'heartOutline';
  * @param {Object} props
  * @param {string?} props.className add more style rules in addition to components own css.root
  * @param {string?} props.rootClassName overwrite components own css.root
- * @param {'location' | 'category' | 'deliverable' | 'hotel' | 'calendar' | 'dollar' | 'heart' | 'more'} props.type icon type
+ * @param {'location' | 'category' | 'deliverable' | 'hotel' | 'calendar' | 'dollar' | 'heart' | 'more' | 'video' | 'photo' | 'bag'} props.type icon type
  * @param {boolean?} props.filled for heart icon, whether it should be filled
  * @returns {JSX.Element} SVG icon
  */
@@ -79,8 +82,8 @@ const IconsCollection = props => {
           <path
             fill="none"
             stroke="#1A98A6"
-            stroke-width="4"
-            stroke-miterlimit="10"
+            strokeWidth="4"
+            strokeMiterlimit="10"
             d="M32 59C32 59 3 45 3 22C3 12 10 5 19 5C25 5 30 9 32 13C34 9 39 5 45 5C54 5 61 12 61 22C61 45 32 59 32 59Z"
           />
         </svg>
@@ -114,7 +117,7 @@ const IconsCollection = props => {
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="2"
+          stroke-width="2"
           strokeLinecap="round"
           strokeLinejoin="round"
           aria-hidden="true"
@@ -263,6 +266,66 @@ const IconsCollection = props => {
           <circle cx="12" cy="12" r="1.5"></circle>
           <circle cx="12" cy="5" r="1.5"></circle>
           <circle cx="12" cy="19" r="1.5"></circle>
+        </svg>
+      );
+    case VIDEO_ICON:
+      return (
+        <svg
+          className={classes}
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          {...roleInfo}
+        >
+          <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"></path>
+          <rect x="2" y="6" width="14" height="12" rx="2"></rect>
+        </svg>
+      );
+    case PHOTO_ICON:
+      return (
+        <svg
+          className={classes}
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          {...roleInfo}
+        >
+          <path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"></path>
+          <circle cx="12" cy="13" r="3"></circle>
+        </svg>
+      );
+    case BAG_ICON:
+      return (
+        <svg
+          className={classes}
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          {...roleInfo}
+        >
+          <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          <rect width="20" height="14" x="2" y="6" rx="2"></rect>
         </svg>
       );
     default:

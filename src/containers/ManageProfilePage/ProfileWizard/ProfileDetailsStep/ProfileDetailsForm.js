@@ -65,7 +65,7 @@ const ErrorMessage = props => {
 };
 
 // Media kit image upload error component
-const MediaKitUploadError = props => {
+export const MediaKitUploadError = props => {
   return props.uploadOverLimit ? (
     <p className={css.error}>
       <FormattedMessage id="ProfileDetailsForm.mediaKitUploadOverLimit" />
@@ -171,7 +171,7 @@ const MediaKitImage = props => {
 };
 
 // Field component that shows media kit images from "images" field array
-const FieldMediaKitImage = props => {
+export const FieldMediaKitImage = props => {
   const { name, intl, onRemoveImage, aspectWidth, aspectHeight, variantPrefix } = props;
   return (
     <Field name={name}>
@@ -197,7 +197,7 @@ const FieldMediaKitImage = props => {
 };
 
 // Field component for adding new media kit images
-const FieldAddMediaKitImage = props => {
+export const FieldAddMediaKitImage = props => {
   const {
     formApi,
     onImageUploadHandler,
@@ -213,7 +213,9 @@ const FieldAddMediaKitImage = props => {
         const { name, type } = input;
         const onChange = e => {
           const file = e.target.files[0];
+          console.log({file})
           if (file) {
+            console.log({file})
             formApi.change('addMediaKitImage', file);
             formApi.blur('addMediaKitImage');
             onImageUploadHandler(file);
@@ -440,7 +442,6 @@ const ProfileDetailsForm = props => {
             }
           }
         };
-     
 
         return (
           <Form className={classes} onSubmit={handleSubmit}>

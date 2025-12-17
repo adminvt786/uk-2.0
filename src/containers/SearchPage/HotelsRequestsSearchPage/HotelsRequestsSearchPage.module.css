@@ -49,6 +49,7 @@
 .labelIcon {
   width: 16px;
   height: 16px;
+  fill: none;
   /* color: #6b7280; */
 }
 
@@ -223,17 +224,24 @@
 .cardImage {
   flex-shrink: 0;
   width: 300px;
-  height: auto;
+  align-self: stretch;
+  display: block;
   overflow: hidden;
   border-radius: 12px;
+  position: relative;
 }
 
-.cardImage img {
+.cardImage img,
+.cardImage > * {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  min-height: 200px;
+  height: 100%;
   object-fit: cover;
   border-radius: 12px;
   transition: transform 0.4s ease;
+  display: block;
 }
 
 .campaignCard:hover .cardImage img {
@@ -317,15 +325,20 @@
 }
 
 .cardTitle {
-  font-size: 20px;
-  font-weight: 600;
   color: #1e3a8a;
+  font-weight: 400;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 24px;
   margin: 0;
+  &:hover {
+    color: #d4a574;
+  }
 }
 
 .cardSubtitle {
-  font-size: 16px;
-  color: #6b7280;
+  font-size: 0.875rem;
+  color: #717182;
   margin: 0 0 12px 0;
 }
 
@@ -348,6 +361,7 @@
   width: 16px;
   height: 16px;
   color: #6b7280;
+  fill: none;
 }
 
 .deliverables {
@@ -373,7 +387,7 @@
 .deliverableTag {
   background-color: #f3f4f6;
   color: #374151;
-  padding: 6px 12px;
+  padding: 2px 8px;
   border-radius: 6px;
   font-size: 13px;
   font-weight: 400;
@@ -388,9 +402,13 @@
 
 .applyButton {
   composes: buttonPrimaryInline from global;
-  height: 40px;
+  background-color: #0b2f52;
+  height: 32px;
   width: 100px;
   padding: 0;
+  &:hover {
+    background-color: #0f4275;
+  }
 }
 
 .categoryTag {
@@ -407,7 +425,6 @@
 @media (max-width: 1024px) {
   .cardImage {
     width: 280px;
-    height: 240px;
   }
 
   .cardContent {
@@ -454,7 +471,227 @@
 
   .categoryTag {
     margin-left: 0;
-    width: 100%;
-    text-align: right;
   }
+}
+.locationFilterForm {
+  flex: 1;
+}
+
+.input {
+  flex: 1;
+}
+
+.locationAutocompleteInput {
+  background-color: #f9fafb;
+  border: none;
+  font-size: 14px;
+  /* Safari bugfix: without this Safari will print placeholder to a wrong place */
+  &::-webkit-input-placeholder {
+    line-height: normal;
+  }
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  &:hover {
+    background-color: #f9fafb;
+    border: none;
+    box-shadow: none;
+  }
+}
+
+.locationAutocompleteInputIcon {
+  display: none;
+}
+
+.predictionsRoot {
+  position: absolute;
+  width: 100%;
+  top: 36px;
+  left: 0;
+  background-color: var(--marketplaceColor);
+  border-bottom-left-radius: var(--borderRadius);
+  border-bottom-right-radius: var(--borderRadius);
+  box-shadow: var(--boxShadowPopup);
+  z-index: calc(var(--zIndexPopup) + 1);
+
+  @media (--viewportMedium) {
+    top: 40px;
+  }
+}
+
+.validLocation {
+  /* border-bottom-color: var(--colorSuccess); */
+}
+
+.locationAutocompleteInputLabel {
+  margin-bottom: 8px;
+}
+
+.locationAutocompleteInputLabelText {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.compensationFilter {
+  margin-top: 8px;
+  flex: 1;
+}
+
+.compensationFilter {
+  flex: 1 !important;
+  width: 100% !important;
+  display: flex !important;
+}
+
+.compensationFilterOutsideClickHandler {
+  display: inline-flex;
+  width: 100%;
+}
+
+.compensationFilter input {
+  width: 100%;
+}
+
+.compensationFilter button {
+  /* //reuse dropdownButton styles */
+  width: 100%;
+  padding: 14px 16px;
+  background-color: #f9fafb;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 14px;
+  &:hover {
+    background-color: #f3f4f6;
+    box-shadow: none;
+  }
+}
+
+.compensationFilterWrapper {
+  flex: 1;
+}
+
+.featureIcon {
+  width: 16px;
+  height: 16px;
+  color: #6b7280;
+  fill: none;
+}
+
+.selectedFilters {
+  padding: 0 24px 24px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.selectedFilter {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #374151;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.selectedFilterCloseIcon {
+  width: 8px;
+  height: 8px;
+  stroke-width: 0.5px;
+}
+
+/* Three dots menu */
+.menuWrapper {
+  position: relative;
+}
+
+.menu {
+  position: relative;
+}
+
+.menuLabel {
+  cursor: pointer;
+}
+
+.menuLabelOpen {
+  /* Styles when menu is open */
+}
+
+.threeDotsWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  border: 1px solid var(--colorGrey100);
+  height: 32px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--colorGrey100);
+  }
+}
+
+.threeDotsIcon {
+  color: var(--colorGrey500);
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--colorGrey700);
+  }
+}
+
+.menuContent {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: var(--zIndexPopup);
+  min-width: 200px !important;
+  background-color: var(--colorWhite);
+  border-radius: var(--borderRadiusMedium);
+  box-shadow: var(--boxShadowPopup);
+  overflow: hidden;
+}
+
+.menuItem {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: none;
+  text-align: left;
+  font-size: 14px;
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorGrey700);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--colorGrey50);
+  }
+}
+
+.menuItemDisabled {
+  color: var(--colorGrey300);
+  cursor: not-allowed;
+
+  &:hover {
+    background-color: transparent;
+  }
+}
+
+.cardFooterContent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }

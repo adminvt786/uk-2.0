@@ -372,7 +372,6 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
         'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
         ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
         ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
-        'limit.images': 1,
       })
     ),
   ])
@@ -389,4 +388,4 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
 //selectors
 export const requestListingSelector = (state, listingId) => {
   return listingId ? getOwnListingsById(state, [listingId])[0] : null;
-}
+};

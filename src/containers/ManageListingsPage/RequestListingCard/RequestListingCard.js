@@ -25,7 +25,7 @@ import { formatMoney } from '../../../util/currency';
 /**
  * Three dots menu icon
  */
-const ThreeDotsIcon = ({ className }) => (
+export const ThreeDotsIcon = ({ className }) => (
   <svg
     className={className}
     width="20"
