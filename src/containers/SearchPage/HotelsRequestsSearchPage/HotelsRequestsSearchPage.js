@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
   FavoriteButton,
@@ -8,7 +8,6 @@ import {
   MenuContent,
   MenuItem,
   MenuLabel,
-  Modal,
   PaginationLinks,
   PrimaryButton,
   ResponsiveImage,
@@ -21,12 +20,15 @@ import {
   ThreeDotsIcon,
 } from '../../ManageListingsPage/RequestListingCard/RequestListingCard';
 import css from './HotelsRequestsSearchPage.module.css';
-import { createResourceLocatorString } from '../../../util/routes';
 import CampaignDetailsModal from './CampaignDetailsModal';
 import FilterForm from './FilterForm';
 import { FormattedMessage } from 'react-intl';
-import moment from 'moment';
 import { formatDateShort, isSameMonthYear } from '../../../util/dates';
+import {
+  LISTING_STATE_PENDING_APPROVAL,
+  LISTING_STATE_PUBLISHED,
+  LISTING_STATE_CLOSED,
+} from '../../../util/types';
 
 const getDeliverableTypeLabel = (deliverableTypeOptions, deliverableType) => {
   return (
@@ -44,24 +46,23 @@ export const CampaignCard = ({
   onClick,
   onEdit,
   showMenu = true,
+  toggleOpenCloseListing,
+  toggleOpenCloseInProgress,
 }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
-  const { title, description, publicData, price, state } = campaign.attributes || {};
+  const { title, publicData, price, state } = campaign.attributes || {};
   const [isCampaignOpen, setIsCampaignOpen] = useState(false);
   const {
     categoryLevel1,
     location,
     startDate,
     endDate,
-    collaboration_exchange_type,
-    creatror_requirements,
-    travel_compensated,
     deliverable_type = [],
     hotel_name,
   } = publicData;
   const category = categories.find(elm => elm.id === categoryLevel1)?.name || '';
-  const isClosed = collaboration_exchange_type === 'closed';
-  const isPublished = state === 'published';
+  const isClosed = state === LISTING_STATE_CLOSED;
+  const isPublished = state === LISTING_STATE_PUBLISHED;
+  const isPendingApproval = state === LISTING_STATE_PENDING_APPROVAL;
   return (
     <div className={css.campaignCard} onClick={onClick}>
       <div className={css.cardImage}>
@@ -78,6 +79,11 @@ export const CampaignCard = ({
           listingAuthor={campaign.author}
           isVisible={campaign.type !== 'ownListing'}
         />
+        {isPendingApproval && (
+          <div className={css.pendingApprovalBadge}>
+            <FormattedMessage id="RequestListingCard.pendingApproval" />
+          </div>
+        )}
         <h3 className={css.cardTitle}>{title}</h3>
         <p className={css.cardSubtitle}>{hotel_name}</p>
         <div className={css.cardDetails}>
@@ -118,7 +124,7 @@ export const CampaignCard = ({
                 rootClassName={css.applyButton}
                 onClick={() => onApply(campaign.id)}
               >
-                Apply
+                <FormattedMessage id="SearchRequestCard.applyButton" />
               </PrimaryButton>
             )}
             {showMenu && (
@@ -139,19 +145,57 @@ export const CampaignCard = ({
                     </div>
                   </MenuLabel>
                   <MenuContent rootClassName={css.menuContent}>
+                    {/* Show Open option only when closed */}
+                    {isClosed && !!toggleOpenCloseListing && (
+                      <MenuItem key="open-listing">
+                        <InlineTextButton
+                          inProgress={toggleOpenCloseInProgress}
+                          disabled={toggleOpenCloseInProgress}
+                          rootClassName={css.menuItem}
+                          onClick={e => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggleOpenCloseListing(true);
+                          }}
+                        >
+                          <FormattedMessage id="RequestListingCard.openListing" />
+                        </InlineTextButton>
+                      </MenuItem>
+                    )}
+
+                    {/* Show Close option when published or pending approval */}
+                    {isPublished && !!toggleOpenCloseListing && (
+                      <MenuItem key="close-listing">
+                        <InlineTextButton
+                          rootClassName={css.menuItem}
+                          onClick={e => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggleOpenCloseListing(false);
+                          }}
+                          inProgress={toggleOpenCloseInProgress}
+                          disabled={toggleOpenCloseInProgress}
+                        >
+                          <FormattedMessage id="RequestListingCard.closeListing" />
+                        </InlineTextButton>
+                      </MenuItem>
+                    )}
+
                     {/* Edit option is always available */}
-                    <MenuItem key="edit-campaign">
-                      <InlineTextButton
-                        rootClassName={css.menuItem}
-                        onClick={e => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          onEdit();
-                        }}
-                      >
-                        <FormattedMessage id="RequestListingCard.editListing" />
-                      </InlineTextButton>
-                    </MenuItem>
+                    {!!onEdit && (
+                      <MenuItem key="edit-campaign">
+                        <InlineTextButton
+                          rootClassName={css.menuItem}
+                          onClick={e => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            onEdit();
+                          }}
+                        >
+                          <FormattedMessage id="RequestListingCard.editListing" />
+                        </InlineTextButton>
+                      </MenuItem>
+                    )}
                   </MenuContent>
                 </Menu>
               </div>
