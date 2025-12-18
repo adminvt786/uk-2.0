@@ -40,8 +40,8 @@ const getMuxUploadUrlWatermark = async (req, res) => {
       cors_origin: marketplaceUrl,
       new_asset_settings: {
         meta: {
-          title: 'child',
-          external_id: txId,
+          title: txId ? 'child' : `Listing profile media kit - ${req.tokenUserId}`,
+          external_id: txId ? txId : req.tokenUserId,
         },
         playback_policy: ['public'],
         inputs: [
