@@ -18,6 +18,7 @@ export const HEART_OUTLINE = 'heartOutline';
 export const VIDEO_ICON = 'video';
 export const PHOTO_ICON = 'photo';
 export const BAG_ICON = 'bag';
+export const PLAY_ICON = 'play';
 /**
  * Icon collection for filters and UI elements.
  *
@@ -38,6 +39,28 @@ const IconsCollection = props => {
   };
 
   switch (type) {
+    case PLAY_ICON:
+      return (
+        <svg
+          width="80px"
+          height="80px"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+          {...roleInfo}
+        >
+          <circle cx="12" cy="12" r="11" fill="grey" strokeWidth="1.5" />
+          <path
+            d="M9 17V7L17 12L9 17Z"
+            fill="white"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+
     case HEART_OUTLINE:
       return (
         <svg

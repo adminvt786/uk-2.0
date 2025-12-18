@@ -1609,5 +1609,8 @@
   "FilterForm.hotelTypeLabel": "Hotel type",
   "FilterForm.hotelTypePlaceholder": "All types",
   "FilterForm.compensationLabel": "Compensation",
-  "FilterForm.compensationPlaceholder": "All compensation"
+  "FilterForm.compensationPlaceholder": "All compensation",
+  "EditListingPhotosForm.addVideo": "+ Add a video...",
+  "EditListingPhotosForm.videoExtensions": ".mp4 or .mov",
+  "EditListingPhotosForm.videoUploadStart": "Uploading start"
 }

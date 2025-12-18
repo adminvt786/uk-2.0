@@ -162,7 +162,7 @@ export const ListingCard = props => {
 
   const followingLabel = config.listing.listingFields
     .find(elm => elm.key === 'size_total_following')
-    .enumOptions.find(elm => elm.option === size_total_following).label;
+    ?.enumOptions?.find(elm => elm.option === size_total_following)?.label;
 
   const isVisible =
     (currentUserType === 'creator' && listingType === 'hotels') ||

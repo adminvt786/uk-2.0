@@ -23,6 +23,7 @@ import {
   FieldTextInput,
   Form,
   H4,
+  IconsCollection,
   IconSpinner,
   ImageFromFile,
   ResponsiveImage,
@@ -36,9 +37,14 @@ import {
   FieldSelectCategory,
 } from '../../../EditListingPage/EditListingWizard/EditListingDetailsPanel/EditListingDetailsForm';
 import ProfileWizardFooter from '../ProfileWizardFooter/ProfileWizardFooter';
+import * as UpChunk from '@mux/upchunk';
+import { getMuxAsset, getMuxUploadUrlWatermark } from '../../../../util/api';
+import { PLAY_ICON } from '../../../../components/IconsCollection/IconsCollection';
+import PlayVideoModal from './PlayVideoModal';
 
 const ACCEPT_IMAGES = 'image/*';
 const UPLOAD_CHANGE_DELAY = 2000; // Show spinner so that browser has time to load img srcset
+const ACCEPT_VIDEOS = 'video/*';
 
 /**
  * Show various error messages
@@ -213,9 +219,9 @@ export const FieldAddMediaKitImage = props => {
         const { name, type } = input;
         const onChange = e => {
           const file = e.target.files[0];
-          console.log({file})
+          console.log({ file });
           if (file) {
-            console.log({file})
+            console.log({ file });
             formApi.change('addMediaKitImage', file);
             formApi.blur('addMediaKitImage');
             onImageUploadHandler(file);
@@ -226,6 +232,38 @@ export const FieldAddMediaKitImage = props => {
           <div className={css.addMediaKitImageWrapper}>
             <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
               {fieldDisabled || disabled ? null : (
+                <input {...inputProps} className={css.addMediaKitImageInput} />
+              )}
+              <label htmlFor={name} className={css.addMediaKitImage}>
+                {label}
+              </label>
+            </AspectRatioWrapper>
+          </div>
+        );
+      }}
+    </Field>
+  );
+};
+
+// Field component that uses file-input to allow user to select videos.
+export const FieldAddVideo = props => {
+  const { formApi, onVideoUploadHandler, aspectWidth = 1, aspectHeight = 1, ...rest } = props;
+
+  return (
+    <Field form={null} {...rest}>
+      {fieldprops => {
+        const { accept, input, label, disabled: fieldDisabled } = fieldprops;
+        const { name, type } = input;
+        const onChange = e => {
+          const file = e.target.files[0];
+          onVideoUploadHandler(file);
+        };
+        const inputProps = { accept, id: name, name, onChange, type };
+
+        return (
+          <div className={css.addMediaKitImageWrapper}>
+            <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
+              {fieldDisabled ? null : (
                 <input {...inputProps} className={css.addMediaKitImageInput} />
               )}
               <label htmlFor={name} className={css.addMediaKitImage}>
@@ -266,6 +304,9 @@ export const FieldAddMediaKitImage = props => {
 const ProfileDetailsForm = props => {
   const [uploadDelay, setUploadDelay] = useState(false);
   const [allCategoriesChosen, setAllCategoriesChosen] = useState(false);
+  const [videoUploadRequested, setVideoUploadRequested] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [openVideoModal, setOpenVideoModal] = useState(false);
 
   const { profileImage, uploadInProgress, currentUser } = props;
 
@@ -319,6 +360,7 @@ const ProfileDetailsForm = props => {
           mediaKitUploadInProgress,
           mediaKitUploadError,
           errors,
+          listingImageConfig,
         } = formRenderProps;
 
         const intl = useIntl();
@@ -326,6 +368,7 @@ const ProfileDetailsForm = props => {
         const filteredListingFieldsConfig = listingFieldsConfig.filter(elm => true);
         const hasCategories = selectableCategories && selectableCategories.length > 0;
         const showCategories = listingType && hasCategories;
+        const { aspectWidth = 1, aspectHeight = 1, variantPrefix } = listingImageConfig;
 
         const displayNameRequiredMessage = intl.formatMessage({
           id: 'ProfileDetailsForm.displayNameRequired',
@@ -410,7 +453,12 @@ const ProfileDetailsForm = props => {
         const submitReady = (updated && pristine) || ready;
         const submitInProgress = updateInProgress;
         const submitDisabled =
-          invalid || disabled || submitInProgress || uploadInProgress || mediaKitUploadInProgress;
+          invalid ||
+          disabled ||
+          submitInProgress ||
+          uploadInProgress ||
+          mediaKitUploadInProgress ||
+          videoUploadRequested;
 
         const onImageUploadHandler = async file => {
           if (file && onMediaKitImageUpload) {
@@ -441,6 +489,71 @@ const ProfileDetailsForm = props => {
               form.change('images', newImages.filter(img => img.id !== tempId));
             }
           }
+        };
+
+        const onVideoUploadHandler = async file => {
+          try {
+            setVideoUploadRequested(true);
+            if (!file) {
+              throw new Error('File is missing');
+            }
+
+            const uploadData = await getMuxUploadUrlWatermark();
+
+            const upload = UpChunk.createUpload({
+              endpoint: uploadData.url,
+              file,
+              chunkSize: 5120,
+            });
+
+            // Subscribe to events
+            upload.on('error', error => {
+              setStatusMessage(error.detail);
+            });
+
+            upload.on('progress', progress => {
+              setProgress(progress.detail);
+            });
+
+            upload.on('success', async () => {
+              let res = await getMuxAsset({ uploadId: uploadData.id });
+
+              if (!res?.duration) {
+                async function waitForAssetReady() {
+                  const assetRes = await getMuxAsset({ uploadId: uploadData.id });
+
+                  if (assetRes.status === 'preparing') {
+                    // Still preparing, wait and check again after a delay
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    return waitForAssetReady(); // Recursive call
+                  } else {
+                    return assetRes; // Asset is ready, return the response
+                  }
+                }
+
+                res = await waitForAssetReady(); // Wait for the asset to be ready
+              }
+
+              setVideoUploadRequested(false);
+              setProgress(0);
+              const videos = values?.videos || [];
+              videos.push({
+                asset_id: res.asset_id,
+                playback_id: res.playback_id,
+                thumbnailTime: 1,
+              });
+              form.change('videos', [...videos]);
+            });
+          } catch (error) {
+            console.log('error', error);
+            setVideoUploadRequested(false);
+          }
+        };
+
+        const onRemoveVideo = index => {
+          const videos = values?.videos || [];
+          videos.splice(index, 1);
+          form.change('videos', [...videos]);
         };
 
         return (
@@ -612,6 +725,62 @@ const ProfileDetailsForm = props => {
               <p className={css.mediaKitTip}>
                 <FormattedMessage id="ProfileDetailsForm.mediaKitTip" />
               </p>
+            </div>
+
+            {/* Video */}
+            <div className={css.mediaKitImagesFieldArray}>
+              {Array.isArray(values.videos)
+                ? values.videos.map((video, index) => {
+                    const { playback_id, asset_id } = video;
+                    console.log('img', `https://image.mux.com/${playback_id}/thumbnail.png`, video);
+                    return (
+                      <div key={asset_id} className={css.videoElement}>
+                        <img src={`https://image.mux.com/${playback_id}/thumbnail.png`} />
+                        <div className={css.actionButtonWrapper}>
+                          <RemoveImageButton onClick={() => onRemoveVideo(index)} />
+                        </div>
+                        <span
+                          className={css.playButton}
+                          onClick={() => setOpenVideoModal(playback_id)}
+                        >
+                          <IconsCollection type={PLAY_ICON} />
+                        </span>
+                      </div>
+                    );
+                  })
+                : null}
+
+              <FieldAddVideo
+                id="addVideo"
+                name="addVideo"
+                accept={ACCEPT_VIDEOS}
+                label={
+                  <span className={css.chooseImageText}>
+                    <span className={css.chooseImage}>
+                      <FormattedMessage id="EditListingPhotosForm.addVideo" />
+                    </span>
+                    <span className={css.imageTypes}>
+                      <FormattedMessage id="EditListingPhotosForm.videoExtensions" />
+                    </span>
+                    {videoUploadRequested && progress > 0 ? (
+                      <span className={css.imageTypes}>{progress.toFixed(2)}%</span>
+                    ) : videoUploadRequested ? (
+                      <FormattedMessage id="EditListingPhotosForm.videoUploadStart" />
+                    ) : null}
+                  </span>
+                }
+                type="file"
+                disabled={videoUploadRequested}
+                formApi={form}
+                onVideoUploadHandler={onVideoUploadHandler}
+                aspectWidth={aspectWidth}
+                aspectHeight={aspectHeight}
+              />
+
+              <PlayVideoModal
+                openVideoModal={openVideoModal}
+                setOpenVideoModal={setOpenVideoModal}
+              />
             </div>
 
             <FieldLocationAutocompleteInput

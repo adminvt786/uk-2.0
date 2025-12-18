@@ -121,6 +121,7 @@ const ProfileDetailsPanel = props => {
   const listingFields = config.listing.listingFields;
   const listingCategories = config.categoryConfiguration.categories;
   const categoryKey = config.categoryConfiguration.key;
+  const listingImageConfig = config.layout.listingImage;
 
   // Combine listing images with uploaded images from Redux
   // This ensures newly uploaded images appear in the form
@@ -241,13 +242,15 @@ const ProfileDetailsPanel = props => {
         mediaKitUploadInProgress={mediaKitImageUploadInProgress}
         mediaKitUploadError={mediaKitImageUploadError}
         listingFieldsConfig={listingFields.filter(
-          elm => !['whats_included', 'delivery_method', 'turnaround_time', 'add_ons'].includes(elm.key)
+          elm =>
+            !['whats_included', 'delivery_method', 'turnaround_time', 'add_ons'].includes(elm.key)
         )}
         selectableCategories={listingCategories}
         categoryPrefix={categoryKey}
         pickSelectedCategories={values =>
           pickCategoryFields(values, categoryKey, 1, listingCategories)
         }
+        listingImageConfig={listingImageConfig}
       />
     </div>
   );

@@ -46,7 +46,7 @@ const getMuxUploadUrlWatermark = async (req, res) => {
         playback_policy: ['public'],
         inputs: [
           {
-            url: marketplaceUrl.includes('staging')
+            url: !marketplaceUrl.includes('staging')
               ? 'https://muxed.s3.amazonaws.com/example-watermark.png'
               : `${marketplaceUrl}/static/images/watermark.jpg`,
             overlay_settings: {
