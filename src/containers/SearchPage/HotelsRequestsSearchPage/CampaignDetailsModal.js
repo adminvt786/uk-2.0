@@ -7,6 +7,7 @@ import {
   Modal,
   IconsCollection,
   Button,
+  FavoriteButton,
 } from '../../../components';
 import { useIntl } from '../../../util/reactIntl';
 import '../../ListingPage/ImageCarousel/image-gallery.css';
@@ -14,6 +15,7 @@ import css from './CampaignDetailsModal.module.css';
 import { formatDate } from '../../ManageListingsPage/RequestListingCard/RequestListingCard';
 import { formatMoney } from '../../../util/currency';
 import { formatDateShort, isSameMonthYear } from '../../../util/dates';
+import { HEART_ICON, HEART_OUTLINE } from '../../../components/IconsCollection/IconsCollection';
 
 const IMAGE_GALLERY_OPTIONS = {
   showPlayButton: false,
@@ -188,14 +190,13 @@ const CampaignDetailsModal = props => {
     option: category.id,
   }));
   const { address } = location || {};
-
   return (
     <Modal
       onManageDisableScrolling={onManageDisableScrolling}
       isOpen
       onClose={onClose}
       hideCloseButtonMessage={true}
-      title="Campaign Details"
+      title={intl.formatMessage({ id: 'CampaignDetailsModal.title' })}
       closeButtonClassName={css.closeButton}
       containerClassNameMerge={css.modalContainer}
       contentClassName={css.content}
@@ -208,14 +209,14 @@ const CampaignDetailsModal = props => {
           <div className={css.featureBox}>
             <label className={css.featureLabel}>
               <IconsCollection type="location" className={css.featureIcon} />
-              <span>Location</span>
+              <span>{intl.formatMessage({ id: 'CampaignDetailsModal.locationLabel' })}</span>
             </label>
             <span className={css.featureValue}>{address}</span>
           </div>
           <div className={css.featureBox}>
             <label className={css.featureLabel}>
               <IconsCollection type="calendar" className={css.featureIcon} />
-              <span>Date</span>
+              <span>{intl.formatMessage({ id: 'CampaignDetailsModal.dateLabel' })}</span>
             </label>
             <span className={css.featureValue}>
               {isSameMonthYear(startDate, endDate)
@@ -226,28 +227,34 @@ const CampaignDetailsModal = props => {
           <div className={css.featureBox}>
             <label className={css.featureLabel}>
               <IconsCollection type="dollar" className={css.featureIcon} />
-              <span>Compensation</span>
+              <span>{intl.formatMessage({ id: 'CampaignDetailsModal.compensationLabel' })}</span>
             </label>
             <span className={css.featureValue}>{formatMoney(intl, price)}</span>
           </div>
           <div className={css.featureBox}>
             <label className={css.featureLabel}>
               <IconsCollection type="bag" className={css.featureIcon} />
-              <span>Type</span>
+              <span>{intl.formatMessage({ id: 'CampaignDetailsModal.hotelTypeLabel' })}</span>
             </label>
             <span className={css.featureValue}>{getLabel(hotelTypeOptions, hotel_type)}</span>
           </div>
         </div>
         <div className={css.description}>
-          <h4 className={css.descriptionLabel}>Campaign Overview</h4>
+          <h4 className={css.descriptionLabel}>
+            {intl.formatMessage({ id: 'CampaignDetailsModal.campaignOverviewLabel' })}
+          </h4>
           <p className={css.descriptionValue}>{description}</p>
         </div>
         <div className={css.description}>
-          <h4 className={css.descriptionLabel}>Campaign Goals</h4>
+          <h4 className={css.descriptionLabel}>
+            {intl.formatMessage({ id: 'CampaignDetailsModal.campaignGoalsLabel' })}
+          </h4>
           <p className={css.descriptionValue}>{creatror_requirements}</p>
         </div>
         <div className={css.deliverables}>
-          <h4 className={css.deliverablesLabel}>Deliverables</h4>
+          <h4 className={css.deliverablesLabel}>
+            {intl.formatMessage({ id: 'CampaignDetailsModal.deliverablesLabel' })}
+          </h4>
           <div className={css.deliverablesList}>
             {deliverable_type.map(deliverable => (
               <div className={css.deliverableBox}>
@@ -265,7 +272,9 @@ const CampaignDetailsModal = props => {
           </div>
         </div>
         <div className={css.description}>
-          <h4 className={css.descriptionLabel}>Campaign Vibe</h4>
+          <h4 className={css.descriptionLabel}>
+            {intl.formatMessage({ id: 'CampaignDetailsModal.campaignVibeLabel' })}
+          </h4>
           <p className={css.descriptionValue}>{getLabel(categoriesOptions, categoryLevel1)}</p>
         </div>
         <div className={css.description}>
@@ -282,12 +291,34 @@ const CampaignDetailsModal = props => {
         {showButtons ? (
           <div className={css.buttons}>
             <Button rootClassName={css.applyButton} onClick={() => onApply(campaign.id)}>
-              Apply Now
+              {intl.formatMessage({ id: 'CampaignDetailsModal.applyNowButton' })}
             </Button>
-            <Button rootClassName={css.saveButton}>
-              <IconsCollection type="heart" className={css.heartIcon} />
-              Save for Later
-            </Button>
+            <FavoriteButton
+              listingId={campaign.id}
+              listingAuthor={campaign.author}
+              isVisible={campaign.type !== 'ownListing'}
+              renderCustomButton={({ onClick, isFavorite, profileUpdateInProgress }) => {
+                return (
+                  <Button
+                    rootClassName={classNames(css.saveButton, {
+                      [css.saveButtonInProgress]: profileUpdateInProgress,
+                    })}
+                    disabled={profileUpdateInProgress}
+                    inProgress={profileUpdateInProgress}
+                    onClick={onClick}
+                  >
+                    <IconsCollection
+                      type={isFavorite ? HEART_ICON : HEART_OUTLINE}
+                      className={css.heartIcon}
+                      style={{
+                        fill: 'var(--marketplaceColor)',
+                      }}
+                    />
+                    {intl.formatMessage({ id: 'CampaignDetailsModal.saveForLaterButton' })}
+                  </Button>
+                );
+              }}
+            />
           </div>
         ) : null}
       </div>

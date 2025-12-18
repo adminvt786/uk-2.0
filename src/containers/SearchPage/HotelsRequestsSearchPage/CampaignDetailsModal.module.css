@@ -307,6 +307,20 @@
   }
 }
 
+.saveButtonInProgress {
+  composes: buttonPrimaryInline from global;
+  padding: 8px 16px !important;
+  background-color: var(--marketplaceColor);
+  color: var(--colorWhite);
+  flex: 1;
+  display: block;
+  border: 1px solid var(--marketplaceColor);
+  &:hover {
+    background-color: var(--marketplaceColor);
+    color: var(--colorWhite);
+  }
+}
+
 .heartIcon {
   margin-right: 8px;
 }

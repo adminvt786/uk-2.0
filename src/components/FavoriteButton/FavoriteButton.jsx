@@ -20,7 +20,8 @@ const FavoriteButton = props => {
   const routeConfiguration = useRouteConfiguration();
   const profileUpdateInProgress = useSelector(profileUpdateInProgressSelector);
 
-  const { rootClassName, className, iconClassName, listingId, isVisible, listingAuthor } = props;
+  const { rootClassName, className, iconClassName, listingId, isVisible, listingAuthor, renderCustomButton } = props;
+
   const currentListingId = listingId?.uuid ?? listingId;
   const favorites = currentUser?.attributes.profile.privateData.favorites ?? [];
   const [isFavorite, setIsFavorite] = useState(favorites.includes(currentListingId));
@@ -72,6 +73,17 @@ const FavoriteButton = props => {
 
   if (isComponentDisabled) {
     return null;
+  }
+  if (typeof renderCustomButton === 'function') {
+    return renderCustomButton({
+      onClick: handleClick,
+      isFavorite,
+      isComponentDisabled,
+      profileUpdateInProgress,
+      currentListingId,
+      currentUser,
+      isAuthenticated,
+    });
   }
 
   return (

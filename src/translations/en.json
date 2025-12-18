@@ -1589,6 +1589,25 @@
   "NoAccessPage.viewListings.hotel.content": "This content is only available to hotel partners with a Premium Subscription",
   "NoAccessPage.viewListings.creator.schemaTitle": "Upgrade Required to view Hotel Campaigns",
   "NoAccessPage.viewListings.creator.heading": "Upgrade Required to view Hotel Campaigns",
-  "NoAccessPage.viewListings.creator.content": "This content is only available to creators with a Premium Subscription"
-
+  "NoAccessPage.viewListings.creator.content": "This content is only available to creators with a Premium Subscription",
+  "RequestListingCard.pendingApproval": "Pending approval",
+  "CampaignDetailsModal.title": "Campaign Details",
+  "CampaignDetailsModal.locationLabel": "Location",
+  "CampaignDetailsModal.dateLabel": "Date",
+  "CampaignDetailsModal.compensationLabel": "Compensation",
+  "CampaignDetailsModal.hotelTypeLabel": "Hotel type",
+  "CampaignDetailsModal.campaignOverviewLabel": "Campaign Overview",
+  "CampaignDetailsModal.campaignGoalsLabel": "Campaign Goals",
+  "CampaignDetailsModal.deliverablesLabel": "Deliverables",
+  "CampaignDetailsModal.campaignVibeLabel": "Campaign vibe",
+  "CampaignDetailsModal.saveForLaterButton": "Save for later",
+  "CampaignDetailsModal.applyNowButton": "Apply now",
+  "FilterForm.categoryLabel": "Category",
+  "FilterForm.categoryPlaceholder": "All categories",
+  "FilterForm.deliverableTypeLabel": "Deliverable type",
+  "FilterForm.deliverableTypePlaceholder": "All types",
+  "FilterForm.hotelTypeLabel": "Hotel type",
+  "FilterForm.hotelTypePlaceholder": "All types",
+  "FilterForm.compensationLabel": "Compensation",
+  "FilterForm.compensationPlaceholder": "All compensation"
 }

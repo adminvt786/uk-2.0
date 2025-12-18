@@ -621,6 +621,7 @@
 
 .menuLabel {
   cursor: pointer;
+  padding: 0;
 }
 
 .menuLabelOpen {
@@ -694,4 +695,15 @@
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.pendingApprovalBadge {
+  background-color: #fef3c7;
+  color: #92400e;
+  padding: 2px 12px;
+  width: fit-content;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 12px;
 }

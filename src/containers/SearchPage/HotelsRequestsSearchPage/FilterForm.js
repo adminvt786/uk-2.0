@@ -13,10 +13,9 @@ import {
   autocompleteSearchRequired,
   composeValidators,
 } from '../../../util/validators';
-import FieldSelectIntegerRange from '../IntegerRangeFilter/FieldSelectIntegerRange';
-import IntegerRangeFilter from '../IntegerRangeFilter/IntegerRangeFilter';
 import PriceFilter from '../PriceFilter/PriceFilter';
 import { isOriginInUse } from '../../../util/search';
+import { formatCurrencyMajorUnit } from '../../../util/currency';
 
 const FilterDropdown = ({ label, placeholder, options, value, onChange, icon }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -141,7 +140,6 @@ const FilterForm = props => {
     : null;
 
   const selectedAddress = validQueryParams.address ? validQueryParams.address : null;
-  console.log({ validQueryParams });
   return (
     <div className={classNames(css.filterForm, className)}>
       <div className={classNames(css.filterContainer)}>
@@ -175,8 +173,8 @@ const FilterForm = props => {
           }}
         />
         <FilterDropdown
-          label="Category"
-          placeholder="All categories"
+          label={intl.formatMessage({ id: 'FilterForm.categoryLabel' })}
+          placeholder={intl.formatMessage({ id: 'FilterForm.categoryPlaceholder' })}
           options={categories.map(cat => ({ option: cat.id, label: cat.name }))}
           value={
             validQueryParams.pub_categoryLevel1
@@ -192,8 +190,8 @@ const FilterForm = props => {
           icon="category"
         />
         <FilterDropdown
-          label="Deliverable Type"
-          placeholder="All types"
+          label={intl.formatMessage({ id: 'FilterForm.deliverableTypeLabel' })}
+          placeholder={intl.formatMessage({ id: 'FilterForm.deliverableTypePlaceholder' })}
           options={deliverableTypeOptions}
           value={
             validQueryParams.pub_deliverable_type
@@ -209,8 +207,8 @@ const FilterForm = props => {
           icon="deliverable"
         />
         <FilterDropdown
-          label="Hotel Type"
-          placeholder="All types"
+          label={intl.formatMessage({ id: 'FilterForm.hotelTypeLabel' })}
+          placeholder={intl.formatMessage({ id: 'FilterForm.hotelTypePlaceholder' })}
           options={hotelTypeOptions}
           value={
             validQueryParams.pub_hotel_type
@@ -228,7 +226,7 @@ const FilterForm = props => {
         <div className={css.compensationFilterWrapper}>
           <label className={css.filterLabel}>
             <IconsCollection type="dollar" className={css.labelIcon} />
-            Compensation
+            {intl.formatMessage({ id: 'FilterForm.compensationLabel' })}
           </label>
           <PriceFilter
             id="price"
@@ -237,7 +235,19 @@ const FilterForm = props => {
             name={'price'}
             label={
               <span className={css.filterLabel}>
-                {selectedPrice ? `${selectedPrice} USD` : 'Compensation'}
+                {selectedPrice
+                  ? formatCurrencyMajorUnit(
+                      intl,
+                      appConfig.marketplaceCurrency,
+                      selectedPrice.split(' - ')[0]
+                    ) +
+                    ' - ' +
+                    formatCurrencyMajorUnit(
+                      intl,
+                      appConfig.marketplaceCurrency,
+                      selectedPrice.split(' - ')[1]
+                    )
+                  : intl.formatMessage({ id: 'FilterForm.compensationPlaceholder' })}
               </span>
             }
             queryParamNames={['price']}
@@ -250,7 +260,7 @@ const FilterForm = props => {
             min={0}
             max={10000}
             step={100}
-            marketplaceCurrency="USD"
+            marketplaceCurrency={appConfig.marketplaceCurrency}
           />
         </div>
       </div>

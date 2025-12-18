@@ -162,6 +162,14 @@ export const ManageListingsPageComponent = props => {
     setListingMenuOpen(listing);
   };
 
+  const onToggleOpenCloseListing = (listingId, isOpen) => {
+    if (isOpen) {
+      handleOpenListing(listingId);
+    } else {
+      onCloseListing(listingId);
+    }
+  };
+
   const handleOpenListing = listingId => {
     const hasPostingRights = hasPermissionToPostListings(currentUser);
 
@@ -230,6 +238,8 @@ export const ManageListingsPageComponent = props => {
           <div className={css.listingCards}>
             {listings.map(l => (
               <CampaignCard
+                toggleOpenCloseListing={isOpen => onToggleOpenCloseListing(l.id.uuid, isOpen)}
+                toggleOpenCloseInProgress={!!closingListing || !!openingListing}
                 key={l.id.uuid}
                 campaign={l}
                 intl={intl}
