@@ -17,22 +17,23 @@
 }
 
 .review {
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.1);
+  background-color: var(--colorWhite);
+  padding: 24px;
+  border-radius: 16px;
   display: flex;
-  flex-direction: row;
-  flex-basis: 564px;
-  flex-shrink: 1;
-  flex-grow: 0;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .avatar {
   flex-shrink: 0;
-  margin-right: 22px;
 }
 
 .reviewContent {
-  composes: textSmall from global;
-  font-style: italic;
+  composes: textMedium from global;
   margin: 0;
+  font-weight: 400;
   white-space: pre-line;
 }
 
@@ -95,4 +96,27 @@
   &:last-of-type {
     margin-right: 0;
   }
+}
+
+.reviewAuthor {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+}
+
+.reviewHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 16px;
+}
+
+.reviewDate {
+  margin: 0;
+  color: var(--colorGrey600);
+  font-size: 14px;
+  font-weight: 400;
 }

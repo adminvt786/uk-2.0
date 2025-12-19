@@ -21,7 +21,7 @@ import css from './ListingPage.module.css';
 class SectionMapMaybe extends Component {
   constructor(props) {
     super(props);
-    this.state = { isStatic: true };
+    this.state = { isStatic: false };
   }
 
   render() {
@@ -41,23 +41,34 @@ class SectionMapMaybe extends Component {
     const map = <Map {...mapProps} useStaticMap={this.state.isStatic} />;
 
     return (
-      <section className={classes} id="listing-location">
-        <Heading as="h2" rootClassName={css.sectionHeadingWithExtraMargin}>
-          <FormattedMessage id="ListingPage.locationTitle" />
-        </Heading>
-        {this.state.isStatic ? (
-          <button
-            className={css.map}
-            onClick={() => {
-              this.setState({ isStatic: false });
-            }}
-          >
-            {map}
-          </button>
-        ) : (
-          <div className={css.map}>{map}</div>
-        )}
-      </section>
+      <>
+        <section className={classes} id="listing-location">
+          <Heading as="h2" rootClassName={css.sectionHeadingWithExtraMargin}>
+            <FormattedMessage id="ListingPage.locationTitle" />
+          </Heading>
+          {this.state.isStatic ? (
+            <button
+              className={css.map}
+              onClick={() => {
+                this.setState({ isStatic: false });
+              }}
+            >
+              {map}
+            </button>
+          ) : (
+            <div className={css.map}>{map}</div>
+          )}
+          {publicData.location.address && (
+            <div className={css.mapLocationInfo}>
+              <FormattedMessage
+                id="ListingPage.mapLocationInfo"
+                values={{ city: publicData.location.address }}
+              />
+            </div>
+          )}
+        </section>
+        <div className={css.devider} />
+      </>
     );
   }
 }

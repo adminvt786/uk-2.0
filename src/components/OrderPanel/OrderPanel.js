@@ -308,6 +308,7 @@ const OrderPanel = props => {
     isCreator,
     fromTxPage,
     selectedPackageId,
+    listingDescription,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
@@ -538,6 +539,7 @@ const OrderPanel = props => {
             onContactUser={onContactUser}
             fromTxPage={fromTxPage}
             selectedPackageId={selectedPackageId}
+            listingDescription={listingDescription}
             {...sharedProps}
           />
         ) : showInquiryForm ? (

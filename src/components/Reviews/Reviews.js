@@ -13,31 +13,17 @@ const Review = props => {
 
   const date = review.attributes.createdAt;
   const dateString = intl.formatDate(date, { month: 'long', year: 'numeric' });
-
   return (
     <div className={css.review}>
-      <Avatar className={css.avatar} user={review.author} />
-      <div>
-        <ReviewRating
-          rating={review.attributes.rating}
-          className={css.mobileReviewRating}
-          reviewStarClassName={css.reviewRatingStar}
-        />
-        <p className={css.reviewContent}>{review.attributes.content}</p>
-        <p className={css.reviewInfo}>
+      <div className={css.reviewHeader}>
+        <div className={css.reviewAuthor}>
+          <Avatar className={css.avatar} user={review.author} />
           <UserDisplayName user={review.author} intl={intl} />
-          <span className={css.separator}>•</span>
-          {dateString}
-          <span className={css.desktopSeparator}>•</span>
-          <span className={css.desktopReviewRatingWrapper}>
-            <ReviewRating
-              rating={review.attributes.rating}
-              className={css.desktopReviewRating}
-              reviewStarClassName={css.reviewRatingStar}
-            />
-          </span>
-        </p>
+        </div>
+        <p className={css.reviewDate}>{dateString}</p>
       </div>
+      <ReviewRating rating={review.attributes.rating} />
+      <p className={css.reviewContent}>{review.attributes.content}</p>
     </div>
   );
 };

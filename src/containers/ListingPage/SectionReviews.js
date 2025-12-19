@@ -5,11 +5,10 @@ import { Heading, H2, Reviews } from '../../components';
 import css from './ListingPage.module.css';
 
 const SectionReviews = props => {
-  const { reviews, fetchReviewsError } = props;
-
+  const { reviews = [], fetchReviewsError } = props;
   return (
     <section className={css.sectionReviews}>
-      <Heading as="h2" rootClassName={css.sectionHeadingWithExtraMargin}>
+      <Heading as="h2" rootClassName={css.reviewHeading}>
         <FormattedMessage id="ListingPage.reviewsTitle" values={{ count: reviews.length }} />
       </Heading>
       {fetchReviewsError ? (

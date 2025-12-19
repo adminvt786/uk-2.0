@@ -19,6 +19,7 @@ export const VIDEO_ICON = 'video';
 export const PHOTO_ICON = 'photo';
 export const BAG_ICON = 'bag';
 export const PLAY_ICON = 'play';
+export const PICTURES_ICON = 'pictures';
 /**
  * Icon collection for filters and UI elements.
  *
@@ -349,6 +350,27 @@ const IconsCollection = props => {
         >
           <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
           <rect width="20" height="14" x="2" y="6" rx="2"></rect>
+        </svg>
+      );
+    case PICTURES_ICON:
+      return (
+        <svg
+          className={classes}
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          {...roleInfo}
+        >
+          <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+          <circle cx="9" cy="9" r="2"></circle>
+          <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
         </svg>
       );
     default:

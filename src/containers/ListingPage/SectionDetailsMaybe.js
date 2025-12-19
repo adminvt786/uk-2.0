@@ -48,9 +48,6 @@ const SectionDetailsMaybe = props => {
 
   return existingListingFields.length > 0 ? (
     <section className={css.sectionDetails}>
-      <Heading as="h2" rootClassName={css.sectionHeading}>
-        <FormattedMessage id="ListingPage.detailsTitle" />
-      </Heading>
       <ul className={css.details}>
         {existingListingFields.map(detail => (
           <li key={detail.key} className={css.detailsRow}>

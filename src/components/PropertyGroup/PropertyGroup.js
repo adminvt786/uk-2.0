@@ -22,15 +22,26 @@ const checkSelected = (options, selectedOptions) => {
 
 const IconCheck = props => {
   const isVisible = props.isVisible;
-  const classes = isVisible ? css.checkIcon : classNames(css.checkIcon, css.hidden);
+
+  if (!isVisible) {
+    return <div className={css.unSelectedIcon} />;
+  }
 
   return (
-    <svg width="9" height="9" xmlns="http://www.w3.org/2000/svg" className={classes} role="none">
-      <path
-        className={css.marketplaceFill}
-        d="M2.636621 7.7824771L.3573694 5.6447948c-.4764924-.4739011-.4764924-1.2418639 0-1.7181952.4777142-.473901 1.251098-.473901 1.7288122 0l1.260291 1.1254783L6.1721653.505847C6.565577-.0373166 7.326743-.1636902 7.8777637.227582c.5473554.3912721.6731983 1.150729.2797866 1.6951076L4.4924979 7.631801c-.2199195.306213-.5803433.5067096-.9920816.5067096-.3225487 0-.6328797-.1263736-.8637952-.3560334z"
-        fillRule="evenodd"
-      />
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={css.checkIcon}
+      aria-hidden="true"
+    >
+      <path d="M20 6 9 17l-5-5"></path>
     </svg>
   );
 };
@@ -40,17 +51,15 @@ const Item = props => {
   const labelClass = isSelected ? css.selectedLabel : css.notSelectedLabel;
   return (
     <li className={css.item} aria-hidden={!isSelected}>
-      <span className={css.iconWrapper}>
+      <span
+        className={classNames(css.iconWrapper, {
+          [css.unSelectedIconWrapper]: !isSelected,
+        })}
+      >
         <IconCheck isVisible={isSelected} />
       </span>
       <div className={css.labelWrapper}>
-        {isSelected ? (
-          <span className={labelClass}>{label}</span>
-        ) : (
-          <s>
-            <span className={labelClass}>{label}</span>
-          </s>
-        )}
+        <span className={labelClass}>{label}</span>
       </div>
     </li>
   );
@@ -91,9 +100,13 @@ const PropertyGroup = props => {
   const ariaLabelMaybe = ariaLabel ? { ['aria-label']: ariaLabel } : {};
 
   const checked = showUnselectedOptions
-    ? checkSelected(options, selectedOptions)
+    ? checkSelected(options, selectedOptions).sort((a, b) => {
+        // Show selected options first, unselected options last
+        if (a.isSelected && !b.isSelected) return -1;
+        if (!a.isSelected && b.isSelected) return 1;
+        return 0; // Maintain original order for items with same selection status
+      })
     : checkSelected(options, selectedOptions).filter(o => o.isSelected);
-
   return (
     <ul className={listClasses} {...ariaLabelMaybe}>
       {checked.map(option => (

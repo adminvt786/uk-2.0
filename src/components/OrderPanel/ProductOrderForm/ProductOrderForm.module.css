@@ -67,7 +67,6 @@
 
   @media (--viewportMedium) {
     padding: 0;
-    margin-top: 72px;
   }
 }
 
@@ -85,4 +84,11 @@
   @media (--viewportMedium) {
     padding: 0;
   }
+}
+
+.ctaButton {
+  min-height: 48px;
+  border-radius: 8px;
+  font-size: 14px !important;
+  font-weight: 400;
 }

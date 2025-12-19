@@ -21,7 +21,7 @@ const SectionMultiEnumMaybe = props => {
         ariaLabel={heading}
         options={options}
         selectedOptions={selectedOptions}
-        twoColumns={options.length > 5}
+        twoColumns={false}
         showUnselectedOptions={showUnselectedOptions}
       />
     </section>

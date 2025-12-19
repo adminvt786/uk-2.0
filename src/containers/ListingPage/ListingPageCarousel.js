@@ -401,56 +401,9 @@ export const ListingPageComponent = props => {
                   <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
                 </H3>
               )}
+              {price && <p className={css.orderPanelPrice}>{formattedPrice}</p>}
+              {description && <p className={css.orderPanelDescription}>{description}</p>}
             </div>
-
-            {isCreator && (
-              <section id="author" className={css.sectionAuthor}>
-                <UserCard
-                  user={currentListing.author}
-                  currentUser={currentUser}
-                  onContactUser={onContactUser}
-                  showContact={false}
-                />
-              </section>
-            )}
-
-            {!isCreator && <SectionTextMaybe text={description} showAsIngress />}
-
-            <SectionPackages
-              packages={publicData.packages}
-              intl={intl}
-              marketplaceCurrency={config.currency}
-            />
-
-            <CustomListingFields
-              publicData={publicData}
-              metadata={metadata}
-              listingFieldConfigs={listingConfig.listingFields}
-              categoryConfiguration={config.categoryConfiguration}
-              intl={intl}
-            />
-
-            <SectionMapMaybe
-              geolocation={geolocation}
-              publicData={publicData}
-              listingId={currentListing.id}
-              mapsConfig={config.maps}
-            />
-            <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
-            <SectionAuthorMaybe
-              title={title}
-              listing={currentListing}
-              authorDisplayName={authorDisplayName}
-              onContactUser={onContactUser}
-              isInquiryModalOpen={isAuthenticated && inquiryModalOpen}
-              onCloseInquiryModal={() => setInquiryModalOpen(false)}
-              sendInquiryError={sendInquiryError}
-              sendInquiryInProgress={sendInquiryInProgress}
-              onSubmitInquiry={onSubmitInquiry}
-              currentUser={currentUser}
-              onManageDisableScrolling={onManageDisableScrolling}
-              isCreator={isCreator}
-            />
           </div>
           <div className={css.orderColumnForProductLayout}>
             <OrderPanel
@@ -480,6 +433,7 @@ export const ListingPageComponent = props => {
               author={ensuredAuthor}
               onManageDisableScrolling={onManageDisableScrolling}
               onContactUser={onContactUser}
+              listingDescription={description}
               {...restOfProps}
               validListingTypes={config.listing.listingTypes}
               marketplaceCurrency={config.currency}
@@ -489,6 +443,48 @@ export const ListingPageComponent = props => {
               isCreator={isCreator}
             />
           </div>
+        </div>
+        <div
+          className={classNames(
+            css.bottomColumnForProductLayout,
+            css.contentWrapperForProductLayout
+          )}
+        >
+          <SectionPackages
+            packages={publicData.packages}
+            intl={intl}
+            marketplaceCurrency={config.currency}
+          />
+
+          <CustomListingFields
+            publicData={publicData}
+            metadata={metadata}
+            listingFieldConfigs={listingConfig.listingFields}
+            categoryConfiguration={config.categoryConfiguration}
+            intl={intl}
+          />
+
+          <SectionMapMaybe
+            geolocation={geolocation}
+            publicData={publicData}
+            listingId={currentListing.id}
+            mapsConfig={config.maps}
+          />
+          <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
+          <SectionAuthorMaybe
+            title={title}
+            listing={currentListing}
+            authorDisplayName={authorDisplayName}
+            onContactUser={onContactUser}
+            isInquiryModalOpen={isAuthenticated && inquiryModalOpen}
+            onCloseInquiryModal={() => setInquiryModalOpen(false)}
+            sendInquiryError={sendInquiryError}
+            sendInquiryInProgress={sendInquiryInProgress}
+            onSubmitInquiry={onSubmitInquiry}
+            currentUser={currentUser}
+            onManageDisableScrolling={onManageDisableScrolling}
+            isCreator={isCreator}
+          />
         </div>
       </LayoutSingleColumn>
     </Page>

@@ -21,6 +21,10 @@
 }
 
 .checkIcon {
+  fill: none;
+  stroke: #d4af37;
+  width: 12px;
+  height: 12px;
 }
 
 .hidden {
@@ -34,9 +38,26 @@
 .iconWrapper {
   align-self: baseline;
   margin-right: 8px;
+  background-color: #d4af371a;
 
   /* This follows line-height */
-  height: 24px;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.unSelectedIconWrapper {
+  background-color: var(--colorGrey100);
+}
+
+.unSelectedIcon {
+  border: 1px solid var(--colorGrey300);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
 }
 
 .labelWrapper {
@@ -47,15 +68,14 @@
 .notSelectedLabel {
   composes: marketplaceBodyFontStyles from global;
   line-height: 24px;
+  font-weight: var(--fontWeightRegular);
   margin: 0;
 }
 
 .selectedLabel {
-  font-weight: var(--fontWeightSemiBold);
+  color: var(--colorGrey900);
 }
 
 .notSelectedLabel {
-  color: var(--colorGrey600);
-  position: relative;
-  text-decoration: line-through;
+  color: var(--colorGrey300);
 }

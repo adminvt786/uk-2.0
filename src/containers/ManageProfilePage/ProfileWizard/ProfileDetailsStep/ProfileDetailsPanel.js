@@ -56,6 +56,7 @@ const getInitialValues = (
     transactionProcessAlias,
     unitType,
     images: profileListing?.images || [],
+    videos: publicData?.videos || [],
     ...nestedCategories,
     ...initialValuesForListingFields(
       publicData,
@@ -165,6 +166,7 @@ const ProfileDetailsPanel = props => {
             unitType,
             location,
             images,
+            videos,
             ...rest
           } = values;
 
@@ -206,6 +208,7 @@ const ProfileDetailsPanel = props => {
               listingType,
               transactionProcessAlias,
               unitType,
+              ...(videos && videos.length > 0 ? { videos } : {}),
               ...cleanedNestedCategories,
               ...publicListingFields,
               ...locationDataMaybe,

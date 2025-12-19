@@ -49,6 +49,7 @@ const renderForm = formRenderProps => {
     marketplaceName,
     fromTxPage,
     selectedPackageId,
+    listingDescription,
   } = formRenderProps;
 
   // Note: don't add custom logic before useEffect
@@ -83,7 +84,7 @@ const renderForm = formRenderProps => {
   // Otherwise continue with the default handleSubmit function.
   const handleFormSubmit = e => {
     formApi.change('selectedPackageId', selectedPackageId);
-    
+
     handleSubmit(e);
   };
 
@@ -132,14 +133,22 @@ const renderForm = formRenderProps => {
 
       <div className={css.submitButton}>
         {fromTxPage ? (
-          <PrimaryButton type="submit" inProgress={submitInProgress}>
+          <PrimaryButton type="submit" className={css.ctaButton} inProgress={submitInProgress}>
             <FormattedMessage id="ProductOrderForm.ctaButton" />
           </PrimaryButton>
         ) : (
-          <PrimaryButton type="button" inProgress={submitInProgress} onClick={onClickContactUser}>
+          <PrimaryButton
+            type="button"
+            className={css.ctaButton}
+            inProgress={submitInProgress}
+            onClick={onClickContactUser}
+          >
             <FormattedMessage id="ProductOrderForm.contactButton" />
           </PrimaryButton>
         )}
+      </div>
+      <div className={css.listingDescription}>
+        <p className={css.listingDescriptionText}>{listingDescription}</p>
       </div>
       <p className={css.finePrint}>
         {payoutDetailsWarning ? (
