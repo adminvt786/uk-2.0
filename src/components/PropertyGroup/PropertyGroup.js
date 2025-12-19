@@ -22,7 +22,10 @@ const checkSelected = (options, selectedOptions) => {
 
 const IconCheck = props => {
   const isVisible = props.isVisible;
-  const classes = isVisible ? css.checkIcon : classNames(css.checkIcon, css.hidden);
+
+  if (!isVisible) {
+    return <div className={css.unSelectedIcon} />;
+  }
 
   return (
     <svg
@@ -35,7 +38,7 @@ const IconCheck = props => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={classes}
+      className={css.checkIcon}
       aria-hidden="true"
     >
       <path d="M20 6 9 17l-5-5"></path>
@@ -48,17 +51,15 @@ const Item = props => {
   const labelClass = isSelected ? css.selectedLabel : css.notSelectedLabel;
   return (
     <li className={css.item} aria-hidden={!isSelected}>
-      <span className={css.iconWrapper}>
+      <span
+        className={classNames(css.iconWrapper, {
+          [css.unSelectedIconWrapper]: !isSelected,
+        })}
+      >
         <IconCheck isVisible={isSelected} />
       </span>
       <div className={css.labelWrapper}>
-        {isSelected ? (
-          <span className={labelClass}>{label}</span>
-        ) : (
-          <s>
-            <span className={labelClass}>{label}</span>
-          </s>
-        )}
+        <span className={labelClass}>{label}</span>
       </div>
     </li>
   );

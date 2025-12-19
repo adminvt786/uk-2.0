@@ -49,6 +49,17 @@
   border-radius: 50%;
 }
 
+.unSelectedIconWrapper {
+  background-color: var(--colorGrey100);
+}
+
+.unSelectedIcon {
+  border: 1px solid var(--colorGrey300);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
 .labelWrapper {
   display: inline-block;
 }
@@ -57,15 +68,14 @@
 .notSelectedLabel {
   composes: marketplaceBodyFontStyles from global;
   line-height: 24px;
+  font-weight: var(--fontWeightRegular);
   margin: 0;
 }
 
 .selectedLabel {
-  font-weight: var(--fontWeightSemiBold);
+  color: var(--colorGrey900);
 }
 
 .notSelectedLabel {
-  color: var(--colorGrey600);
-  position: relative;
-  text-decoration: line-through;
+  color: var(--colorGrey300);
 }
