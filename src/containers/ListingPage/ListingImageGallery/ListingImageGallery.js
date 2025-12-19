@@ -117,6 +117,7 @@ const ListingImageGallery = props => {
         >
           <div className={css.itemCentering}>
             <MuxPlayer
+              className={css.muxPlayer}
               ref={ref => (videoPlayerRefMap.current[(item?.video?.playback_id)] = ref)}
               playbackId={item?.video?.playback_id}
               streamType="on-demand"
@@ -164,7 +165,7 @@ const ListingImageGallery = props => {
     );
   };
 
-  const allItems = [...items, ...videoItems];
+  const allItems = [...videoItems, ...items];
 
   const onSlide = index => {
     const currentVideo = allItems[index];

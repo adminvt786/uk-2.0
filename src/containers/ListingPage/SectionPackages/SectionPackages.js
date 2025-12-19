@@ -59,7 +59,7 @@ const PackageCard = props => {
  */
 const SectionPackages = props => {
   const { className, packages, intl, marketplaceCurrency = 'USD' } = props;
-  console.log({ packages });
+
   // Don't render if no packages
   if (!packages || packages.length === 0) {
     return null;

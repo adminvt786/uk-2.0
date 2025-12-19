@@ -1613,5 +1613,7 @@
   "EditListingPhotosForm.addVideo": "+ Add a video...",
   "EditListingPhotosForm.videoExtensions": ".mp4 or .mov",
   "EditListingPhotosForm.videoUploadStart": "Uploading start",
-  "ProfileDetailsForm.videoRequired": "You need to add at least one video."
+  "ProfileDetailsForm.videoRequired": "You need to add at least one video.",
+  "ListingPage.mapLocationInfo": "Based in {city} • Available for travel worldwide",
+  "ListingImageGallery.videoAltText": "listing video {index}/{count}"
 }

@@ -11,7 +11,7 @@
 
 .sectionTitle {
   margin-top: 0;
-  margin-bottom: 8px;
+  margin-bottom: 32px;
   margin-left: 0;
   color: var(--colorGrey900);
   padding-left: 0;
@@ -46,8 +46,9 @@
 .packageCard {
   background-color: var(--colorWhite);
   border: 1px solid var(--colorGrey100);
-  border-radius: 8px;
+  border-radius: 14px;
   padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.2s ease, transform 0.2s ease;
   display: flex;
   flex-direction: column;
@@ -107,13 +108,8 @@
 
 .priceLabel {
   display: inline-block;
-  padding: 4px 10px;
-  background-color: var(--marketplaceColor);
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: var(--fontWeightBold);
-  color: var(--colorWhite);
-  letter-spacing: 0.5px;
+  font-weight: var(--fontWeightRegular);
+  color: #d4af37;
 }
 
 .packageDescription {

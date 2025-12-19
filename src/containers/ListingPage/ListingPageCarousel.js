@@ -401,9 +401,9 @@ export const ListingPageComponent = props => {
                   <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
                 </H3>
               )}
+              {price && <p className={css.orderPanelPrice}>{formattedPrice}</p>}
+              {description && <p className={css.orderPanelDescription}>{description}</p>}
             </div>
-
-            {!isCreator && <SectionTextMaybe text={description} showAsIngress />}
           </div>
           <div className={css.orderColumnForProductLayout}>
             <OrderPanel

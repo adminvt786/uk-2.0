@@ -219,7 +219,6 @@
 .priceValueInCTA {
   /* Font */
   composes: h3 from global;
-  color: var(--marketplaceColor);
 
   margin-top: 0;
   margin-bottom: 0px;
