@@ -59,7 +59,7 @@
 
 .price {
   composes: h4 from global;
-  font-weight: var(--fontWeightBold);
+  font-weight: var(--fontWeightRegular);
   margin: 0 0 0 24px;
 
   @media (--viewportMedium) {
@@ -68,7 +68,6 @@
   }
 }
 .priceValue {
-  color: var(--marketplaceColor);
 }
 
 .perUnit {

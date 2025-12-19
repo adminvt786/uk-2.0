@@ -281,7 +281,7 @@
   @media (--viewportLarge) {
     max-width: calc(var(--contentMaxWidth) + 72px);
     padding: 0 36px;
-    margin: 0 auto 117px;
+    margin: 0 auto 54px;
   }
 
   @media (--viewportXLarge) {
@@ -294,11 +294,7 @@
   @media (--viewportMedium) {
   }
   @media (--viewportLarge) {
-    /* contentContainer's full width - (orderColumn + paddings + margin) */
-    max-width: calc(100% - 360px);
-    flex-basis: calc(100% - 360px);
-    flex-shrink: 0;
-    flex-grow: 1;
+    flex: 1;
   }
 }
 
@@ -307,9 +303,7 @@
   }
   @media (--viewportLarge) {
     display: block;
-    margin-left: 48px;
-    flex-basis: 312px;
-    flex-shrink: 0;
+    flex: 1;
   }
 }
 
@@ -327,9 +321,10 @@
     display: flex;
     flex-direction: row;
     max-width: unset;
-    width: min(calc(var(--contentMaxWidth) + 72px), 100vw);
+    width: min(1376px, 100vw);
     padding: 64px 36px 0 36px;
-    margin: 0 auto 117px auto;
+    margin: 0 auto 54px auto;
+    gap: 48px;
   }
 }
 
@@ -394,7 +389,7 @@
 
 .orderPanelTitle {
   /* Font */
-  font-weight: var(--fontWeightBold);
+  font-weight: var(--fontWeightRegular);
 
   /* Layout */
   width: 100%;
@@ -834,4 +829,9 @@
   right: 0;
   width: 100%;
   height: 100%;
+}
+
+.bottomColumnForProductLayout {
+  flex-direction: column;
+  padding-top: 0;
 }

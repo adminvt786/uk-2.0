@@ -11,6 +11,7 @@ import {
   autocompleteSearchRequired,
   composeValidators,
   required,
+  videoRequired,
 } from '../../../../util/validators';
 import { isUploadImageOverLimitError } from '../../../../util/errors';
 
@@ -41,6 +42,7 @@ import * as UpChunk from '@mux/upchunk';
 import { getMuxAsset, getMuxUploadUrlWatermark } from '../../../../util/api';
 import { PLAY_ICON } from '../../../../components/IconsCollection/IconsCollection';
 import PlayVideoModal from './PlayVideoModal';
+import { ARRAY_ERROR } from 'final-form';
 
 const ACCEPT_IMAGES = 'image/*';
 const UPLOAD_CHANGE_DELAY = 2000; // Show spinner so that browser has time to load img srcset
@@ -219,7 +221,6 @@ export const FieldAddMediaKitImage = props => {
         const { name, type } = input;
         const onChange = e => {
           const file = e.target.files[0];
-          console.log({ file });
           if (file) {
             console.log({ file });
             formApi.change('addMediaKitImage', file);
@@ -277,6 +278,187 @@ export const FieldAddVideo = props => {
   );
 };
 
+const FieldVideoItem = props => {
+  const { name, onRemoveVideo, setOpenVideoModal, ...rest } = props;
+  return (
+    <Field name={name} {...rest}>
+      {fieldProps => {
+        const { input } = fieldProps;
+        const video = input.value;
+        return video ? (
+          <div className={css.videoElement}>
+            <img src={`https://image.mux.com/${video?.playback_id}/thumbnail.png`} />
+            <div className={css.actionButtonWrapper}>
+              <RemoveImageButton onClick={() => onRemoveVideo()} />
+            </div>
+            <span className={css.playButton} onClick={() => setOpenVideoModal(video?.playback_id)}>
+              <IconsCollection type={PLAY_ICON} />
+            </span>
+          </div>
+        ) : null;
+      }}
+    </Field>
+  );
+};
+
+/**
+ * VideoSection component - Handles video upload, display, and playback
+ * @component
+ * @param {Object} props
+ * @param {Object} props.form - The form API from react-final-form
+ * @param {Object} props.values - The current form values
+ * @param {boolean} props.videoUploadRequested - Whether a video upload is in progress
+ * @param {Function} props.setVideoUploadRequested - Function to set video upload state
+ * @param {number} props.progress - Upload progress percentage
+ * @param {Function} props.setProgress - Function to set upload progress
+ * @param {number} props.aspectWidth - Aspect ratio width
+ * @param {number} props.aspectHeight - Aspect ratio height
+ */
+const VideoSection = props => {
+  const {
+    form,
+    values,
+    videoUploadRequested,
+    setVideoUploadRequested,
+    progress,
+    setProgress,
+    aspectWidth,
+    aspectHeight,
+    intl,
+  } = props;
+  const [openVideoModal, setOpenVideoModal] = useState(null);
+  const onVideoUploadHandler = async file => {
+    try {
+      setVideoUploadRequested(true);
+      if (!file) {
+        throw new Error('File is missing');
+      }
+
+      const uploadData = await getMuxUploadUrlWatermark();
+
+      const upload = UpChunk.createUpload({
+        endpoint: uploadData.url,
+        file,
+        chunkSize: 5120,
+      });
+
+      // Subscribe to events
+      upload.on('error', error => {
+        console.error('Video upload error:', error.detail);
+        setVideoUploadRequested(false);
+        setProgress(0);
+      });
+
+      upload.on('progress', progress => {
+        setProgress(progress.detail);
+      });
+
+      upload.on('success', async () => {
+        let res = await getMuxAsset({ uploadId: uploadData.id });
+
+        if (!res?.duration) {
+          async function waitForAssetReady() {
+            const assetRes = await getMuxAsset({ uploadId: uploadData.id });
+
+            if (assetRes.status === 'preparing') {
+              // Still preparing, wait and check again after a delay
+              await new Promise(resolve => setTimeout(resolve, 2000));
+              return waitForAssetReady(); // Recursive call
+            } else {
+              return assetRes; // Asset is ready, return the response
+            }
+          }
+
+          res = await waitForAssetReady(); // Wait for the asset to be ready
+        }
+
+        setVideoUploadRequested(false);
+        setProgress(0);
+        const videos = values?.videos || [];
+        const newVideos = [
+          ...videos,
+          {
+            asset_id: res.asset_id,
+            playback_id: res.playback_id,
+            thumbnailTime: 1,
+          },
+        ];
+        form.change('videos', newVideos);
+      });
+    } catch (error) {
+      console.log('error', error);
+      setVideoUploadRequested(false);
+    }
+  };
+  const touched = form.getState().touched;
+  const addVideoError =
+    touched.addVideo && !values?.videos?.length
+      ? intl.formatMessage({ id: 'ProfileDetailsForm.videoRequired' })
+      : null;
+  console.log({ addVideoError, touched, values });
+  return (
+    <>
+      <div className={css.mediaKitImagesFieldArray}>
+        <FieldArray
+          name="videos"
+          validate={videoRequired(intl.formatMessage({ id: 'ProfileDetailsForm.videoRequired' }))}
+        >
+          {({ fields }) =>
+            fields.map((name, index) => (
+              <FieldVideoItem
+                key={name}
+                name={name}
+                onRemoveVideo={() => {
+                  fields.remove(index);
+                  form.blur('addVideo');
+                }}
+                setOpenVideoModal={setOpenVideoModal}
+              />
+            ))
+          }
+        </FieldArray>
+
+        <div
+          onClick={() => {
+            form.blur('addVideo');
+          }}
+        >
+          <FieldAddVideo
+            id="addVideo"
+            name="addVideo"
+            accept={ACCEPT_VIDEOS}
+            label={
+              <span className={css.chooseImageText}>
+                <span className={css.chooseImage}>
+                  <FormattedMessage id="EditListingPhotosForm.addVideo" />
+                </span>
+                <span className={css.imageTypes}>
+                  <FormattedMessage id="EditListingPhotosForm.videoExtensions" />
+                </span>
+                {videoUploadRequested && progress > 0 ? (
+                  <span className={css.imageTypes}>{progress.toFixed(2)}%</span>
+                ) : videoUploadRequested ? (
+                  <FormattedMessage id="EditListingPhotosForm.videoUploadStart" />
+                ) : null}
+              </span>
+            }
+            type="file"
+            disabled={videoUploadRequested}
+            formApi={form}
+            onVideoUploadHandler={onVideoUploadHandler}
+            aspectWidth={aspectWidth}
+            aspectHeight={aspectHeight}
+          />
+        </div>
+        <PlayVideoModal openVideoModal={openVideoModal} setOpenVideoModal={setOpenVideoModal} />
+      </div>
+      {addVideoError && (
+        <div className={classNames(css.error, css.videoError)}>{addVideoError}</div>
+      )}
+    </>
+  );
+};
+
 /**
  * ProfileDetailsForm component - Form for Step 1 of the profile wizard.
  * Collects display name, about me, and profile image for the profile listing.
@@ -306,7 +488,6 @@ const ProfileDetailsForm = props => {
   const [allCategoriesChosen, setAllCategoriesChosen] = useState(false);
   const [videoUploadRequested, setVideoUploadRequested] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [openVideoModal, setOpenVideoModal] = useState(false);
 
   const { profileImage, uploadInProgress, currentUser } = props;
 
@@ -491,71 +672,6 @@ const ProfileDetailsForm = props => {
           }
         };
 
-        const onVideoUploadHandler = async file => {
-          try {
-            setVideoUploadRequested(true);
-            if (!file) {
-              throw new Error('File is missing');
-            }
-
-            const uploadData = await getMuxUploadUrlWatermark();
-
-            const upload = UpChunk.createUpload({
-              endpoint: uploadData.url,
-              file,
-              chunkSize: 5120,
-            });
-
-            // Subscribe to events
-            upload.on('error', error => {
-              setStatusMessage(error.detail);
-            });
-
-            upload.on('progress', progress => {
-              setProgress(progress.detail);
-            });
-
-            upload.on('success', async () => {
-              let res = await getMuxAsset({ uploadId: uploadData.id });
-
-              if (!res?.duration) {
-                async function waitForAssetReady() {
-                  const assetRes = await getMuxAsset({ uploadId: uploadData.id });
-
-                  if (assetRes.status === 'preparing') {
-                    // Still preparing, wait and check again after a delay
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-                    return waitForAssetReady(); // Recursive call
-                  } else {
-                    return assetRes; // Asset is ready, return the response
-                  }
-                }
-
-                res = await waitForAssetReady(); // Wait for the asset to be ready
-              }
-
-              setVideoUploadRequested(false);
-              setProgress(0);
-              const videos = values?.videos || [];
-              videos.push({
-                asset_id: res.asset_id,
-                playback_id: res.playback_id,
-                thumbnailTime: 1,
-              });
-              form.change('videos', [...videos]);
-            });
-          } catch (error) {
-            console.log('error', error);
-            setVideoUploadRequested(false);
-          }
-        };
-
-        const onRemoveVideo = index => {
-          const videos = values?.videos || [];
-          videos.splice(index, 1);
-          form.change('videos', [...videos]);
-        };
-
         return (
           <Form className={classes} onSubmit={handleSubmit}>
             <ErrorMessage fetchErrors={fetchErrors} />
@@ -728,60 +844,17 @@ const ProfileDetailsForm = props => {
             </div>
 
             {/* Video */}
-            <div className={css.mediaKitImagesFieldArray}>
-              {Array.isArray(values.videos)
-                ? values.videos.map((video, index) => {
-                    const { playback_id, asset_id } = video;
-                    console.log('img', `https://image.mux.com/${playback_id}/thumbnail.png`, video);
-                    return (
-                      <div key={asset_id} className={css.videoElement}>
-                        <img src={`https://image.mux.com/${playback_id}/thumbnail.png`} />
-                        <div className={css.actionButtonWrapper}>
-                          <RemoveImageButton onClick={() => onRemoveVideo(index)} />
-                        </div>
-                        <span
-                          className={css.playButton}
-                          onClick={() => setOpenVideoModal(playback_id)}
-                        >
-                          <IconsCollection type={PLAY_ICON} />
-                        </span>
-                      </div>
-                    );
-                  })
-                : null}
-
-              <FieldAddVideo
-                id="addVideo"
-                name="addVideo"
-                accept={ACCEPT_VIDEOS}
-                label={
-                  <span className={css.chooseImageText}>
-                    <span className={css.chooseImage}>
-                      <FormattedMessage id="EditListingPhotosForm.addVideo" />
-                    </span>
-                    <span className={css.imageTypes}>
-                      <FormattedMessage id="EditListingPhotosForm.videoExtensions" />
-                    </span>
-                    {videoUploadRequested && progress > 0 ? (
-                      <span className={css.imageTypes}>{progress.toFixed(2)}%</span>
-                    ) : videoUploadRequested ? (
-                      <FormattedMessage id="EditListingPhotosForm.videoUploadStart" />
-                    ) : null}
-                  </span>
-                }
-                type="file"
-                disabled={videoUploadRequested}
-                formApi={form}
-                onVideoUploadHandler={onVideoUploadHandler}
-                aspectWidth={aspectWidth}
-                aspectHeight={aspectHeight}
-              />
-
-              <PlayVideoModal
-                openVideoModal={openVideoModal}
-                setOpenVideoModal={setOpenVideoModal}
-              />
-            </div>
+            <VideoSection
+              intl={intl}
+              form={form}
+              values={values}
+              videoUploadRequested={videoUploadRequested}
+              setVideoUploadRequested={setVideoUploadRequested}
+              progress={progress}
+              setProgress={setProgress}
+              aspectWidth={aspectWidth}
+              aspectHeight={aspectHeight}
+            />
 
             <FieldLocationAutocompleteInput
               rootClassName={classNames(css.formField, css.input)}

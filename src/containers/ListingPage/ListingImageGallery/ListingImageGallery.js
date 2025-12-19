@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import classNames from 'classnames';
 import ReactImageGallery from 'react-image-gallery';
 
@@ -10,6 +10,7 @@ import {
   IconClose,
   IconArrowHead,
   ResponsiveImage,
+  IconsCollection,
 } from '../../../components';
 
 // Copied directly from
@@ -19,6 +20,8 @@ import {
 import './image-gallery.css';
 
 import css from './ListingImageGallery.module.css';
+import MuxPlayer from '@mux/mux-player-react';
+import { PICTURES_ICON } from '../../../components/IconsCollection/IconsCollection';
 
 const IMAGE_GALLERY_OPTIONS = {
   showPlayButton: false,
@@ -63,9 +66,11 @@ const getFirstImageAspectRatio = (firstImage, scaledVariant) => {
  */
 const ListingImageGallery = props => {
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const imageGalleryRef = useRef(null);
   const intl = useIntl();
-  const { rootClassName, className, images, imageVariants, thumbnailVariants } = props;
+  const { rootClassName, className, images, imageVariants, thumbnailVariants, videos } = props;
   const thumbVariants = thumbnailVariants || imageVariants;
+  const videoPlayerRefMap = useRef({});
   // imageVariants are scaled variants.
   const { aspectWidth, aspectHeight } = getFirstImageAspectRatio(images?.[0], imageVariants[0]);
   const items = images.map((img, i) => {
@@ -85,10 +90,45 @@ const ListingImageGallery = props => {
       image: img,
     };
   });
+
+  const videoItems = videos?.map((video, i) => {
+    return {
+      original: '',
+      alt: intl.formatMessage(
+        { id: 'ListingImageGallery.videoAltText' },
+        { index: i + 1, count: videos.length }
+      ),
+      thumbnail: `https://image.mux.com/${video?.playback_id}/animated.gif`,
+      video,
+      isVideo: true,
+    };
+  });
+
   const imageSizesMaybe = isFullscreen
     ? {}
     : { sizes: `(max-width: 1024px) 100vw, (max-width: 1200px) calc(100vw - 192px), 708px` };
   const renderItem = item => {
+    if (item?.isVideo) {
+      return (
+        <AspectRatioWrapper
+          width={aspectWidth || 1}
+          height={aspectHeight || 1}
+          className={isFullscreen ? css.itemWrapperFullscreen : css.itemWrapper}
+        >
+          <div className={css.itemCentering}>
+            <MuxPlayer
+              ref={ref => (videoPlayerRefMap.current[(item?.video?.playback_id)] = ref)}
+              playbackId={item?.video?.playback_id}
+              streamType="on-demand"
+              primaryColor="#FFFFFF"
+              secondaryColor="#000000"
+              muted={false}
+              thumbnailTime={item?.video?.thumbnailTime}
+            />
+          </div>
+        </AspectRatioWrapper>
+      );
+    }
     return (
       <AspectRatioWrapper
         width={aspectWidth || 1}
@@ -108,6 +148,9 @@ const ListingImageGallery = props => {
     );
   };
   const renderThumbInner = item => {
+    if (item?.isVideo) {
+      return <img src={item?.thumbnail} alt={item.thumbAlt} className={css.thumb} />;
+    }
     return (
       <div>
         <ResponsiveImage
@@ -119,6 +162,20 @@ const ListingImageGallery = props => {
         />
       </div>
     );
+  };
+
+  const allItems = [...items, ...videoItems];
+
+  const onSlide = index => {
+    const currentVideo = allItems[index];
+    Object.keys(videoPlayerRefMap.current).forEach(key => {
+      const currentElement = videoPlayerRefMap.current[key];
+      if (key === currentVideo?.video?.playback_id && currentElement && currentElement.play) {
+        currentElement.play();
+      } else if (currentElement && currentElement.pause) {
+        currentElement.pause();
+      }
+    });
   };
 
   const onScreenChange = isFull => {
@@ -156,33 +213,44 @@ const ListingImageGallery = props => {
         <IconClose rootClassName={css.closeIcon} />
       </Button>
     ) : (
-      <button className={css.openFullscreen} onClick={onClick}>
-        <FormattedMessage
-          id="ListingImageGallery.viewImagesButton"
-          values={{ count: images.length }}
-        />
-      </button>
+      <></>
     );
   };
 
-  if (items.length === 0) {
+  if (allItems.length === 0) {
     return <ResponsiveImage className={css.noImage} image={null} variants={[]} alt="" />;
   }
 
   const classes = classNames(rootClassName || css.root, className);
 
   return (
-    <ReactImageGallery
-      additionalClass={classes}
-      items={items}
-      renderItem={renderItem}
-      renderThumbInner={renderThumbInner}
-      onScreenChange={onScreenChange}
-      renderLeftNav={renderLeftNav}
-      renderRightNav={renderRightNav}
-      renderFullscreenButton={renderFullscreenButton}
-      {...IMAGE_GALLERY_OPTIONS}
-    />
+    <>
+      <ReactImageGallery
+        additionalClass={classes}
+        items={allItems}
+        renderItem={renderItem}
+        renderThumbInner={renderThumbInner}
+        onScreenChange={onScreenChange}
+        renderLeftNav={renderLeftNav}
+        renderRightNav={renderRightNav}
+        renderFullscreenButton={renderFullscreenButton}
+        onSlide={onSlide}
+        ref={imageGalleryRef}
+        {...IMAGE_GALLERY_OPTIONS}
+      />
+      <button
+        className={css.openFullscreen}
+        onClick={() => {
+          imageGalleryRef.current.toggleFullScreen();
+        }}
+      >
+        <IconsCollection type={PICTURES_ICON} />
+        <FormattedMessage
+          id="ListingImageGallery.viewImagesButton"
+          values={{ count: images.length }}
+        />
+      </button>
+    </>
   );
 };
 

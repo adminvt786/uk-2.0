@@ -269,5 +269,9 @@ export const validSGID = message => value => {
   return value.length === 9 ? VALID : message;
 };
 
+export const videoRequired = message => (value) => {
+  return Array.isArray(value) && value.length > 0 ? VALID : message;
+};
+
 export const composeValidators = (...validators) => value =>
   validators.reduce((error, validator) => error || validator(value), VALID);
