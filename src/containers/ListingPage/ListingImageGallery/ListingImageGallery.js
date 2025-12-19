@@ -68,7 +68,7 @@ const ListingImageGallery = props => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const imageGalleryRef = useRef(null);
   const intl = useIntl();
-  const { rootClassName, className, images, imageVariants, thumbnailVariants, videos } = props;
+  const { rootClassName, className, images, imageVariants, thumbnailVariants, videos = [] } = props;
   const thumbVariants = thumbnailVariants || imageVariants;
   const videoPlayerRefMap = useRef({});
   // imageVariants are scaled variants.
