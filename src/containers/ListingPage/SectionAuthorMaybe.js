@@ -24,7 +24,6 @@ const SectionAuthorMaybe = props => {
     onManageDisableScrolling,
     isCreator,
   } = props;
-
   if (!listing.author || isCreator) {
     return (
       <Modal
@@ -34,7 +33,7 @@ const SectionAuthorMaybe = props => {
         onClose={onCloseInquiryModal}
         usePortal
         onManageDisableScrolling={onManageDisableScrolling}
-        focusElementId={CONTACT_USER_LINK}
+        focusElementId={isInquiryModalOpen ? CONTACT_USER_LINK : null}
       >
         <InquiryForm
           className={css.inquiryForm}
@@ -74,7 +73,7 @@ const SectionAuthorMaybe = props => {
         onClose={onCloseInquiryModal}
         usePortal
         onManageDisableScrolling={onManageDisableScrolling}
-        focusElementId={CONTACT_USER_LINK}
+        focusElementId={isInquiryModalOpen ? CONTACT_USER_LINK : null}
       >
         <InquiryForm
           className={css.inquiryForm}
