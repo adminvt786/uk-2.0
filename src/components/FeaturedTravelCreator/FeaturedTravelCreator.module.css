@@ -24,42 +24,43 @@
 }
 
 .title {
-  font-family: Cormorant Garamond;
-  font-weight: 600;
-  font-style: SemiBold;
-  font-size: 50px;
-  leading-trim: CAP_HEIGHT;
-  line-height: 55px;
-  letter-spacing: 0%;
-  text-align: center;
+  font-family: Cormorant Garamond !important;
+  font-weight: 600 !important;
+  font-style: SemiBold !important;
+  font-size: 50px !important;
+  leading-trim: CAP_HEIGHT !important;
+  line-height: 55px !important;
+  letter-spacing: 0% !important;
+  text-align: center !important;
 
-  color: #0b2f52;
-  margin: 0 auto 16px;
-  padding: 0;
+  color: #0b2f52 !important;
+  margin: 0 auto 16px !important;
+  padding: 0 !important;
   @media (max-width: 767px) {
-    font-size: 34px;
-    margin-bottom: 12px;
+    font-size: 34px !important;
+    margin-bottom: 12px !important;
   }
 }
 
 .description {
-  font-family: Inter;
-  font-weight: 400;
-  font-style: Regular;
-  font-size: 18px;
-  leading-trim: CAP_HEIGHT;
-  line-height: 26px;
-  letter-spacing: 0%;
-  text-align: center;
-  text-wrap: unset;
+  font-family: Inter !important;
+  font-weight: 400 !important;
+  font-style: Regular !important;
+  font-size: 18px !important;
+  leading-trim: CAP_HEIGHT !important;
+  line-height: 26px !important;
+  letter-spacing: 0% !important;
+  text-align: center !important;
+  text-wrap: unset !important;
 
-  color: #3c3c3c;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0;
-  margin: 0 auto;
+  color: #3c3c3c !important;
+  max-width: 800px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  margin: 0 auto !important;
   @media (max-width: 767px) {
-    font-size: 16px;
+    font-size: 14px !important;
+    line-height: 20px !important;
   }
 }
 
@@ -248,54 +249,54 @@
 }
 
 .ctaButtonFooter {
-  display: block;
+  display: block !important;
   padding: 5px 20px;
-  background-color: #f3f4f4;
-  color: #3c3c3c;
-  font-family: Inter;
-  font-weight: 400;
-  font-style: Regular;
-  font-size: 14px;
-  leading-trim: CAP_HEIGHT;
-  line-height: 22px;
-  letter-spacing: 0%;
-  text-align: center;
+  background-color: #f3f4f4 !important;
+  color: #3c3c3c !important;
+  font-family: Inter !important;
+  font-weight: 400 !important;
+  font-style: Regular !important;
+  font-size: 14px !important;
+  leading-trim: CAP_HEIGHT !important;
+  line-height: 22px !important;
+  letter-spacing: 0% !important;
+  text-align: center !important;
 
-  border-radius: 10px;
-  border: none;
+  border-radius: 10px !important;
+  border: none !important;
   text-decoration: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  height: 52px;
-  min-height: 52px;
-  width: fit-content;
-  align-content: center;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease !important;
+  height: 52px !important;
+  min-height: 52px !important;
+  width: fit-content !important;
+  align-content: center !important;
 
   max-width: calc(1340px + 64px);
-  border-radius: 40px;
-  margin: 60px auto 0 auto;
-  padding: 0 32px;
-  backdrop-filter: blur(54px);
-  border: 1px solid #e5e5e5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
+  border-radius: 40px !important;
+  margin: 60px auto 0 auto !important;
+  padding: 0 32px !important;
+  backdrop-filter: blur(54px) !important;
+  border: 1px solid #e5e5e5 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
   @media (max-width: 767px) {
-    margin: 40px auto 0 auto;
+    margin: 40px auto 0 auto !important;
   }
   &:hover {
-    background-color: #e5e7eb;
-    text-decoration: none;
+    background-color: #e5e7eb !important;
+    text-decoration: none !important;
   }
   &::after {
-    content: '';
-    height: 16px;
-    width: 16px;
-    display: block;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+    content: '' !important;
+    height: 16px !important;
+    width: 16px !important;
+    display: block !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath fill='%230B2F52' d='m20 12l.354-.354l.353.354l-.353.354zm-15 .5a.5.5 0 0 1 0-1zm9.354-6.854l6 6l-.708.708l-6-6zm6 6.708l-6 6l-.708-.708l6-6zM20 12.5H5v-1h15z'/%3E%3C/svg%3E");
   }
 }

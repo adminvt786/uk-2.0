@@ -24,42 +24,42 @@
 }
 
 .title {
-  font-family: Cormorant Garamond;
-  font-weight: 600;
-  font-style: SemiBold;
-  font-size: 50px;
-  leading-trim: CAP_HEIGHT;
-  line-height: 55px;
-  letter-spacing: 0%;
-  text-align: center;
+  font-family: Cormorant Garamond !important;
+  font-weight: 600 !important;
+  font-style: SemiBold !important;
+  font-size: 50px !important;
+  leading-trim: CAP_HEIGHT !important;
+  line-height: 55px !important;
+  letter-spacing: 0% !important;
+  text-align: center !important;
   
-  color: #0B2F52;
-  margin: 0 auto 16px;
-  padding: 0;
+  color: #0B2F52 !important;
+  margin: 0 auto 16px !important;
+  padding: 0 !important;
   @media (max-width: 767px) {
-    font-size: 36px;
-    margin-bottom: 12px;
+    font-size: 36px !important;
+    margin-bottom: 12px !important;
   }
 }
 
 .description {
-  font-family: Inter;
-  font-weight: 400;
-  font-style: Regular;
-  font-size: 18px;
-  leading-trim: CAP_HEIGHT;
-  line-height: 26px;
-  letter-spacing: 0%;
-  text-align: center;
-  text-wrap: unset;
+  font-family: Inter !important;
+  font-weight: 400 !important;
+  font-style: Regular !important;
+  font-size: 18px !important;
+  leading-trim: CAP_HEIGHT !important;
+  line-height: 26px !important;
+  letter-spacing: 0% !important;
+  text-align: center !important;
+  text-wrap: unset !important;
   
-  color: #3C3C3C;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0 ;
-  margin: 0 auto;
+  color: #3C3C3C !important;
+  max-width: 800px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  margin: 0 auto !important;
   @media (max-width: 767px) {
-    font-size: 16px;
+    font-size: 16px !important;
   }
 }
 

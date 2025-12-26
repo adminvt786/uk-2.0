@@ -30,54 +30,58 @@
 }
 
 .sectionLabel {
-  font-family: Inter, sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: #d9a441;
-  margin: 0 0 28px 0;
-  padding: 0;
+  font-family: Inter, sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  line-height: 20px !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+  color: #d9a441 !important;
+  margin: 0 0 28px 0 !important;
+  padding: 0 !important;
   @media (max-width: 767px) {
-    font-size: 12px;
-    margin-bottom: 13px;
+    font-size: 12px !important;
+    margin-bottom: 13px !important;
   }
 }
 
 .title {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 400;
-  font-size: 52px;
-  line-height: 62px;
-  letter-spacing: 0;
-  text-align: left;
-  color: #000;
-  margin: 0 0 24px 0;
-  padding: 0;
+  font-family: 'Cormorant Garamond', serif !important;
+  font-weight: 400 !important;
+  font-size: 52px !important;
+  line-height: 62px !important;
+  letter-spacing: 0 !important;
+  text-align: left !important;
+  color: #000 !important;
+  margin: 0 0 24px 0 !important;
+  padding: 0 !important;
   @media (max-width: 1023px) {
-    font-size: 40px;
-    line-height: 48px;
-    margin-bottom: 20px;
+    font-size: 40px !important;
+    line-height: 48px !important;
+    margin-bottom: 20px !important;
   }
   @media (max-width: 767px) {
-    font-size: 36px;
-    line-height: 44px;
-    margin-bottom: 16px;
+    font-size: 36px !important;
+    line-height: 44px !important;
+    margin-bottom: 16px !important;
   }
 }
 
 .description {
-  font-family: Inter, sans-serif;
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 28px;
-  letter-spacing: 0;
-  text-align: left;
-  color: #666;
-  margin: 0;
-  padding: 0;
-  max-width: 100%;
+  font-family: Inter, sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 18px !important;
+  line-height: 28px !important  ;
+  letter-spacing: 0 !important;
+  text-align: left !important;
+  color: #666 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: 100% !important;
+  @media (max-width: 767px) {
+    font-size: 14px !important;
+    line-height: 20px !important;
+  }
 }
 
 .swiperWrapper {
@@ -244,33 +248,33 @@
 }
 
 .viewAllLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: Inter;
-  font-weight: 400;
-  font-style: Regular;
-  font-size: 18px;
-  leading-trim: CAP_HEIGHT;
-  line-height: 100%;
-  letter-spacing: 0%;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-family: Inter !important;
+  font-weight: 400 !important;
+  font-style: Regular !important;
+  font-size: 18px !important;
+  leading-trim: CAP_HEIGHT !important;
+  line-height: 100% !important;
+  letter-spacing: 0% !important;
 
-  color: #d9a441;
-  text-decoration: none;
-  padding: 18px 0;
-  transition: opacity 0.2s ease;
+  color: #d9a441 !important;
+  text-decoration: none !important;
+  padding: 18px 0 !important;
+  transition: opacity 0.2s ease !important;
   @media (max-width: 480px) {
-    font-weight: 400;
-    font-size: 16px;
+    font-weight: 400 !important;
+    font-size: 16px !important;
   }
   &::after {
-    content: '';
-    width: 14px;
-    height: 14px;
-    display: block;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+    content: '' !important;
+    width: 14px !important;
+    height: 14px !important;
+    display: block !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
     background-image: url("data:image/svg+xml,%3Csvg width='15' height='12' viewBox='0 0 15 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0.625 5.625L13.9583 5.625M13.9583 5.625L8.95833 10.625M13.9583 5.625L8.95833 0.625' stroke='%23D9A441' strokeWidth='1.25' strokeLinecap='round' strokeLinejoin='round'/%3E%3C/svg%3E");
   }
 }

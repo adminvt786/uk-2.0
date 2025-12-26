@@ -24,37 +24,37 @@
 }
 
 .title {
-  font-family: Cormorant Garamond;
-  font-weight: 600;
-  font-style: SemiBold;
-  font-size: 50px;
-  leading-trim: CAP_HEIGHT;
-  line-height: 55px;
-  letter-spacing: 0%;
-  text-align: center;
+  font-family: Cormorant Garamond !important;
+  font-weight: 600 !important;
+  font-style: SemiBold !important;
+  font-size: 50px !important;
+  leading-trim: CAP_HEIGHT !important;
+  line-height: 55px !important;
+  letter-spacing: 0% !important;
+  text-align: center !important;
   
-  color: #0B2F52;
-  margin: 0 0 16px 0;
-  padding: 0;
+  color: #0B2F52 !important;
+  margin: 0 0 16px 0 !important;
+  padding: 0 !important;
   @media (max-width: 767px) {
-    font-size: 30px;
-    line-height: 45px;
-    margin-bottom: 12px;
+    font-size: 30px !important;
+    line-height: 45px !important;
+    margin-bottom: 12px !important;
   }
 }
 
 .subtitle {
-  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 1.5;
-  letter-spacing: 0%;
-  color: #6B7280;
-  margin: 0 auto;
-  padding: 0;
-  max-width: 600px;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 18px !important;
+  line-height: 1.5 !important;
+  letter-spacing: 0% !important;
+  color: #6B7280 !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  max-width: 600px !important;
   @media (max-width: 767px) {
-    font-size: 14px;
+    font-size: 14px !important;
   }
 }
 
