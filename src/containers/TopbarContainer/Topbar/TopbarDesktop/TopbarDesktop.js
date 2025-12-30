@@ -237,15 +237,8 @@ const TopbarDesktop = props => {
       initialValues={initialSearchFormValues}
       appConfig={config}
     />
-  ) : (
-    <div
-      className={classNames(css.spacer, css.topbarSearchWithLeftPadding, {
-        [css.takeAvailableSpace]: giveSpaceForSearch,
-      })}
-    />
-  );
-  const isSearchPage = currentPage === 'SearchPage';
-
+  ) : null;
+  const isSearchPage = currentPage === 'SearchPage' || currentPage === 'SearchPageWithListingType';
   // Landing page "Get Started" button
   const getStartedButton = isAuthenticatedOrJustHydrated ? null : (
     <NamedLink name="SignupPage" className={css.getStartedButton}>
@@ -280,20 +273,16 @@ const TopbarDesktop = props => {
         linkToExternalSite={config?.topbar?.logoLink}
         isScrolled={isScrolled}
       />
-      {isSearchPage ? (
-        searchFormMaybe
-      ) : (
-        <CustomLinksMenu
-          isScrolled={isScrolled}
-          currentPage={currentPage}
-          customLinks={customLinks}
-          intl={intl}
-          hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
-          showCreateListingsLink={
-            false && showCreateListingsLink && !isCreatorUserType(currentUser)
-          }
-        />
-      )}
+      {isSearchPage ? searchFormMaybe : null}
+
+      <CustomLinksMenu
+        isScrolled={isScrolled}
+        currentPage={currentPage}
+        customLinks={customLinks}
+        intl={intl}
+        hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
+        showCreateListingsLink={false && showCreateListingsLink && !isCreatorUserType(currentUser)}
+      />
 
       <div className={css.topbarLinks}>
         {favoriteLinkMaybe}

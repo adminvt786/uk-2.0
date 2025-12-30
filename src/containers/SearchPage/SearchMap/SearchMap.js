@@ -162,6 +162,7 @@ export class SearchMapComponent extends Component {
       // Initiate rerendering
       this.setState({ mapReattachmentCount: window.mapReattachmentCount });
     };
+
     const mapProvider = config.maps.mapProvider;
     const hasApiAccessForMapProvider = !!getMapProviderApiAccess(config.maps);
     const SearchMapVariantComponent = getSearchMapVariantComponent(mapProvider);

@@ -11,6 +11,9 @@ import { ModalInMobile, Button } from '../../../components';
 
 import PopupOpenerButton from '../PopupOpenerButton/PopupOpenerButton';
 import css from './SearchFiltersMobile.module.css';
+import TopbarSearchForm from '../../TopbarContainer/Topbar/TopbarSearchForm/TopbarSearchForm';
+import { isMainSearchTypeKeywords, isOriginInUse } from '../../../util/search';
+import { parse } from '../../../util/urlHelpers';
 
 class SearchFiltersMobileComponent extends Component {
   constructor(props) {
@@ -21,6 +24,8 @@ class SearchFiltersMobileComponent extends Component {
     this.cancelFilters = this.cancelFilters.bind(this);
     this.closeFilters = this.closeFilters.bind(this);
     this.resetAll = this.resetAll.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.topbarSearcInitialValues = this.topbarSearcInitialValues.bind(this);
   }
 
   // Open filters modal, set the initial parameters to current ones
@@ -67,6 +72,63 @@ class SearchFiltersMobileComponent extends Component {
     }
   }
 
+  handleSubmit = values => {
+    const { currentSearchParams, history, location, config, routeConfiguration } = this.props;
+    const topbarSearchParams = () => {
+      if (isMainSearchTypeKeywords(config)) {
+        return { keywords: values?.keywords };
+      }
+      // topbar search defaults to 'location' search
+      const { search, selectedPlace } = values?.location || {};
+      const { origin, bounds } = selectedPlace || {};
+      const originMaybe = isOriginInUse(config) ? { origin } : {};
+
+      return {
+        ...originMaybe,
+        address: search,
+        bounds,
+      };
+    };
+    const searchParams = {
+      ...currentSearchParams,
+      ...topbarSearchParams(),
+    };
+
+    const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
+      routeConfiguration,
+      location
+    );
+
+    history.push(
+      createResourceLocatorString(routeName, routeConfiguration, pathParams, searchParams)
+    );
+  };
+
+  topbarSearcInitialValues = () => {
+    const { config, location } = this.props;
+    console.log(location.search);
+    const { address, origin, bounds } = parse(location.search, {
+      latlng: ['origin'],
+      latlngBounds: ['bounds'],
+    });
+    if (isMainSearchTypeKeywords(config)) {
+      return { keywords };
+    }
+
+    // Only render current search if full place object is available in the URL params
+    const locationFieldsPresent = isOriginInUse(config)
+      ? address && origin && bounds
+      : address && bounds;
+    return {
+      location: locationFieldsPresent
+        ? {
+            search: address,
+            selectedPlace: { address, origin, bounds },
+          }
+        : null,
+    };
+  };
+
   render() {
     const {
       rootClassName,
@@ -84,6 +146,8 @@ class SearchFiltersMobileComponent extends Component {
       intl,
       isMapVariant = true,
     } = this.props;
+
+    const initialSearchFormValues = this.topbarSearcInitialValues();
 
     const classes = classNames(rootClassName || css.root, className);
 
@@ -128,6 +192,16 @@ class SearchFiltersMobileComponent extends Component {
             </div>
           ) : null}
         </div>
+
+        <TopbarSearchForm
+          appConfig={this.props.config}
+          onSubmit={this.handleSubmit}
+          className={css.searchForm}
+          iconClassName={css.searchFormIcon}
+          initialValues={initialSearchFormValues}
+          desktopInputRoot={css.searchFormDesktopInputRoot}
+          predictionsClassName={css.searchFormPredictions}
+        />
 
         {noResultsInfo ? noResultsInfo : null}
 

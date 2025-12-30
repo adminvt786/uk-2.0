@@ -13,7 +13,16 @@ import css from './SearchMapInfoCard.module.css';
 
 // ListingCard is the listing info without overlayview or carousel controls
 const ListingCard = props => {
-  const { className, clickHandler, intl, isInCarousel, listing, urlToListing, config } = props;
+  const {
+    className,
+    clickHandler,
+    intl,
+    isInCarousel,
+    listing,
+    urlToListing,
+    config,
+    variantPrefix: variantPrefixProp,
+  } = props;
 
   const { title, price, publicData } = listing.attributes;
   const { cardStyle } = publicData || {};
@@ -26,14 +35,15 @@ const ListingCard = props => {
   const firstImage = listing.images && listing.images.length > 0 ? listing.images[0] : null;
 
   const {
-    aspectWidth = 1,
-    aspectHeight = 1,
-    variantPrefix = 'listing-card',
+    // aspectWidth = 1,
+    // aspectHeight = 1,
+    variantPrefix = variantPrefixProp || 'listing-card',
   } = config.layout.listingImage;
+  const aspectWidth = 2;
+  const aspectHeight = 1;
   const variants = firstImage
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
-
   const pricePerUnit = intl.formatMessage(
     { id: 'SearchMapInfoCard.perUnit' },
     { unitType: publicData?.unitType }
@@ -152,6 +162,7 @@ const SearchMapInfoCard = props => {
         intl={intl}
         isInCarousel={hasCarousel}
         config={config}
+        variantPrefix="scaled"
       />
       {hasCarousel ? (
         <div className={classNames(css.paginationInfo, css.borderRadiusInheritBottom)}>

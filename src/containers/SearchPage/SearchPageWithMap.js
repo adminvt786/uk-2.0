@@ -231,12 +231,15 @@ export class SearchPageComponent extends Component {
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
     const filterQueryParamNames = getQueryParamNames(listingFieldsConfig, defaultFiltersConfig);
-
     // Reset state
     this.setState({ currentQueryParams: {} });
 
     // Reset routing params
-    const queryParams = omit(urlQueryParams, filterQueryParamNames);
+    const queryParams = omit({ ...urlQueryParams, address: undefined, bounds: undefined }, [
+      'address',
+      'bounds',
+      ...filterQueryParamNames,
+    ]);
 
     const { routeName, pathParams } = getSearchPageResourceLocatorStringParams(
       routeConfiguration,
@@ -362,6 +365,11 @@ export class SearchPageComponent extends Component {
       currentUser,
     } = this.props;
 
+    const { address } = parse(location.search, {
+      latlng: ['origin'],
+      latlngBounds: ['bounds'],
+    });
+
     // If the search page variant is of type /s/:listingType, this defines the :listingType
     // path parameter used to filter the whole page.
     //
@@ -400,7 +408,7 @@ export class SearchPageComponent extends Component {
     // like mapSearch, page or origin (origin depends on config.maps.search.sortSearchByDistance)
     const { searchParamsAreInSync, urlQueryParams, searchParamsInURL } = searchParamsPicker(
       location.search,
-      searchParams,
+      { ...searchParams, address },
       filterConfigs,
       sortConfig,
       listingTypePathParam !== 'creators' || isOriginInUse(config)
@@ -573,7 +581,8 @@ export class SearchPageComponent extends Component {
                 selectedFiltersCount={selectedFiltersCountForMobile}
                 noResultsInfo={noResultsInfo}
                 location={location}
-                isMapVariant={false}
+                isMapVariant
+                config={config}
               >
                 {availableFilters.map(filterConfig => {
                   const key = `SearchFiltersMobile.${filterConfig.scope || 'built-in'}.${
@@ -692,7 +701,7 @@ export class SearchPageComponent extends Component {
                 </div>
               )}
             </div>
-            {/* <ModalInMobile
+            <ModalInMobile
               className={css.mapPanel}
               id="SearchPage_map"
               isModalOpenOnMobile={this.state.isSearchMapOpenOnMobile}
@@ -719,7 +728,7 @@ export class SearchPageComponent extends Component {
                   />
                 ) : null}
               </div>
-            </ModalInMobile> */}
+            </ModalInMobile>
           </div>
         )}
       </Page>

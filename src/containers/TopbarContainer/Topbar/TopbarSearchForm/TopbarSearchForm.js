@@ -48,7 +48,15 @@ const KeywordSearchField = props => {
 };
 
 const LocationSearchField = props => {
-  const { desktopInputRootClass, intl, isMobile = false, inputRef, onLocationChange } = props;
+  const {
+    desktopInputRootClass,
+    intl,
+    isMobile = false,
+    inputRef,
+    onLocationChange,
+    iconClassName,
+    predictionsClassName,
+  } = props;
   const submitButton = ({}) => (
     <button
       className={css.searchSubmit}
@@ -73,12 +81,17 @@ const LocationSearchField = props => {
           onLocationChange(value);
         };
 
+        const iconClasses = classNames(isMobile ? css.mobileIcon : css.desktopIcon, iconClassName);
+        const predictionsClasses = classNames(
+          isMobile ? css.mobilePredictions : css.desktopPredictions,
+          predictionsClassName
+        );
         return (
           <LocationAutocompleteInput
             className={isMobile ? css.mobileInputRoot : desktopInputRootClass}
-            iconClassName={isMobile ? css.mobileIcon : css.desktopIcon}
+            iconClassName={iconClasses}
             inputClassName={isMobile ? css.mobileInput : css.desktopInput}
-            predictionsClassName={isMobile ? css.mobilePredictions : css.desktopPredictions}
+            predictionsClassName={predictionsClasses}
             predictionsAttributionClassName={isMobile ? css.mobilePredictionsAttribution : null}
             placeholder={intl.formatMessage({ id: 'TopbarSearchForm.placeholder' })}
             closeOnBlur={!isMobile}
@@ -152,6 +165,8 @@ const TopbarSearchForm = props => {
           desktopInputRoot,
           isMobile = false,
           handleSubmit,
+          iconClassName,
+          predictionsClassName,
         } = formRenderProps;
         const classes = classNames(rootClassName, className);
         const desktopInputRootClass = desktopInputRoot || css.desktopInputRoot;
@@ -178,6 +193,8 @@ const TopbarSearchForm = props => {
                 isMobile={isMobile}
                 inputRef={searchInpuRef}
                 onLocationChange={onChange}
+                iconClassName={iconClassName}
+                predictionsClassName={predictionsClassName}
               />
             )}
           </Form>

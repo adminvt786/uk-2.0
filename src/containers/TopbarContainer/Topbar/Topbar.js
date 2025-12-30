@@ -241,17 +241,19 @@ const TopbarComponent = props => {
 
   // Custom links are sorted so that group="primary" are always at the beginning of the list.
   const sortedCustomLinks = sortCustomLinks(config.topbar?.customLinks);
-  const customLinks = getResolvedCustomLinks(sortedCustomLinks, routeConfiguration)?.filter(link => {
-    if (isCreator && link.href.includes('hotels')) {
-      return false;
-    }
+  const customLinks = getResolvedCustomLinks(sortedCustomLinks, routeConfiguration)?.filter(
+    link => {
+      if (isCreator && link.href.includes('hotels')) {
+        return false;
+      }
 
-    if (isHotel && link.href.includes('creators')) {
-      return false;
-    }
+      if (isHotel && link.href.includes('creators')) {
+        return false;
+      }
 
-    return true;
-  });
+      return true;
+    }
+  );
   const resolvedCurrentPage = currentPage || getResolvedCurrentPage(location, routeConfiguration);
 
   const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
@@ -334,15 +336,19 @@ const TopbarComponent = props => {
   // Search form is shown conditionally depending on configuration and
   // the current page.
   const showSearchOnAllPages = searchFormDisplay === SEARCH_DISPLAY_ALWAYS;
+  const isSearchHotelsPage =
+    location.pathname.includes('/hotels') && resolvedCurrentPage === 'SearchPageWithListingType';
+
   const showSearchOnSearchPage =
     searchFormDisplay === SEARCH_DISPLAY_ONLY_SEARCH_PAGE &&
     ['SearchPage', 'SearchPageWithListingType'].includes(resolvedCurrentPage);
+
   const showSearchNotOnLandingPage =
     searchFormDisplay === SEARCH_DISPLAY_NOT_LANDING_PAGE && !isLandingPage;
 
   const showSearchForm =
-    showSearchOnAllPages || showSearchOnSearchPage || showSearchNotOnLandingPage;
-
+    (showSearchOnAllPages || showSearchOnSearchPage || showSearchNotOnLandingPage) &&
+    !isSearchHotelsPage;
   const mobileSearchButtonMaybe = showSearchForm ? (
     <Button
       id={MOBILE_SEARCH_BUTTON_ID}
