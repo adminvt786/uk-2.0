@@ -112,3 +112,29 @@
   display: inline-block;
   border-radius: 3px;
 }
+
+.searchForm {
+  margin-top: 16px;
+  border: 1px solid var(--colorGrey100);
+  background-color: var(--colorWhite);
+  border-radius: 4px;
+  input {
+    height: 40px !important;
+    background-color: transparent;
+  }
+}
+
+.searchFormIcon {
+  height: 40px !important;
+  background-color: transparent;
+}
+
+.searchFormDesktopInputRoot {
+  height: 40px !important;
+  padding: 0 10px;
+}
+
+.searchFormPredictions {
+  top: 42px !important;
+  max-width: 100% !important;
+}

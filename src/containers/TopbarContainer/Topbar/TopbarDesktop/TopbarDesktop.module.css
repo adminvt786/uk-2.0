@@ -26,7 +26,7 @@
     padding: 0 50px 0 0;
   }
 }
-.topbarLinks{
+.topbarLinks {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -44,7 +44,7 @@
   leading-trim: CAP_HEIGHT;
   line-height: 100%;
   letter-spacing: 0%;
-  
+
   color: var(--colorWhite);
   height: 100%;
   padding: 0;
@@ -72,7 +72,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background-color: #D9A441;
+  background-color: #d9a441;
   border-radius: 40px;
 
   color: var(--colorBlack);
@@ -87,7 +87,7 @@
   margin: 0;
   border: none;
   white-space: nowrap;
-  & svg{
+  & svg {
     display: none;
   }
 }
@@ -141,15 +141,15 @@
 .root.transparent {
   background-color: transparent;
   box-shadow: none;
-  
-  & .getStartedButton{
+
+  & .getStartedButton {
     background-color: var(--colorWhite);
     border-radius: 0px;
-    & svg{
+    & svg {
       display: block;
     }
   }
-  & .getStartedText{
+  & .getStartedText {
     color: #000;
   }
 }
@@ -195,11 +195,11 @@
 .logoLink {
   border-bottom: 0px solid;
   transition: var(--transitionStyleButton);
-  &>div{
+  & > div {
+    width: 146px !important;
+    & img {
       width: 146px !important;
-      & img{
-        width: 146px !important;
-      }
+    }
   }
 }
 .logoLink:hover {
@@ -210,6 +210,7 @@
 /* Search */
 .searchLink {
   min-width: 320px;
+  flex-grow: 1;
   height: 100%;
   border-left-style: solid;
   border-left-width: 1px;
@@ -293,13 +294,12 @@
   text-decoration: inherit;
   position: relative;
   font-family: Inter;
-font-weight: 400;
-font-style: Regular;
-font-size: 16px;
-leading-trim: CAP_HEIGHT;
-line-height: 100%;
-letter-spacing: 0%;
-
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: CAP_HEIGHT;
+  line-height: 100%;
+  letter-spacing: 0%;
 }
 
 .notificationDot {

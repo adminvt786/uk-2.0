@@ -62,8 +62,9 @@
   font-weight: var(--fontWeightSemiBold);
 }
 
-.aspectratioWrapper {
+.aspectRatioWrapper {
   background: var(--colorGrey100); /* Loading BG color */
+  overflow: hidden;
 }
 
 .rootForImage {

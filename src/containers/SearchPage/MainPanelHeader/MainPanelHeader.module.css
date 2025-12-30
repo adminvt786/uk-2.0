@@ -37,7 +37,11 @@
 }
 
 .resultsFound {
-  white-space: nowrap;
+  word-break: break-word;
+  white-space: normal;
+  span {
+    word-break: normal !important;
+  }
 }
 
 .sortyByWrapper {
